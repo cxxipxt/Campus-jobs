@@ -4,6 +4,8 @@
 
 หน้านี้รวมคู่มือทั้งหน้าเว็บและฐานข้อมูล เพื่ออ่านได้ทันทีจากหน้าแรกของ repository
 
+เจ้าของ repository คือ **มิก (@cxxipxt)** ทุกคนทำงานบน branch ของตัวเองแล้วส่ง PR ให้มิกตรวจ อ่านขั้นตอนและสถานะการป้องกันใน [คู่มือ GitHub ของทีม](docs/github-workflow.md)
+
 - [WEB_README — โครงหน้าเว็บและแบ่งงาน](#web_readme)
 - [DATABASE_README — ฐานข้อมูลและภาพรวมโครงการ](#database_readme)
 - [คู่มือหน้าเว็บแยกไฟล์](frontend/README.md)
