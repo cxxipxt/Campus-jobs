@@ -1,0 +1,33 @@
+-- Read-only inspection. Select your database before running this file.
+SELECT DATABASE() AS selected_database, VERSION() AS server_version,
+       @@session.time_zone AS session_time_zone, @@session.sql_mode AS sql_mode;
+
+-- Expected: all eight named tables, InnoDB and utf8mb4_unicode_ci.
+SELECT TABLE_NAME, ENGINE, TABLE_COLLATION
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN ('STUDENT', 'EMPLOYER', 'JOB_CATEGORY', 'JOB',
+                     'APPLICATION', 'STUDENT_SKILL', 'JOB_SKILL', 'SAVED_JOB')
+ORDER BY TABLE_NAME;
+
+-- Expected: 8 FK rows, DELETE_RULE and UPDATE_RULE = RESTRICT.
+SELECT TABLE_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, DELETE_RULE, UPDATE_RULE
+FROM information_schema.REFERENTIAL_CONSTRAINTS
+WHERE CONSTRAINT_SCHEMA = DATABASE()
+ORDER BY TABLE_NAME, CONSTRAINT_NAME;
+
+-- Expected: 16 CHECK constraints, all enforced.
+SELECT TABLE_NAME, CONSTRAINT_NAME, ENFORCED
+FROM information_schema.TABLE_CONSTRAINTS
+WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_TYPE = 'CHECK'
+ORDER BY TABLE_NAME, CONSTRAINT_NAME;
+
+-- Inspect PKs, unique keys and indexes.
+SELECT TABLE_NAME, INDEX_NAME, NON_UNIQUE,
+       GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX) AS indexed_columns
+FROM information_schema.STATISTICS
+WHERE TABLE_SCHEMA = DATABASE()
+GROUP BY TABLE_NAME, INDEX_NAME, NON_UNIQUE
+ORDER BY TABLE_NAME, INDEX_NAME;
+
+SELECT category_id, category_name FROM JOB_CATEGORY ORDER BY category_id;
