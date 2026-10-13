@@ -24,12 +24,19 @@
 
 ## การเข้าสู่ระบบนักศึกษา
 
-- หน้า `student/login.html` มีเพียงปุ่มเลือก Microsoft หรือ Google ไม่มีช่องอีเมลและรหัสผ่าน
+- หน้า `student/login.html` มีเพียงปุ่มเลือก Microsoft หรือ Google ใช้บัญชีอีเมลนักศึกษาของมหาวิทยาลัยเท่านั้น ไม่มีช่องอีเมลและรหัสผ่าน
+- โดเมนที่มิกกำหนด: Microsoft ใช้ `@kmutt.ac.th` และ Google ใช้ `@mail.kmutt.ac.th` เท่านั้น ไม่รับอีเมลส่วนตัว
+- ตรวจชื่อโดเมนหลัง @ แบบตรงตัวและไม่แยกตัวพิมพ์เล็ก/ใหญ่ ไม่รับโดเมนที่เพียงลงท้ายคล้ายกันหรือ subdomain อื่นโดยอัตโนมัติ
+- ต้องยืนยัน tenant ID ของ KMUTT สำหรับ Microsoft และ hosted domain ที่ Google ส่งจริงก่อนตั้งค่า Backend; ไม่สมมติว่า hosted domain ตรงกับโดเมนอีเมลเสมอ
+- ระบบจริงต้องตรวจบัญชีและข้อมูลยืนยันตัวตนฝั่ง Backend ก่อนสร้าง session ไม่ตัดสินจากข้อความที่ผู้ใช้กรอกหรือส่วนท้ายอีเมลเพียงอย่างเดียว
+- Google: ตรวจ ID token และ hosted domain (hd) ขององค์กรที่อนุญาต; Microsoft: ตรวจ ID token และ tenant/issuer ของมหาวิทยาลัย รวมถึงเงื่อนไขบัญชีนักศึกษา
+- อีเมลมหาวิทยาลัยอาจเป็นบัญชีบุคลากรด้วย ต้องกำหนดวิธีแยกนักศึกษาตามข้อมูลหรือโดเมนที่มหาวิทยาลัยใช้
+- อ้างอิง [Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect) และ [Microsoft token validation](https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens)
 - ปุ่มยังไม่เชื่อมบริการยืนยันตัวตน และไม่ใช่การเข้าสู่ระบบจริง
 - เส้นทางบัญชีใหม่ที่วางไว้: `register.html` → `student/login.html` → `student/register.html` → `dashboard.html`
-- `student/register.html` เป็นฟอร์มข้อมูลโปรไฟล์ครั้งแรก ไม่มีฟิลด์ตั้งรหัสผ่าน
+- `student/register.html` เป็นฟอร์มยืนยันชื่อและข้อมูลโปรไฟล์ครั้งแรก ไม่มีฟิลด์ตั้งรหัสผ่าน ยืนยันแล้วจึง INSERT STUDENT และไป Dashboard
 - เมื่อทำระบบจริง อีเมลและข้อมูลบัญชีต้องมาจากผู้ให้บริการที่ยืนยันแล้ว ไม่ใช้ค่าจากฟอร์มเป็นหลักฐานยืนยันตัวตน
-- Schema ปัจจุบันยังบังคับ STUDENT.password_hash ก่อนทำล็อกอินจริงต้องออกแบบการเชื่อมบัญชีผู้ให้บริการและ migration ไม่สร้างรหัสผ่านหลอก
+- Schema v2 ใช้ STUDENT.university_username แบบ UNIQUE แทนรหัสผ่านนักศึกษา ใช้ 8 ตารางเดิม และมี migration จาก v1 ดู [ขั้นตอนล็อกอินนักศึกษา](../database/student-login.md)
 - นายจ้างยังใช้โครงฟอร์มอีเมล/รหัสผ่านเดิม
 
 ## โครงสร้างปัจจุบัน

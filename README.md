@@ -39,12 +39,19 @@
 
 ### การเข้าสู่ระบบนักศึกษา
 
-- หน้า `student/login.html` มีเพียงปุ่มเลือก Microsoft หรือ Google ไม่มีช่องอีเมลและรหัสผ่าน
+- หน้า `student/login.html` มีเพียงปุ่มเลือก Microsoft หรือ Google ใช้บัญชีอีเมลนักศึกษาของมหาวิทยาลัยเท่านั้น ไม่มีช่องอีเมลและรหัสผ่าน
+- โดเมนที่มิกกำหนด: Microsoft ใช้ `@kmutt.ac.th` และ Google ใช้ `@mail.kmutt.ac.th` เท่านั้น ไม่รับอีเมลส่วนตัว
+- ตรวจชื่อโดเมนหลัง @ แบบตรงตัวและไม่แยกตัวพิมพ์เล็ก/ใหญ่ ไม่รับโดเมนที่เพียงลงท้ายคล้ายกันหรือ subdomain อื่นโดยอัตโนมัติ
+- ต้องยืนยัน tenant ID ของ KMUTT สำหรับ Microsoft และ hosted domain ที่ Google ส่งจริงก่อนตั้งค่า Backend; ไม่สมมติว่า hosted domain ตรงกับโดเมนอีเมลเสมอ
+- ระบบจริงต้องตรวจบัญชีและข้อมูลยืนยันตัวตนฝั่ง Backend ก่อนสร้าง session ไม่ตัดสินจากข้อความที่ผู้ใช้กรอกหรือส่วนท้ายอีเมลเพียงอย่างเดียว
+- Google: ตรวจ ID token และ hosted domain (hd) ขององค์กรที่อนุญาต; Microsoft: ตรวจ ID token และ tenant/issuer ของมหาวิทยาลัย รวมถึงเงื่อนไขบัญชีนักศึกษา
+- อีเมลมหาวิทยาลัยอาจเป็นบัญชีบุคลากรด้วย ต้องกำหนดวิธีแยกนักศึกษาตามข้อมูลหรือโดเมนที่มหาวิทยาลัยใช้
+- อ้างอิง [Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect) และ [Microsoft token validation](https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens)
 - ปุ่มยังไม่เชื่อมบริการยืนยันตัวตน และไม่ใช่การเข้าสู่ระบบจริง
 - เส้นทางบัญชีใหม่ที่วางไว้: `register.html` → `student/login.html` → `student/register.html` → `dashboard.html`
-- `student/register.html` เป็นฟอร์มข้อมูลโปรไฟล์ครั้งแรก ไม่มีฟิลด์ตั้งรหัสผ่าน
+- `student/register.html` เป็นฟอร์มยืนยันชื่อและข้อมูลโปรไฟล์ครั้งแรก ไม่มีฟิลด์ตั้งรหัสผ่าน ยืนยันแล้วจึง INSERT STUDENT และไป Dashboard
 - เมื่อทำระบบจริง อีเมลและข้อมูลบัญชีต้องมาจากผู้ให้บริการที่ยืนยันแล้ว ไม่ใช้ค่าจากฟอร์มเป็นหลักฐานยืนยันตัวตน
-- Schema ปัจจุบันยังบังคับ STUDENT.password_hash ก่อนทำล็อกอินจริงต้องออกแบบการเชื่อมบัญชีผู้ให้บริการและ migration ไม่สร้างรหัสผ่านหลอก
+- Schema v2 ใช้ STUDENT.university_username แบบ UNIQUE แทนรหัสผ่านนักศึกษา ใช้ 8 ตารางเดิม และมี migration จาก v1 ดู [ขั้นตอนล็อกอินนักศึกษา](database/student-login.md)
 - นายจ้างยังใช้โครงฟอร์มอีเมล/รหัสผ่านเดิม
 
 ### โครงสร้างปัจจุบัน
@@ -212,7 +219,7 @@ Conceptual ER มี 5 Entity หลัก ได้แก่ STUDENT, EMPLOYER,
    | 2 | [seed.sql](database/seed.sql) | เพิ่มประเภทงานเริ่มต้น รันซ้ำได้ |
    | 3 | [verify.sql](database/verify.sql) | ตรวจโครงสร้างโดยไม่แก้ข้อมูล |
 
-4. ตรวจว่าพบ 8 ตาราง, 8 Foreign Key, 16 CHECK constraints ที่บังคับใช้ และประเภทงาน 7 รายการ
+4. ตรวจว่าพบ 8 ตาราง, 8 Foreign Key, 21 CHECK constraints ที่บังคับใช้ และประเภทงาน 7 รายการ
 5. ให้ Backend ตั้ง `SET SESSION time_zone = '+00:00';` ทุก connection ก่อนอ่านหรือเขียนเวลา
 
 `schema.sql` ใช้กับฐานข้อมูลใหม่ที่ยังว่าง หากมีตารางเดิมหรือเกิดข้อผิดพลาดให้หยุดและตรวจสอบก่อนรันต่อ ดูคำสั่ง mysql client และข้อกำหนดเพิ่มเติมใน [คู่มือติดตั้งฐานข้อมูล](database/README.md)
@@ -266,3 +273,8 @@ Campus-jobs/
 - [ ] ระบบปฏิเสธข้อมูลซ้ำ ข้อมูลผิดเงื่อนไข และการเข้าถึงข้อมูลของคนอื่น
 
 รายการตรวจฉบับเต็มอยู่ใน [Acceptance Checklist](docs/acceptance-checklist.md)
+
+
+## ปรับฐานข้อมูล v2 ตามแบบล่าสุด
+
+ยังคง 8 ตาราง STUDENT เพิ่ม university_username (UNIQUE), ไม่มี password_hash/university และ EMPLOYER ใช้ company_name ดู [ขั้นตอนและ migration](database/student-login.md) ภาพ ER เดิมยังไม่อัปเดตตาม v2

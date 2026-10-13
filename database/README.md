@@ -1,7 +1,7 @@
 # ฐานข้อมูล Campus-jobs
 [Data Dictionary](data-dictionary.md) เป็นข้อกำหนดร่วมก่อนเขียน SQL
 
-ทีมยืนยันใช้ MySQL แล้ว โครงเริ่มต้น v1 ใช้ MySQL 8.0.16 ขึ้นไป เพราะต้องบังคับ CHECK constraints
+ทีมยืนยันใช้ MySQL แล้ว โครงล่าสุด v2 ใช้ MySQL 8.0.16 ขึ้นไป เพราะต้องบังคับ CHECK constraints
 ทุกคนสร้างฐานข้อมูลพัฒนาบนเครื่องตัวเองด้วยไฟล์กลางชุดเดียวกัน ไม่แยก schema ตามคน
 ยังไม่ได้ติดตั้งลงเซิร์ฟเวอร์ของทีม และยังไม่ได้ทดสอบกับ MySQL จริงในเครื่องที่จัดทำไฟล์
 
@@ -27,18 +27,18 @@ USE campus_jobs;
 
 ```sql
 USE campus_jobs;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-prepared/database/schema.sql;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-prepared/database/seed.sql;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-prepared/database/verify.sql;
+SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/schema.sql;
+SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/seed.sql;
+SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/verify.sql;
 ```
 
 schema.sql ไม่ลบฐานข้อมูลและไม่ข้ามตารางเดิมเงียบ ๆ ถ้าชื่อซ้ำให้หยุดและตรวจ ห้ามรันต่อโดยใช้ `--force`
 DDL ของ MySQL commit แยกแต่ละคำสั่ง หากเกิดข้อผิดพลาดบางตารางอาจถูกสร้างแล้ว อย่ารันซ้ำหรือ DROP ฐานข้อมูลที่มีข้อมูล ให้ตรวจและแก้เฉพาะจุด
 
-## ข้อตกลงโครงเริ่มต้น v1
+## ข้อตกลงโครงล่าสุด v2
 - ชื่อตารางใช้ตัวพิมพ์ใหญ่ตาม ER ทุกเครื่องและทุก query ต้องใช้ให้ตรงกัน โดยเฉพาะเมื่อย้ายไป Linux
 - ID ทุกตัวเป็น INT UNSIGNED; PK ที่เป็น ID เดี่ยวเพิ่มอัตโนมัติ ห้ามกำหนด ID ใหม่เอง
-- ฟิลด์โปรไฟล์เพิ่มเติมของ STUDENT และ EMPLOYER อนุญาต NULL; ชื่อ อีเมล password_hash บังคับกรอก
+- STUDENT ใช้ university_username แบบ UNIQUE ไม่มี password_hash หรือ university; full_name เป็น NOT NULL และห้ามว่าง ต้องมีชื่อก่อนสร้างนักศึกษา ส่วน EMPLOYER ใช้ company_name และบังคับ password_hash
 - JOB บังคับรายละเอียด ค่าจ้าง สถานที่ และเวลางาน; ค่าจ้างเป็นบาทต่อชั่วโมงและห้ามติดลบ
 - status บังคับตัวสะกดและตัวพิมพ์ตรงตาม scope; ไม่อนุญาตค่าอื่น
 - ข้อความทั่วไปใช้ utf8mb4_unicode_ci: รองรับภาษาไทย เปรียบเทียบโดยไม่แยกตัวพิมพ์เล็ก/ใหญ่และอาจไม่แยกเครื่องหมายกำกับเสียง
@@ -69,3 +69,8 @@ skill วงรีสองชั้น -> STUDENT_SKILL
 skills_required วงรีสองชั้น -> JOB_SKILL
 ความสัมพันธ์บันทึกงาน M:N -> SAVED_JOB
 saved_at เป็นเวลาในความสัมพันธ์บันทึกงาน (เพิ่มลงในภาพฉบับ repository นี้)
+
+
+## อัปเกรดบัญชีนักศึกษาเป็น v2
+
+ดู [student-login.md](student-login.md) สำหรับกฎ Microsoft/Google ขั้นตอนสร้างบัญชีและ migration จาก v1 ฐานข้อมูลใหม่รัน schema.sql v2 ได้เลย แต่ฐานข้อมูลเดิมต้องสำรองและรัน preflight ก่อน migration 001 ไม่ลบสร้างใหม่

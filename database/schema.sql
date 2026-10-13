@@ -1,4 +1,4 @@
--- Campus-jobs baseline v1. MySQL >= 8.0.16, InnoDB.
+-- Campus-jobs baseline v2. MySQL >= 8.0.16, InnoDB.
 -- Run once against a NEW, EMPTY development database selected by the caller.
 -- Deliberately no DROP, CREATE DATABASE, USE, or IF NOT EXISTS.
 -- MySQL DDL auto-commits: stop on the first error and inspect partial results.
@@ -7,18 +7,26 @@ SET SESSION time_zone = '+00:00';
 
 CREATE TABLE STUDENT (
     student_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    university_username VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
     full_name VARCHAR(150) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NULL,
-    university VARCHAR(150) NULL,
     major VARCHAR(150) NULL,
     resume_url VARCHAR(2048) NULL,
     PRIMARY KEY (student_id),
+    CONSTRAINT uq_student_university_username UNIQUE (university_username),
     CONSTRAINT uq_student_email UNIQUE (email),
     CONSTRAINT chk_student_name CHECK (CHAR_LENGTH(TRIM(full_name)) > 0),
     CONSTRAINT chk_student_email CHECK (CHAR_LENGTH(TRIM(email)) > 0),
-    CONSTRAINT chk_student_hash CHECK (CHAR_LENGTH(TRIM(password_hash)) > 0)
+    CONSTRAINT chk_student_username CHECK (
+        CHAR_LENGTH(university_username) > 0
+        AND university_username = LOWER(university_username)
+        AND university_username = TRIM(university_username)
+        AND LOCATE('@', university_username) = 0
+    ),
+    CONSTRAINT chk_student_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
+    CONSTRAINT chk_student_major CHECK (major IS NULL OR CHAR_LENGTH(TRIM(major)) > 0),
+    CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR REGEXP_LIKE(resume_url, '^https?://', 'c'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE EMPLOYER (
@@ -32,7 +40,9 @@ CREATE TABLE EMPLOYER (
     CONSTRAINT uq_employer_email UNIQUE (email),
     CONSTRAINT chk_employer_name CHECK (CHAR_LENGTH(TRIM(company_name)) > 0),
     CONSTRAINT chk_employer_email CHECK (CHAR_LENGTH(TRIM(email)) > 0),
-    CONSTRAINT chk_employer_hash CHECK (CHAR_LENGTH(TRIM(password_hash)) > 0)
+    CONSTRAINT chk_employer_hash CHECK (CHAR_LENGTH(TRIM(password_hash)) > 0),
+    CONSTRAINT chk_employer_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
+    CONSTRAINT chk_employer_address CHECK (address IS NULL OR CHAR_LENGTH(TRIM(address)) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE JOB_CATEGORY (
