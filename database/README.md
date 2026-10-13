@@ -23,13 +23,13 @@ USE campus_jobs;
 ```
 
 ใน Workbench เปิดไฟล์ SQL แล้วสั่งรันทั้งไฟล์ โดยใช้ connection เดียวกับที่เลือกฐานข้อมูลไว้
-หรือเปิด mysql client ด้วย `mysql -u root -p` แล้วรัน (แก้ path ถ้าเก็บโปรเจกต์ไว้ที่อื่น):
+หรือเปิด mysql client ด้วย `mysql -u root -p` แล้วรัน ตัวอย่างนี้สมมติว่าเก็บโปรเจกต์ไว้ที่ `D:/Campus-jobs` ให้เปลี่ยนพาธเป็นตำแหน่งไฟล์ในเครื่องของแต่ละคน:
 
 ```sql
 USE campus_jobs;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/schema.sql;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/seed.sql;
-SOURCE C:/Users/chaip/OneDrive/Documents/ChatGPT/Webpro/Campus-jobs-github/database/verify.sql;
+SOURCE D:/Campus-jobs/database/schema.sql;
+SOURCE D:/Campus-jobs/database/seed.sql;
+SOURCE D:/Campus-jobs/database/verify.sql;
 ```
 
 schema.sql ไม่ลบฐานข้อมูลและไม่ข้ามตารางเดิมเงียบ ๆ ถ้าชื่อซ้ำให้หยุดและตรวจ ห้ามรันต่อโดยใช้ `--force`
