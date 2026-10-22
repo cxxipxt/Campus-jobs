@@ -27,7 +27,7 @@ CREATE TABLE STUDENT (
     CONSTRAINT chk_student_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
     CONSTRAINT chk_student_major CHECK (major IS NULL OR CHAR_LENGTH(TRIM(major)) > 0),
     CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR REGEXP_LIKE(resume_url, '^https?://', 'c'))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 
 CREATE TABLE EMPLOYER (
     employer_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
