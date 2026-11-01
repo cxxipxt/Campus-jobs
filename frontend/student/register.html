@@ -1,18 +1,81 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>สมัครสมาชิกนักศึกษา | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>ยืนยันข้อมูลนักศึกษา - Campusjobs</title>
 </head>
 <body>
+
+<!-- หน้านี้อยู่ใน frontend/student/
+     ลิงก์ไปหน้าในโฟลเดอร์หลักต้องขึ้นต้นด้วย ../  ส่วนหน้าในโฟลเดอร์เดียวกันไม่ต้องใส่ -->
 <a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="../index.html">หน้าหลัก</a></li><li><a href="../jobs.html">ค้นหางาน</a></li><li><a href="../dashboard.html">ภาพรวม</a></li><li><a href="../register.html">สมัครสมาชิก</a></li><li><a href="../saved.html">งานที่บันทึก</a></li><li><a href="../my-applications.html">ประวัติสมัคร</a></li><li><a href="../student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="../employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="../student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>กรอกข้อมูลนักศึกษาครั้งแรก</h1><p>กรอกโปรไฟล์หลังยืนยันบัญชี Microsoft หรือ Google ในระบบจริง</p><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<form action="#" method="post"><fieldset><legend>ข้อมูลบัญชี</legend><p><label for="full_name">ชื่อ–นามสกุล (จำเป็น)</label><br><input id="full_name" name="full_name" type="text" required></p><p><label for="email">อีเมล (จำเป็น)</label><br><input id="email" name="email" type="email" readonly required></p></fieldset><fieldset><legend>ข้อมูลเพิ่มเติม (เว้นว่างได้)</legend><p><label for="phone">เบอร์โทร</label><br><input id="phone" name="phone" type="tel"></p><p><label for="major">สาขา</label><br><input id="major" name="major" type="text"></p></fieldset><p><button type="submit" disabled>บันทึกข้อมูลนักศึกษา</button></p><p>ปุ่มยังไม่ทำงานในโครง HTML นี้</p></form><p><a href="login.html">มีบัญชีแล้ว เข้าสู่ระบบ</a></p>
+<header>
+    <p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
+    <nav aria-label="เมนูหลัก">
+        <ul>
+            <li><a href="../index.html">หน้าหลัก</a></li>
+            <li><a href="../jobs.html">ค้นหางาน</a></li>
+            <li><a href="login.html">เข้าสู่ระบบนักศึกษา</a></li>
+            <li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
+            <li><a href="../register.html">สมัครสมาชิก</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main id="main">
+    <h1>ยืนยันข้อมูลโปรไฟล์นักศึกษา</h1>
+    <p>
+        หน้านี้แสดงครั้งแรกหลังเข้าสู่ระบบด้วยบัญชีมหาวิทยาลัย
+        ตรวจชื่อและข้อมูลโปรไฟล์ แล้วกดยืนยันเพื่อสร้างบัญชี ไม่ต้องตั้งรหัสผ่านใหม่
+    </p>
+
+    <!-- ข้อมูลบัญชีมาจากผู้ให้บริการ (Microsoft / Google) ที่ Backend ยืนยันแล้ว
+         แสดงเป็นข้อความอย่างเดียว ไม่ใช่ช่องกรอก เพราะ README กำหนดว่า
+         อีเมลและข้อมูลบัญชีต้องไม่รับจากฟอร์ม ค่าด้านล่างเป็นข้อมูลตัวอย่าง -->
+    <section aria-labelledby="account-title">
+        <h2 id="account-title">บัญชีมหาวิทยาลัยที่ยืนยันแล้ว</h2>
+        <dl>
+            <dt>อีเมลมหาวิทยาลัย</dt>
+            <dd>sample-student@kmutt.ac.th</dd>
+            <dt>ชื่อผู้ใช้มหาวิทยาลัย</dt>
+            <dd>sample-student</dd>
+        </dl>
+        <p>ไม่ใช่บัญชีนี้? <a href="login.html">เข้าสู่ระบบด้วยบัญชีอื่น</a></p>
+    </section>
+
+    <!-- ปุ่มยืนยันปิดไว้ตามกติกา README (ต้องใช้ Backend ประมวลผล)
+         เมื่อมี Backend: ตรวจ session -> INSERT STUDENT -> ไป dashboard.html
+         ช่องที่ไม่กรอก (เบอร์โทร สาขา ลิงก์ Resume) ต้องส่งเป็น NULL ไม่ใช่ข้อความว่าง
+         ค่า maxlength ตรงกับคอลัมน์ใน STUDENT: full_name 150, phone 20, major 150 -->
+    <form method="post">
+        <h2>ข้อมูลโปรไฟล์</h2>
+        <p>
+            <label for="full_name">ชื่อ-นามสกุล</label><br>
+            <input type="text" id="full_name" name="full_name" maxlength="150" autocomplete="name" required>
+        </p>
+        <p>
+            <label for="phone">เบอร์โทร (ไม่บังคับ)</label><br>
+            <input type="tel" id="phone" name="phone" maxlength="20" autocomplete="tel">
+        </p>
+        <p>
+            <label for="major">สาขา (ไม่บังคับ)</label><br>
+            <input type="text" id="major" name="major" maxlength="150">
+        </p>
+        <p>
+            <label for="resume_url">ลิงก์ Resume (ไม่บังคับ)</label><br>
+            <input type="url" id="resume_url" name="resume_url" pattern="https?://.+"
+                   title="ต้องขึ้นต้นด้วย http:// หรือ https:// (ตัวพิมพ์เล็ก)"
+                   placeholder="https://">
+        </p>
+        <p>ระบบเก็บ Resume เป็นลิงก์เท่านั้น ไม่รองรับการอัปโหลดไฟล์ ทักษะเพิ่มได้ภายหลังที่หน้าโปรไฟล์</p>
+        <button type="submit" disabled>ยืนยันและสร้างบัญชี</button>
+    </form>
+
+    <!-- ลิงก์นี้ไว้ตรวจเส้นทางหน้าเว็บเท่านั้น (ยังไม่ได้บันทึกข้อมูลจริง) -->
+    <p><a href="../dashboard.html">ดูหน้าภาพรวม (ตัวอย่าง)</a></p>
 </main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="../index.html">กลับหน้าหลัก</a></p></footer>
+
 </body>
 </html>
