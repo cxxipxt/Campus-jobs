@@ -4,7 +4,9 @@
 -- MySQL DDL auto-commits: stop on the first error and inspect partial results.
 SET NAMES utf8mb4;
 SET SESSION time_zone = '+00:00';
-
+DROP DATABASE IF EXISTS campus_jobs;
+CREATE DATABASE campus_jobs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE campus_jobs;
 CREATE TABLE STUDENT (
     student_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     university_username VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -26,7 +28,7 @@ CREATE TABLE STUDENT (
     ),
     CONSTRAINT chk_student_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
     CONSTRAINT chk_student_major CHECK (major IS NULL OR CHAR_LENGTH(TRIM(major)) > 0),
-    CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR REGEXP_LIKE(resume_url, '^https?://', 'c'))
+    CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR resume_url REGEXP '^https?://')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE EMPLOYER (
@@ -124,4 +126,38 @@ CREATE TABLE SAVED_JOB (
         ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT fk_saved_job_job FOREIGN KEY (job_id) REFERENCES JOB (job_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tables: APPLICATION & SAVED_JOB
+--  Ter
+
+CREATE TABLE IF NOT EXISTS APPLICATION (
+    application_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    student_id INT UNSIGNED NOT NULL,
+    job_id INT UNSIGNED NOT NULL,
+    status ENUM('Pending', 'Reviewed', 'Accepted', 'Rejected') NOT NULL DEFAULT 'Pending',
+    applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (application_id),
+    
+
+    CONSTRAINT fk_application_student FOREIGN KEY (student_id) REFERENCES STUDENT(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_application_job FOREIGN KEY (job_id) REFERENCES JOB(job_id) ON DELETE CASCADE,
+    
+ 
+    CONSTRAINT uq_student_job_application UNIQUE (student_id, job_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS SAVED_JOB (
+    saved_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    student_id INT UNSIGNED NOT NULL,
+    job_id INT UNSIGNED NOT NULL,
+    saved_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (saved_id),
+
+    CONSTRAINT fk_saved_job_student FOREIGN KEY (student_id) REFERENCES STUDENT(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_saved_job_job FOREIGN KEY (job_id) REFERENCES JOB(job_id) ON DELETE CASCADE,
+    CONSTRAINT uq_student_job_saved UNIQUE (student_id, job_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
