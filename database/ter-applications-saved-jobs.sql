@@ -33,3 +33,16 @@ CREATE TABLE SAVED_JOB (
     CONSTRAINT fk_saved_job_job FOREIGN KEY (job_id) REFERENCES JOB (job_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- คำสั่งสำหรับ API: บันทึกงาน (Saved Jobs)
+INSERT IGNORE INTO SAVED_JOB (student_id, job_id) 
+VALUES (?, ?);
+
+-- คำสั่งสำหรับ API: สมัครงาน (Applications)
+START TRANSACTION;
+INSERT IGNORE INTO APPLICATION (student_id, job_id, status)
+SELECT ?, ?, 'Pending'
+FROM JOB
+WHERE job_id = ? AND status = 'Open'
+FOR UPDATE;
+COMMIT;
