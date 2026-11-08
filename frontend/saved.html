@@ -5,14 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
 <title>งานที่บันทึก | Campus-jobs</title>
+<!-- เชื่อม CSS กลางของโปรเจกต์ -->
+<link rel="stylesheet" href="assets/styles/global.css">
 </head>
 <body>
 <a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="index.html">หน้าหลัก</a></li><li><a href="jobs.html">ค้นหางาน</a></li><li><a href="saved.html" aria-current="page">งานที่บันทึก</a></li><li><a href="my-applications.html">ประวัติสมัคร</a></li><li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>งานที่บันทึก</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<section><h2>รายการที่บันทึกไว้ — ข้อมูลตัวอย่าง</h2><article><h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3><p>คาเฟ่ตัวอย่าง · กรุงเทพฯ · 60 บาท/ชั่วโมง · Open</p><p><button type="button" disabled>ยกเลิกบันทึก</button></p></article><p>เมื่อยังไม่มีรายการ ให้แสดง “ยังไม่มีงานที่บันทึก” พร้อมลิงก์ค้นหางาน</p><a href="jobs.html">ค้นหางานเพิ่มเติม</a></section>
+<header>
+    <p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
+    <nav aria-label="เมนูหลัก">
+        <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="jobs.html">ค้นหางาน</a></li>
+            <li><a href="saved.html" aria-current="page">งานที่บันทึก</a></li>
+            <li><a href="my-applications.html">ประวัติสมัคร</a></li>
+            <li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li>
+            <li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li>
+            <li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li>
+            <li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
+        </ul>
+    </nav>
+</header>
+<main id="main">
+    <h1>งานที่บันทึก</h1>
+    <aside aria-label="สถานะต้นแบบ">
+        <p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง</p>
+    </aside>
+    <section>
+        <h2>รายการที่บันทึกไว้ — ข้อมูลตัวอย่าง</h2>
+        
+        <!-- ตัวอย่างงานที่บันทึก -->
+        <article id="saved-job-1" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+            <h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3>
+            <p>คาเฟ่ตัวอย่าง · กรุงเทพฯ · 60 บาท/ชั่วโมง · Open</p>
+            
+            <!-- ส่วนปุ่มกดที่เพิ่ม JavaScript Logic เข้าไป -->
+            <div class="job-actions" style="margin-top: 15px;">
+                <button type="button" id="applyBtn-1" onclick="applyForSavedJob(1)">สมัครงานนี้</button> 
+                <button type="button" onclick="unsaveJob(1)" style="background-color: #dc3545; color: white;">ยกเลิกบันทึก</button>
+            </div>
+        </article>
+
+        <!-- ข้อความแสดงเมื่อไม่มีงาน (ซ่อนไว้ก่อน) -->
+        <p id="empty-state" style="display: none; color: gray;">ยังไม่มีงานที่บันทึก</p>
+        
+        <p><a href="jobs.html">ค้นหางานเพิ่มเติม</a></p>
+    </section>
 </main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="index.html">กลับหน้าหลัก</a></p></footer>
+<footer>
+    <hr>
+    <p>Campus-jobs · โอปอ / มิก / เต้อ</p>
+    <p><a href="index.html">กลับหน้าหลัก</a></p>
+</footer>
+
+<!-- Script การทำงานของปุ่มในหน้ารายการงานที่บันทึก -->
+<script>
+    // สมมติข้อมูลผู้ใช้ปัจจุบัน (student_id = 1) รอ Backend มาเชื่อมจริง
+    const currentStudentId = 1; 
+
+    async function applyForSavedJob(jobId) {
+        console.log(`Sending application for Job ID: ${jobId} by Student: ${currentStudentId}`);
+        alert("ส่งใบสมัครเรียบร้อยแล้ว! (ระบบจะบันทึกลงฐานข้อมูลและป้องกันการสมัครซ้ำ)");
+        
+        // ทดสอบปิดปุ่มหลังกดสมัครแล้ว 
+        const btn = document.getElementById(`applyBtn-${jobId}`);
+        if(btn) {
+            btn.innerText = "สมัครแล้ว";
+            btn.disabled = true;
+        }
+    }
+
+    async function unsaveJob(jobId) {
+        if(confirm("แน่ใจหรือไม่ว่าต้องการยกเลิกบันทึกงานนี้?")) {
+            const jobCard = document.getElementById(`saved-job-${jobId}`);
+            if(jobCard) {
+                jobCard.style.display = 'none'; // ซ่อน UI งานที่ถูกยกเลิกการบันทึก
+                console.log(`Unsaved Job ID: ${jobId}`);
+                
+                // โชว์ข้อความ "ยังไม่มีงานที่บันทึก" เพื่อจำลองเวลาลบงานออกจนหมด
+                document.getElementById('empty-state').style.display = 'block';
+            }
+        }
+    }
+</script>
 </body>
 </html>
