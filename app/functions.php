@@ -24,6 +24,15 @@ function identity(string $role): ?int {
     return $id === false ? null : $id;
 }
 function employer(): int { $id = identity('employer'); if (!$id) go('employer/login.php'); return $id; }
+function student(): int {
+    $id = identity('student');
+
+    if (!$id) {
+        go('student/login.html');
+    }
+
+    return $id;
+}
 function required_text(string $value, int $max, string $label): void {
     if ($value === '' || mb_strlen($value, 'UTF-8') > $max) throw new InvalidArgumentException("กรุณากรอก$label ไม่เกิน $max ตัวอักษร");
 }
