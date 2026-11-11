@@ -1,0 +1,9 @@
+{
+    "name": "campus-jobs/student-auth",
+    "description": "Student authentication with Microsoft and Google OpenID Connect for Campus-jobs",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "jumbojett/openid-connect-php": "^1.0"
+    }
+}
