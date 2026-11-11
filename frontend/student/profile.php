@@ -40,6 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ) {
                 throw new InvalidArgumentException('กรุณากรอกลิงก์ Resume ให้ถูกต้อง');
             }
+            // แปลงเฉพาะ URL scheme ให้เป็นตัวพิมพ์เล็กก่อนบันทึก
+            $resumeUrl = preg_replace_callback(
+                '/^[a-z][a-z0-9+.-]*:\/\//i',
+                static fn(array $matches): string => strtolower($matches[0]),
+                $resumeUrl
+            );
         }
 
         query(
