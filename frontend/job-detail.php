@@ -15,7 +15,15 @@ start_page($job['job_title']);
 <h2>ติดต่อนายจ้าง</h2><p><?= e($job['email']) ?><?= $job['phone']?' · '.e($job['phone']):'' ?></p><p><?= nl2br(e($job['address']??'')) ?></p>
 </article>
 <?php if($job['status']!=='Open'): ?><p class="notice">งานนี้ปิดรับสมัครแล้ว ประวัติเดิมยังอยู่</p><?php else: ?>
-<p>ระบบสมัครและบันทึกงานกำลังเชื่อมต่อในส่วนของเตอร์</p><button disabled>สมัครงาน</button> <button disabled>บันทึกงาน</button>
+<p>สมัครงานได้ผ่านระบบของเว็บไซต์ และบันทึกงานที่สนใจไว้ดูภายหลังได้</p>
+
+<button disabled>สมัครงาน</button>
+
+<form method="post" action="<?= e(url('save-job.php')) ?>">
+    <?php csrf_field(); ?>
+    <input type="hidden" name="job_id" value="<?= e($job['job_id']) ?>">
+    <button type="submit">บันทึกงาน</button>
+</form>
 <?php endif; ?>
 <p><a href="<?= e(url('student/login.html')) ?>">เข้าสู่ระบบนักศึกษาด้วย Microsoft หรือ Google</a> · <a href="<?= e(url('my-applications.php')) ?>">การสมัครของฉัน</a></p>
 <?php end_page(); ?>
