@@ -57,8 +57,10 @@
         
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-wrapper .icon-left { position: absolute; left: 15px; color: #a1a1aa; font-size: 16px; }
-        .input-wrapper input { width: 100%; border: 1px solid #e4e4e7; background-color: #ffffff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; font-family: 'Kanit', sans-serif; padding: 14px 15px 14px 45px; }
-        .input-wrapper input:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
+        .input-wrapper input, .input-wrapper select { width: 100%; border: 1px solid #e4e4e7; background-color: #ffffff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; font-family: 'Kanit', sans-serif; }
+        .input-wrapper input { padding: 14px 15px 14px 45px; }
+        .input-wrapper select { padding: 14px 15px 14px 45px; cursor: pointer; appearance: none; }
+        .input-wrapper input:focus, .input-wrapper select:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
 
         .password-hint { font-size: 11px; color: #71717a; margin-top: 6px; line-height: 1.4; }
 
@@ -121,7 +123,7 @@
                     <div class="role-tab active">🏢 นายจ้าง</div>
                 </div>
 
-                <!-- ฟอร์มสมัครสมาชิกนายจ้างตามบรีฟ -->
+                <!-- ฟอร์มสมัครสมาชิกนายจ้าง -->
                 <form action="dashboard.html" method="GET">
                     
                     <fieldset class="fieldset-custom">
@@ -172,11 +174,30 @@
                             </div>
                         </div>
 
+                        <!-- ลักษณะธุรกิจใช้ Dropdown และมีเงื่อนไข "อื่น ๆ" -->
                         <div class="form-group">
                             <label for="business_type">ลักษณะธุรกิจ (จำเป็น)</label>
                             <div class="input-wrapper">
                                 <span class="icon-left">📊</span>
-                                <input id="business_type" name="business_type" type="text" placeholder="เช่น ร้านอาหาร, คาเฟ่, เทคโนโลยี, การศึกษา ฯลฯ" required>
+                                <select id="business_type" name="business_type" onchange="checkBusinessType(this)" required>
+                                    <option value="">-- กรุณาเลือกลักษณะธุรกิจ --</option>
+                                    <option value="restaurant">ร้านอาหารและคาเฟ่</option>
+                                    <option value="retail">ขายสินค้าและบริการ / รีเทล</option>
+                                    <option value="tech">เทคโนโลยีและซอฟต์แวร์</option>
+                                    <option value="education">การศึกษาและติวเตอร์</option>
+                                    <option value="event">อีเวนต์และความบันเทิง</option>
+                                    <option value="office">งานสำนักงานและบริหารจัดการ</option>
+                                    <option value="other">อื่น ๆ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ช่องกรอกเองเมื่อเลือก "อื่น ๆ" -->
+                        <div class="form-group" id="other_business_group" style="display: none;">
+                            <label for="other_business">ระบุลักษณะธุรกิจ (อื่น ๆ)</label>
+                            <div class="input-wrapper">
+                                <span class="icon-left">✍️</span>
+                                <input id="other_business" name="other_business" type="text" placeholder="โปรดระบุลักษณะธุรกิจของคุณ">
                             </div>
                         </div>
 
@@ -213,5 +234,20 @@
 
     </main>
 
+    <!-- Script สำหรับควบคุมการแสดงผลช่องกรอก "อื่น ๆ" -->
+    <script>
+        function checkBusinessType(select) {
+            const otherGroup = document.getElementById('other_business_group');
+            const otherInput = document.getElementById('other_business');
+            if (select.value === 'other') {
+                otherGroup.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherGroup.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+        }
+    </script>
 </body>
 </html>
