@@ -226,7 +226,47 @@ Conceptual ER มี 5 Entity หลัก ได้แก่ STUDENT, EMPLOYER,
 
 ---
 
-### 6. โครงสร้างไฟล์ (Repository Structure)
+### 6. การติดตั้ง Backend และ Composer (Backend Setup)
+
+ระบบ Backend ใช้ PHP และ Composer สำหรับจัดการไลบรารีที่จำเป็นต่อการเข้าสู่ระบบด้วย Microsoft และ Google ผ่าน OpenID Connect
+
+#### สิ่งที่ต้องเตรียม
+
+- PHP CLI ที่รองรับไลบรารีที่กำหนดใน `composer.json`
+- Composer
+- PHP Extensions: `curl` และ `json`
+
+#### ขั้นตอนติดตั้ง
+
+1. Clone repository และเข้าโฟลเดอร์หลักของโปรเจกต์ `Campus-jobs`
+2. ตรวจสอบว่าติดตั้ง PHP และ Composer แล้ว:
+
+   ```bash
+   php -v
+   composer --version
+   ```
+
+3. ติดตั้ง Dependencies จากไฟล์ `composer.lock`:
+
+   ```bash
+   composer install
+   ```
+
+4. Composer จะติดตั้งไลบรารีตามเวอร์ชันที่กำหนด และสร้างโฟลเดอร์ `vendor/` ซึ่งมีไฟล์ `vendor/autoload.php` ที่ Backend ใช้งาน
+
+#### Dependencies
+
+- `jumbojett/openid-connect-php` — OpenID Connect Client สำหรับ Microsoft และ Google
+
+#### ข้อควรระวัง
+
+- ต้อง Commit ไฟล์ `composer.json` และ `composer.lock` ขึ้น Git
+- ไม่ต้อง Commit โฟลเดอร์ `vendor/` เพราะถูกยกเว้นไว้ใน `.gitignore`
+- หลัง Clone repository ใหม่ ให้รัน `composer install` ก่อนทดสอบระบบ PHP
+- หากเพิ่มหรือเปลี่ยน Dependencies ให้ปรับปรุง `composer.json` และ `composer.lock` ให้ตรงกัน
+
+---
+### 7. โครงสร้างไฟล์ (Repository Structure)
 
 ```text
 Campus-jobs/
@@ -240,17 +280,21 @@ Campus-jobs/
 │   ├── data-dictionary.md        รายละเอียดคอลัมน์และคีย์
 │   ├── team-guide.md             แบ่งงานและเชื่อมข้อมูล
 │   └── README.md                 คู่มือติดตั้งฐานข้อมูล
+│   └── migrations/
+│       └── 005_student_oauth.sql
 ├── docs/
 │   ├── scope.md                  ขอบเขตและกฎระบบ
 │   ├── team-plan.md              แผนงานของโอปอ มิก และเต้อ
 │   ├── acceptance-checklist.md   รายการทดสอบก่อนส่งงาน
 │   └── erd/                      ER Diagram สำหรับ draw.io
 └── .github/                      แบบฟอร์ม Pull Request
+├── composer.json
+├── composer.lock
 ```
 
 ---
 
-### 7. วิธีทำงานร่วมกัน (Development Workflow)
+### 8. วิธีทำงานร่วมกัน (Development Workflow)
 
 1. ตกลงภาษา Backend โครงสร้างไฟล์ ระบบ Session และหน้าตาเว็บร่วมกัน
 2. ทุกคนติดตั้งฐานข้อมูลจาก `schema.sql` และ `seed.sql` ชุดเดียวกัน
@@ -263,7 +307,7 @@ Campus-jobs/
 
 ---
 
-### 8. การทดสอบก่อนส่งงาน (Acceptance Checklist)
+### 9. การทดสอบก่อนส่งงาน (Acceptance Checklist)
 
 - [ ] นำเข้าฐานข้อมูลและอ่านข้อมูลภาษาไทยได้ถูกต้อง
 - [ ] นักศึกษาและนายจ้างสมัครสมาชิกและล็อกอินได้
@@ -275,6 +319,12 @@ Campus-jobs/
 รายการตรวจฉบับเต็มอยู่ใน [Acceptance Checklist](docs/acceptance-checklist.md)
 
 
-## ปรับฐานข้อมูล v2 ตามแบบล่าสุด
+### หมายเหตุเกี่ยวกับฐานข้อมูล v2 และ OAuth
 
-ยังคง 8 ตาราง STUDENT เพิ่ม university_username (UNIQUE), ไม่มี password_hash/university และ EMPLOYER ใช้ company_name ดู [ขั้นตอนและ migration](database/student-login.md) ภาพ ER เดิมยังไม่อัปเดตตาม v2
+ฐานข้อมูลพื้นฐาน v2 มี 8 ตาราง โดยตาราง STUDENT ใช้ `university_username` (UNIQUE) และไม่มี `password_hash` หรือ `university` ส่วน EMPLOYER ใช้ `company_name`
+
+เมื่อรัน Migration `005_student_oauth.sql` จะเพิ่มตาราง `STUDENT_OAUTH` เป็นตารางที่ 9 เพื่อเชื่อมบัญชีนักศึกษากับ Microsoft และ Google
+
+ดูรายละเอียดการติดตั้งและ Migration ได้ที่ [student-login.md](database/student-login.md)
+
+หมายเหตุ: ภาพ ER Diagram ยังเป็นเวอร์ชันเดิมและยังไม่ได้ปรับตามโครงสร้าง v2 และ STUDENT_OAUTH
