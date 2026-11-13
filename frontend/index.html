@@ -1,18 +1,344 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>Campus-jobs — หน้าหลัก | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>Campus-jobs | หางานพาร์ทไทม์ที่เข้ากับชีวิตนักศึกษา</title>
+    
+    <!-- เชื่อม CSS กลาง (เผื่อมีอัปเดตเพิ่มเติม) -->
+    <link rel="stylesheet" href="assets/styles/global.css">
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS โคลนนิ่งดีไซน์ตามภาพตัวอย่างเป๊ะๆ */
+        :root {
+            --bg-light: #f8f9fa;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #ffffff; color: var(--text-main); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navbar */
+        header { border-bottom: 1px solid var(--border-color); padding: 15px 0; background: white; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 600; color: #000; }
+        .nav-links { display: flex; gap: 30px; font-size: 15px; }
+        .nav-links a:hover, .nav-links a.active { color: #000; font-weight: 500; }
+        .nav-links a { color: var(--text-muted); }
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-outline { border: none; background: transparent; color: #000; padding: 8px 16px; cursor: pointer; font-size: 15px; }
+        .btn-black { background: #000; color: #fff; padding: 10px 24px; border-radius: 30px; font-weight: 500; font-size: 15px; }
+        .btn-black:hover { background: #333; color: white; }
+
+        /* Hero Section */
+        .hero { display: flex; align-items: center; gap: 50px; padding: 80px 0; flex-wrap: wrap; }
+        .hero-content { flex: 1; min-width: 300px; }
+        .hero-content h1 { font-size: 48px; line-height: 1.2; margin-bottom: 20px; font-weight: 600; }
+        .hero-content p { color: var(--text-muted); margin-bottom: 30px; font-size: 16px; max-width: 90%; }
+        
+        /* Search Box */
+        .search-box { display: flex; background: white; border: 1px solid var(--border-color); border-radius: 50px; padding: 8px; margin-bottom: 40px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); max-width: 100%; }
+        .search-box input { border: none; outline: none; padding: 10px 20px; flex: 1; font-size: 15px; }
+        .search-box .divider { width: 1px; background: var(--border-color); margin: 5px 0; }
+        .search-box button { background: #000; color: #fff; border: none; padding: 12px 30px; border-radius: 30px; cursor: pointer; font-family: 'Kanit'; }
+        
+        /* Stats */
+        .stats { display: flex; gap: 40px; flex-wrap: wrap; }
+        .stat-item h3 { font-size: 24px; font-weight: 600; color: #000; }
+        .stat-item p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
+        
+        /* Hero Image Placeholder */
+        .hero-image { flex: 1; background: var(--bg-light); border-radius: 24px; height: 400px; min-width: 300px; position: relative; border: 1px dashed #d1d5db; display: flex; align-items: center; justify-content: center; }
+        .hero-image::after { content: "ภาพประกอบ (Mockup)"; color: #9ca3af; font-size: 14px; }
+        
+        /* Section Shared */
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-header h2 { font-size: 28px; margin-bottom: 10px; font-weight: 600; }
+        .section-header p { color: var(--text-muted); font-size: 15px; }
+
+        /* Popular Categories */
+        .categories { padding: 80px 0; text-align: center; }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; margin-top: 40px; }
+        .cat-card { background: white; border: 1px solid var(--border-color); padding: 25px 10px; border-radius: 16px; transition: 0.2s; cursor: pointer; }
+        .cat-card:hover { border-color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .cat-icon { font-size: 28px; margin-bottom: 15px; }
+        .cat-title { font-size: 14px; font-weight: 500; }
+
+        /* Trending Jobs */
+        .trending { background: var(--bg-light); padding: 80px 0; }
+        .trending-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .job-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .job-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .job-icon { background: var(--bg-light); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .job-type { background: var(--bg-light); padding: 4px 12px; border-radius: 20px; font-size: 12px; color: var(--text-muted); }
+        .job-title { font-size: 18px; margin-bottom: 5px; font-weight: 600; }
+        .job-company { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+        .job-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+        .job-wage { font-weight: 600; font-size: 18px; }
+
+        /* Steps */
+        .steps { padding: 80px 0; text-align: center; }
+        .step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-top: 50px; }
+        .step-item .icon-circle { width: 70px; height: 70px; background: var(--bg-light); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; font-size: 24px; }
+        .step-item .number { position: absolute; top: -5px; right: -5px; background: #000; color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .step-item h4 { margin-bottom: 10px; font-size: 16px; font-weight: 600; }
+        .step-item p { color: var(--text-muted); font-size: 14px; }
+
+        /* Testimonials */
+        .testimonials { padding: 80px 0; background: var(--bg-light); }
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .test-card { background: white; padding: 30px; border-radius: 20px; }
+        .stars { color: #111827; margin-bottom: 15px; letter-spacing: 2px; }
+        .test-text { color: var(--text-muted); margin-bottom: 25px; font-size: 14px; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; }
+
+        /* Footer (ฝังระบบลิงก์ทั้งหมดไว้ที่นี่) */
+        footer { background: #111827; color: white; padding: 60px 0 30px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-logo { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+        .footer-links h4 { margin-bottom: 20px; color: #9ca3af; font-size: 15px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; font-size: 14px; }
+        .footer-links a { color: #d1d5db; transition: 0.2s; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { border-top: 1px solid #374151; padding-top: 30px; display: flex; justify-content: space-between; color: #9ca3af; font-size: 13px; }
+        
+        @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .hero-content h1 { font-size: 36px; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="index.html" aria-current="page">หน้าหลัก</a></li><li><a href="jobs.html">ค้นหางาน</a></li><li><a href="dashboard.html">ภาพรวม</a></li><li><a href="register.html">สมัครสมาชิก</a></li><li><a href="saved.html">งานที่บันทึก</a></li><li><a href="my-applications.html">ประวัติสมัคร</a></li><li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>Campus-jobs — หน้าหลัก</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<section><h2>หางานพาร์ทไทม์ที่เข้ากับชีวิตนักศึกษา</h2><p>เลือกงานตามประเภท สถานที่ และค่าจ้าง พร้อมติดตามผลการสมัครในที่เดียว</p><p><a href="jobs.html">ค้นหางาน</a> · <a href="student/register.html">สมัครสมาชิกนักศึกษา</a> · <a href="employer/register.html">สมัครสมาชิกนายจ้าง</a></p></section><section><h2>สำรวจโครงหน้าเว็บ</h2><ul><li><a href="dashboard.html">ภาพรวมของฉัน</a></li><li><a href="employer/jobs.html">จัดการนายจ้างและงาน</a></li><li><a href="jobs.html">ค้นหาและสมัครงาน</a></li></ul><p><a href="student/profile.html">โปรไฟล์นักศึกษา</a> · <a href="saved.html">งานที่บันทึก</a> · <a href="my-applications.html">ประวัติสมัครงาน</a> · <a href="employer/applicants.html">พิจารณาผู้สมัคร</a></p></section><section><h2>งานตัวอย่าง</h2><article><h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3><p>คาเฟ่ตัวอย่าง · กรุงเทพฯ · 60 บาท/ชั่วโมง</p><p>เสาร์–อาทิตย์ 09:00–16:00</p></article></section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="index.html">กลับหน้าหลัก</a></p></footer>
+    <a href="#main" style="position: absolute; left: -9999px;">ข้ามไปเนื้อหาหลัก</a>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">Campus-jobs</a>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="active">หน้าแรก</a>
+                <a href="jobs.html">ค้นหางาน</a>
+                <a href="dashboard.html">ภาพรวม</a>
+                <a href="#contact">ติดต่อเรา</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="student/login.html" class="btn-outline">เข้าสู่ระบบ</a>
+                <a href="register.html" class="btn-black">สมัครสมาชิก</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <!-- Hero Section -->
+        <section class="container hero">
+            <div class="hero-content">
+                <h1>หางานที่ยืดหยุ่นและ<br>เหมาะกับ ตารางเรียน<br>ของคุณ.</h1>
+                <p>ค้นพบงานพาร์ทไทม์ที่ตอบโจทย์ไลฟ์สไตล์และตารางเรียนของคุณ แหล่งรวมงานที่คัดสรรมาเพื่อนักศึกษาโดยเฉพาะ</p>
+                
+                <form action="jobs.html" class="search-box">
+                    <input type="text" placeholder="🔍 ค้นหางาน, คีย์เวิร์ด">
+                    <div class="divider"></div>
+                    <input type="text" placeholder="📍 สถานที่">
+                    <button type="submit">ค้นหา</button>
+                </form>
+                
+                <div class="stats">
+                    <div class="stat-item"><h3>2,500+</h3><p>นักศึกษาที่ได้งาน</p></div>
+                    <div class="stat-item"><h3>15,000+</h3><p>ตำแหน่งงานทั้งหมด</p></div>
+                    <div class="stat-item"><h3>800+</h3><p>บริษัทที่ร่วมงาน</p></div>
+                </div>
+            </div>
+            <div class="hero-image"></div>
+        </section>
+
+        <!-- Popular Categories -->
+        <section class="container categories">
+            <div class="section-header">
+                <h2>หมวดหมู่งานยอดนิยม</h2>
+                <p>ค้นหางานตามความถนัดและความสนใจของคุณ</p>
+            </div>
+            <div class="category-grid">
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">☕</div><div class="cat-title">คาเฟ่ & บาริสต้า</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">📚</div><div class="cat-title">ติวเตอร์</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">💻</div><div class="cat-title">แอดมินเพจ</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">📦</div><div class="cat-title">แพ็คสินค้า</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">🎨</div><div class="cat-title">กราฟิกดีไซน์</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">📝</div><div class="cat-title">คอนเทนต์</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">📸</div><div class="cat-title">ถ่ายภาพ</div></a>
+                <a href="jobs.html" class="cat-card"><div class="cat-icon">💬</div><div class="cat-title">แปลภาษา</div></a>
+            </div>
+        </section>
+
+        <!-- Trending Jobs -->
+        <section class="trending">
+            <div class="container">
+                <div class="trending-header">
+                    <h2 style="font-size: 28px; font-weight: 600;">งานยอดนิยมตอนนี้</h2>
+                    <a href="jobs.html" class="btn-outline" style="border: 1px solid #000; border-radius: 30px;">ดูงานทั้งหมด</a>
+                </div>
+                <div class="job-grid">
+                    <!-- Job Card 1 (ตัวเชื่อมระบบจริงที่เต้อทำไว้) -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="job-icon">☕</div>
+                            <span class="job-type">เสาร์–อาทิตย์</span>
+                        </div>
+                        <h3 class="job-title">พนักงานร้านกาแฟ</h3>
+                        <p class="job-company">คาเฟ่ตัวอย่าง · กรุงเทพฯ</p>
+                        <div class="job-footer">
+                            <span class="job-wage">฿60 <small>/ ชม.</small></span>
+                            <a href="job-detail.html" class="btn-black" style="padding: 8px 16px; font-size: 13px;">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <!-- Job Card 2 (Mockup) -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="job-icon">💻</div>
+                            <span class="job-type">WFH</span>
+                        </div>
+                        <h3 class="job-title">พนักงานคีย์ข้อมูล</h3>
+                        <p class="job-company">Tech Startup Co. · ทำที่บ้าน</p>
+                        <div class="job-footer">
+                            <span class="job-wage">฿350 <small>/ วัน</small></span>
+                            <a href="job-detail.html" class="btn-black" style="padding: 8px 16px; font-size: 13px;">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <!-- Job Card 3 (Mockup) -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="job-icon">📸</div>
+                            <span class="job-type">Freelance</span>
+                        </div>
+                        <h3 class="job-title">ช่างภาพอีเวนต์</h3>
+                        <p class="job-company">Event Organizer · เชียงใหม่</p>
+                        <div class="job-footer">
+                            <span class="job-wage">฿1,500 <small>/ งาน</small></span>
+                            <a href="job-detail.html" class="btn-black" style="padding: 8px 16px; font-size: 13px;">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Steps -->
+        <section class="container steps">
+            <div class="section-header">
+                <h2>เริ่มหารายได้ง่ายๆ ใน 4 ขั้นตอน</h2>
+            </div>
+            <div class="step-grid">
+                <div class="step-item">
+                    <div class="icon-circle">👤<span class="number">1</span></div>
+                    <h4>สมัครสมาชิก</h4>
+                    <p>สร้างโปรไฟล์นักศึกษาและระบุความถนัดของคุณ</p>
+                </div>
+                <div class="step-item">
+                    <div class="icon-circle">🔍<span class="number">2</span></div>
+                    <h4>หางานที่ใช่</h4>
+                    <p>ค้นหางานที่ตรงกับตารางเรียนและไลฟ์สไตล์</p>
+                </div>
+                <div class="step-item">
+                    <div class="icon-circle">📝<span class="number">3</span></div>
+                    <h4>สมัครงาน</h4>
+                    <p>ส่งใบสมัครไปยังบริษัทที่คุณสนใจได้ทันที</p>
+                </div>
+                <div class="step-item">
+                    <div class="icon-circle">💰<span class="number">4</span></div>
+                    <h4>รับค่าจ้าง</h4>
+                    <p>เริ่มทำงานและรับรายได้ระหว่างเรียน</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <h2>เรื่องราวความสำเร็จจากนักศึกษา</h2>
+                </div>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="test-text">"หางานง่ายมาก ได้งานพาร์ทไทม์ร้านกาแฟใกล้หอพัก จัดสรรเวลาเรียนกับเวลาทำงานได้ลงตัวสุดๆ"</p>
+                        <div class="user-info">
+                            <div class="avatar"></div>
+                            <div><strong>สมชาย ย.</strong><br><small style="color: var(--text-muted)">นักศึกษาปี 2</small></div>
+                        </div>
+                    </div>
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="test-text">"แพลตฟอร์มใช้งานง่าย มีหมวดหมู่ชัดเจน ได้งานแปลภาษาแบบ WFH ตรงกับสาขาที่เรียนเลย"</p>
+                        <div class="user-info">
+                            <div class="avatar"></div>
+                            <div><strong>สุดา ค.</strong><br><small style="color: var(--text-muted)">นักศึกษาปี 3</small></div>
+                        </div>
+                    </div>
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="test-text">"ระบบเซฟงานและติดตามสถานะใบสมัครดีมาก ทำให้รู้ว่านายจ้างกำลังพิจารณาอยู่ สะดวกมากครับ"</p>
+                        <div class="user-info">
+                            <div class="avatar"></div>
+                            <div><strong>ก้องภพ ท.</strong><br><small style="color: var(--text-muted)">นักศึกษาปี 4</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (ลิงก์ระบบทั้งหมดถูกเชื่อมต่อไว้ที่นี่ให้ครบถ้วน) -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">Campus-jobs</div>
+                    <p style="color: #9ca3af; font-size: 14px; max-width: 250px;">แพลตฟอร์มหางานพาร์ทไทม์ที่เชื่อมต่อนักศึกษากับโอกาสในการทำงาน</p>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนักศึกษา</h4>
+                    <ul>
+                        <li><a href="dashboard.html">ภาพรวมของฉัน</a></li>
+                        <li><a href="my-applications.html">ประวัติสมัครงาน</a></li>
+                        <li><a href="saved.html">งานที่บันทึก</a></li>
+                        <li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li>
+                        <li><a href="student/register.html">สมัครสมาชิกนักศึกษา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนายจ้าง</h4>
+                    <ul>
+                        <li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
+                        <li><a href="employer/register.html">สมัครสมาชิกนายจ้าง</a></li>
+                        <li><a href="employer/jobs.html">จัดการนายจ้างและงาน</a></li>
+                        <li><a href="employer/applicants.html">พิจารณาผู้สมัคร</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>ระบบและช่วยเหลือ</h4>
+                    <ul>
+                        <li><a href="jobs.html">หน้าค้นหางานทั้งหมด</a></li>
+                        <li><a href="#">ติดต่อเรา</a></li>
+                        <li><a href="#">คำถามที่พบบ่อย</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Campus-jobs. All rights reserved.</p>
+                <div>โอปอ / มิก / เต้อ</div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
