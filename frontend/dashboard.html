@@ -50,7 +50,7 @@
         .welcome-box h1 { font-size: 26px; font-weight: 600; margin-bottom: 4px; }
         .welcome-box p { font-size: 13px; color: #6b7280; }
 
-        /* Stats Grid (สถิติ 3 กล่อง) */
+        /* Stats Grid (สถิติ 3 กล่องเชื่อมโยงกับหน้า My Applications) */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .stat-box { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); position: relative; }
         .stat-box .icon-top { font-size: 20px; margin-bottom: 15px; display: block; }
@@ -72,9 +72,9 @@
         tr:last-child td { border-bottom: none; }
         
         .badge-status { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
-        .status-reviewing { background: #fef3c7; color: #92400e; }
+        .status-reviewing { background: #111827; color: white; }
         .status-interview { background: #e0e7ff; color: #3730a3; }
-        .status-accepted { background: #111827; color: white; }
+        .status-accepted { background: #d1fae5; color: #065f46; }
 
         /* Saved Jobs & Banner Grid ล่าง */
         .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
@@ -109,6 +109,7 @@
                 <li><a href="index.html">หน้าแรก</a></li>
                 <li><a href="jobs.html">หางาน</a></li>
                 <li><a href="dashboard.html" class="active">แดชบอร์ด</a></li>
+                <li><a href="my-applications.html">การสมัครของฉัน</a></li>
             </ul>
             <div class="nav-right">
                 <div class="icon-btn">🔔</div>
@@ -151,32 +152,32 @@
                     <p>นี่คือกราฟภาพรวมกิจกรรมการสมัครงานของคุณ</p>
                 </div>
 
-                <!-- สถิติภาพรวม 3 ช่อง (อิงจากภาพตัวอย่าง) -->
+                <!-- สถิติภาพรวม 3 ช่อง (เชื่อมโยงกับหน้า My Applications) -->
                 <div class="stats-grid">
-                    <div class="stat-box">
+                    <div class="stat-box" onclick="location.href='my-applications.html'" style="cursor: pointer;" title="คลิกเพื่อดูประวัติสมัครทั้งหมด">
                         <span class="icon-top">📄</span>
                         <div class="number">24</div>
-                        <div class="label">การสมัครทั้งหมด</div>
+                        <div class="label">การสมัครทั้งหมด (ดูรายละเอียด)</div>
                         <span class="badge-growth">+12%</span>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box" onclick="location.href='my-applications.html'" style="cursor: pointer;" title="คลิกเพื่อดูรายการที่อยู่ระหว่างพิจารณา">
                         <span class="icon-top">⏱️</span>
                         <div class="number">9</div>
                         <div class="label">อยู่ระหว่างพิจารณา</div>
-                        <span class="badge-pending">รอคิว 9</span>
+                        <span class="badge-pending">รอตรวจ 9</span>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-box" onclick="location.href='my-applications.html'" style="cursor: pointer;" title="คลิกเพื่อดูงานที่ได้รับเลือก">
                         <span class="icon-top">✅</span>
                         <div class="number">5</div>
                         <div class="label">ได้รับเข้าทำงาน</div>
                     </div>
                 </div>
 
-                <!-- ตาราง: การสมัครล่าสุด -->
+                <!-- ตาราง: การสมัครล่าสุด (เชื่อมข้อมูลกับ my-applications.html) -->
                 <div class="content-box">
                     <div class="box-header">
                         <h2>การสมัครล่าสุด</h2>
-                        <a href="my-applications.html">ดูทั้งหมด</a>
+                        <a href="my-applications.html">ดูทั้งหมดในประวัติสมัคร →</a>
                     </div>
                     <table>
                         <thead>
@@ -189,22 +190,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>MITH Bangkok</strong></td>
-                                <td>บริษัท มิติครบมาก จำกัด</td>
+                                <td><a href="job-detail.html" style="font-weight: 600;">Junior Frontend Developer</a></td>
+                                <td>TECHFLOW INC.</td>
+                                <td>14 ต.ค. 2569</td>
+                                <td><span class="badge-status status-reviewing">อยู่ระหว่างตรวจสอบ</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="job-detail.html" style="font-weight: 600;">UI/UX Design Intern</a></td>
+                                <td>CREATIVE STUDIO</td>
                                 <td>12 ต.ค. 2569</td>
-                                <td><span class="badge-status status-reviewing">รอพิจารณา</span></td>
+                                <td><span class="badge-status status-interview">นัดสัมภาษณ์</span></td>
                             </tr>
                             <tr>
-                                <td><strong>ติวเตอร์คณิตศาสตร์</strong></td>
-                                <td>EduBright Center</td>
-                                <td>08 ต.ค. 2569</td>
-                                <td><span class="badge-status status-interview">สัมภาษณ์</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>เด็กฝึกงาน Frontend</strong></td>
-                                <td>TechStart Solutions</td>
-                                <td>01 ต.ค. 2569</td>
-                                <td><span class="badge-status status-accepted">ได้งานแล้ว</span></td>
+                                <td><a href="job-detail.html" style="font-weight: 600;">พนักงานร้านกาแฟ</a></td>
+                                <td>คาเฟ่ตัวอย่าง</td>
+                                <td>13 ต.ค. 2569</td>
+                                <td><span class="badge-status status-accepted">ได้รับเลือกแล้ว</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -240,7 +241,7 @@
                         </div>
                     </div>
 
-                    <!-- แบนเนอร์ปรับปรุงเรซูเม่ (ถอดแบบจากกล่องดำขวาล่างในเรฟ) -->
+                    <!-- แบนเนอร์ปรับปรุงเรซูเม่ -->
                     <div class="resume-banner">
                         <div>
                             <h3>📄 ปรับปรุงเรซูเม่ของคุณ</h3>
