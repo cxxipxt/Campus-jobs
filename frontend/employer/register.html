@@ -57,14 +57,13 @@
         
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-wrapper .icon-left { position: absolute; left: 15px; color: #a1a1aa; font-size: 16px; }
-        .input-wrapper input, .input-wrapper textarea { width: 100%; border: 1px solid #e4e4e7; background-color: #ffffff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; font-family: 'Kanit', sans-serif; }
-        .input-wrapper input { padding: 14px 15px 14px 45px; }
-        .input-wrapper textarea { padding: 14px 15px; resize: vertical; min-height: 100px; }
-        .input-wrapper input:focus, .input-wrapper textarea:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
+        .input-wrapper input { width: 100%; border: 1px solid #e4e4e7; background-color: #ffffff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; font-family: 'Kanit', sans-serif; padding: 14px 15px 14px 45px; }
+        .input-wrapper input:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
 
-        .btn-submit { width: 100%; background-color: #111827; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .password-hint { font-size: 11px; color: #71717a; margin-top: 6px; line-height: 1.4; }
+
+        .btn-submit { width: 100%; background-color: #111827; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; margin-top: 10px; font-family: 'Kanit'; }
         .btn-submit:hover { background-color: #000000; }
-        .btn-submit:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
         .login-link { text-align: center; margin-top: 30px; font-size: 14px; color: #71717a; }
         .login-link a { color: #111827; font-weight: 600; }
@@ -116,35 +115,31 @@
                     <p>ลงทะเบียนเพื่อเริ่มประกาศงานและหาผู้สมัคร</p>
                 </div>
 
-                <!-- แท็บเลือก Role (นายจ้าง Active) -->
+                <!-- แท็บเลือก Role -->
                 <div class="role-tabs">
                     <a href="../student/register.html" class="role-tab">🎓 นักศึกษา</a>
                     <div class="role-tab active">🏢 นายจ้าง</div>
                 </div>
 
-                <aside aria-label="สถานะต้นแบบ" style="text-align: center; margin-bottom: 20px; font-size: 12px; color: #d97706; background: #fef3c7; padding: 8px; border-radius: 8px;">
-                    โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง
-                </aside>
-
-                <!-- ฟอร์มกรอกข้อมูล (อิงตามฟิลด์เดิมของเต้อ 100%) -->
-                <form action="#" method="post">
+                <!-- ฟอร์มสมัครสมาชิกนายจ้างตามบรีฟ -->
+                <form action="dashboard.html" method="GET">
                     
                     <fieldset class="fieldset-custom">
-                        <legend class="fieldset-legend">ข้อมูลบัญชี</legend>
+                        <legend class="fieldset-legend">ข้อมูลบัญชีและความปลอดภัย</legend>
                         
                         <div class="form-group">
-                            <label for="company_name">ชื่อบริษัทหรือร้านค้า (จำเป็น)</label>
+                            <label for="username">ชื่อผู้ใช้ (Username)</label>
                             <div class="input-wrapper">
-                                <span class="icon-left">🏢</span>
-                                <input id="company_name" name="company_name" type="text" placeholder="ระบุชื่อบริษัทหรือร้านค้าของคุณ" required>
+                                <span class="icon-left">👤</span>
+                                <input id="username" name="username" type="text" placeholder="ระบุชื่อผู้ใช้สำหรับเข้าสู่ระบบ" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="email">อีเมล (จำเป็น)</label>
+                            <label for="email">อีเมลสำหรับบัญชี (จำเป็น)</label>
                             <div class="input-wrapper">
                                 <span class="icon-left">✉️</span>
-                                <input id="email" name="email" type="email" placeholder="email@company.com" required>
+                                <input id="email" name="email" type="email" placeholder="account@company.com" required>
                             </div>
                         </div>
 
@@ -154,6 +149,7 @@
                                 <span class="icon-left">🔑</span>
                                 <input id="password" name="password" type="password" placeholder="••••••••" required>
                             </div>
+                            <div class="password-hint">รหัสผ่าน 12–72 ตัว ใช้ได้เฉพาะตัวอักษรอังกฤษ A–Z / a–z ตัวเลข 0–9 และอักขระพิเศษ โดยไม่เว้นวรรค</div>
                         </div>
 
                         <div class="form-group">
@@ -166,10 +162,26 @@
                     </fieldset>
 
                     <fieldset class="fieldset-custom">
-                        <legend class="fieldset-legend">ข้อมูลเพิ่มเติม (เว้นว่างได้)</legend>
+                        <legend class="fieldset-legend">ข้อมูลธุรกิจและช่องทางติดต่อ</legend>
 
                         <div class="form-group">
-                            <label for="phone">เบอร์โทร</label>
+                            <label for="company_name">ชื่อบริษัทหรือร้านค้า (ไม่บังคับ)</label>
+                            <div class="input-wrapper">
+                                <span class="icon-left">🏢</span>
+                                <input id="company_name" name="company_name" type="text" placeholder="เช่น บริษัท เทค จำกัด หรือ ร้านกาแฟ A">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business_type">ลักษณะธุรกิจ (จำเป็น)</label>
+                            <div class="input-wrapper">
+                                <span class="icon-left">📊</span>
+                                <input id="business_type" name="business_type" type="text" placeholder="เช่น ร้านอาหาร, คาเฟ่, เทคโนโลยี, การศึกษา ฯลฯ" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">โทรศัพท์ (ไม่บังคับ)</label>
                             <div class="input-wrapper">
                                 <span class="icon-left">📱</span>
                                 <input id="phone" name="phone" type="tel" placeholder="08X-XXX-XXXX">
@@ -177,20 +189,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="address">ที่อยู่</label>
+                            <label for="contact_email">อีเมลติดต่อ (จำเป็น)</label>
                             <div class="input-wrapper">
-                                <!-- Textarea ไม่ต้องมีไอคอนซ้อนข้างใน จะได้มีพื้นที่พิมพ์เยอะๆ -->
-                                <textarea id="address" name="address" rows="4" placeholder="ระบุที่อยู่ของบริษัทหรือร้านค้า"></textarea>
+                                <span class="icon-left">📧</span>
+                                <input id="contact_email" name="contact_email" type="email" placeholder="contact@company.com" required>
                             </div>
                         </div>
                     </fieldset>
 
-                    <!-- เอา disabled ออกชั่วคราวเพื่อให้เห็นสถานะตอน Hover ได้ แต่ถ้าเต้ออยากให้ปุ่มล็อกไว้เหมือนเดิม สามารถเติม disabled กลับเข้าไปได้ครับ -->
-                    <button type="button" class="btn-submit" onclick="alert('จำลองการกดปุ่ม: ข้อมูลเตรียมส่งไป Backend')">สมัครสมาชิก</button>
+                    <button type="submit" class="btn-submit">สมัครสมาชิกนายจ้าง</button>
                 </form>
 
                 <div class="login-link">
-                    มีบัญชีแล้ว <a href="login.html">เข้าสู่ระบบ</a>
+                    มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a>
                 </div>
                 
                 <div class="dev-back">
