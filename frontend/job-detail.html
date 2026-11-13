@@ -1,104 +1,317 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>รายละเอียดงาน — พนักงานร้านกาแฟ | Campus-jobs</title>
-<!-- เชื่อม CSS กลางของโปรเจกต์ -->
-<link rel="stylesheet" href="assets/styles/global.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="รายละเอียดงานพาร์ทไทม์สำหรับนักศึกษา - Campus-jobs">
+    <title>รายละเอียดงาน — พนักงานร้านกาแฟ | Campus-jobs</title>
+    
+    <!-- เชื่อม CSS กลางของโปรเจกต์ -->
+    <link rel="stylesheet" href="assets/styles/global.css">
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navbar ตามเรฟ */
+        header { border-bottom: 1px solid #e5e7eb; padding: 15px 0; background: white; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 600; color: #000; }
+        .nav-menu { display: flex; gap: 30px; font-size: 14px; list-style: none; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover { color: #000; font-weight: 500; }
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-outline-nav { background: transparent; border: none; font-size: 14px; cursor: pointer; color: #111827; }
+        .btn-black-nav { background: #000; color: #fff; padding: 8px 20px; border-radius: 30px; font-weight: 500; font-size: 14px; }
+        .btn-black-nav:hover { background: #333; }
+
+        /* Breadcrumb */
+        .breadcrumb { padding: 20px 0; font-size: 13px; color: #6b7280; }
+        .breadcrumb a { color: #6b7280; }
+        .breadcrumb a:hover { color: #111827; }
+
+        /* Detail Layout */
+        .detail-layout { display: flex; gap: 40px; padding-bottom: 80px; align-items: flex-start; }
+        
+        /* Left Content */
+        .detail-main { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+        
+        .card-box { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 30px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        
+        .job-title-header { display: flex; gap: 20px; align-items: flex-start; }
+        .job-main-icon { background: #f3f4f6; width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+        
+        .job-badges { display: flex; gap: 8px; margin-bottom: 10px; }
+        .badge-pill { background: #f3f4f6; padding: 3px 12px; border-radius: 12px; font-size: 12px; color: #4b5563; font-weight: 500; }
+        .badge-open { background: #d1fae5; color: #065f46; }
+
+        .job-title-header h1 { font-size: 26px; font-weight: 600; margin-bottom: 5px; }
+        .job-company-sub { font-size: 14px; color: #6b7280; }
+
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #111827; }
+        .content-text { font-size: 14px; color: #4b5563; line-height: 1.7; }
+        
+        .check-list { display: flex; flex-direction: column; gap: 10px; list-style: none; font-size: 14px; color: #4b5563; }
+        .check-list li::before { content: "✓ "; font-weight: bold; color: #000; margin-right: 8px; }
+
+        .benefit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 14px; color: #4b5563; }
+        .benefit-item { display: flex; align-items: center; gap: 10px; background: #f9fafb; padding: 12px 16px; border-radius: 12px; }
+
+        .map-box { background: #f3f4f6; height: 200px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px; margin-top: 15px; border: 1px dashed #d1d5db; }
+
+        /* Right Sidebar (Sticky) */
+        .detail-sidebar { width: 360px; flex-shrink: 0; position: sticky; top: 90px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .price-card { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .salary-highlight { font-size: 28px; font-weight: 600; color: #111827; margin-bottom: 20px; }
+        .salary-highlight span { font-size: 14px; font-weight: normal; color: #6b7280; }
+
+        .info-summary-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 25px; font-size: 14px; border-top: 1px solid #f3f4f6; border-bottom: 1px solid #f3f4f6; padding: 20px 0; }
+        .info-row { display: flex; align-items: center; gap: 12px; color: #4b5563; }
+        .info-row span:first-child { font-size: 18px; }
+
+        /* ปุ่ม Action */
+        .job-actions { display: flex; flex-direction: column; gap: 12px; }
+        .btn-apply-main { background: #111827; color: white; border: none; padding: 15px; border-radius: 14px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: 'Kanit'; width: 100%; text-align: center; }
+        .btn-apply-main:hover { background: #374151; }
+        .btn-apply-main:disabled { background: #9ca3af; cursor: not-allowed; }
+
+        .btn-save-main { background: white; color: #111827; border: 1px solid #e5e7eb; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: 'Kanit'; width: 100%; text-align: center; }
+        .btn-save-main:hover { background: #f3f4f6; border-color: #d1d5db; }
+        .btn-save-main.saved { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+
+        .employer-mini-card { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f3f4f6; font-size: 13px; color: #6b7280; }
+        .employer-avatar { width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #374151; }
+
+        /* Footer ตามเรฟ */
+        footer { background: #111827; color: white; padding: 60px 0 30px; margin-top: 40px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-logo { font-size: 22px; font-weight: 600; margin-bottom: 15px; }
+        .footer-links h4 { margin-bottom: 15px; color: #9ca3af; font-size: 14px; font-weight: 500; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; font-size: 13px; }
+        .footer-links a { color: #d1d5db; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { border-top: 1px solid #374151; padding-top: 25px; display: flex; justify-content: space-between; color: #9ca3af; font-size: 12px; }
+
+        @media (max-width: 900px) {
+            .detail-layout { flex-direction: column; }
+            .detail-sidebar { width: 100%; position: static; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header>
-    <p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-    <nav aria-label="เมนูหลัก">
-        <ul>
-            <li><a href="index.html">หน้าหลัก</a></li>
-            <li><a href="jobs.html">ค้นหางาน</a></li>
-            <li><a href="dashboard.html">ภาพรวม</a></li>
-            <li><a href="register.html">สมัครสมาชิก</a></li>
-            <li><a href="saved.html">งานที่บันทึก</a></li>
-            <li><a href="my-applications.html">ประวัติสมัคร</a></li>
-            <li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li>
-            <li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li>
-            <li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li>
-            <li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
-        </ul>
-    </nav>
-</header>
-<main id="main">
-    <h1>รายละเอียดงาน — พนักงานร้านกาแฟ</h1>
-    <aside aria-label="สถานะต้นแบบ">
-        <p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง</p>
-    </aside>
-    <article>
-        <h2>พนักงานร้านกาแฟ</h2>
-        <dl>
-            <dt>นายจ้าง</dt><dd>คาเฟ่ตัวอย่าง</dd>
-            <dt>ประเภทงาน</dt><dd>ร้านอาหารและคาเฟ่</dd>
-            <dt>สถานที่</dt><dd>กรุงเทพฯ ใกล้มหาวิทยาลัย</dd>
-            <dt>ค่าจ้าง</dt><dd>60 บาท/ชั่วโมง</dd>
-            <dt>วันและเวลางาน</dt><dd>เสาร์–อาทิตย์ 09:00–16:00</dd>
-            <dt>สถานะ</dt><dd>Open — เปิดรับสมัคร</dd>
-        </dl>
-        <h3>รายละเอียด</h3>
-        <p>รับออเดอร์ เตรียมเครื่องดื่ม และดูแลความสะอาดร้าน เหมาะสำหรับนักศึกษาที่สะดวกทำงานวันหยุด</p>
-        <h3>ทักษะที่ต้องการ</h3>
-        <ul>
-            <li>การบริการลูกค้า</li>
-            <li>การสื่อสาร</li>
-        </ul>
-        <h3>ข้อมูลนายจ้าง</h3>
-        <p>คาเฟ่ตัวอย่าง · โทร 000-000-0000 · อีเมล employer@example.com</p>
-        
-        <!-- ส่วนปุ่มกดที่เพิ่ม JavaScript Logic เข้าไป -->
-        <div class="job-actions" style="margin-top: 20px; margin-bottom: 20px;">
-            <button id="saveBtn" type="button" onclick="toggleSaveJob(1)">บันทึกงาน</button> 
-            <button id="applyBtn" type="button" onclick="applyJob(1)">สมัครงานนี้</button>
+
+    <!-- Navbar ตามเรฟ -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">CampusJob</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">หน้าหลัก</a></li>
+                <li><a href="jobs.html">หางาน</a></li>
+                <li><a href="dashboard.html">สำหรับนายจ้าง</a></li>
+                <li><a href="#">เกี่ยวกับเรา</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="student/login.html" class="btn-outline-nav">เข้าสู่ระบบ</a>
+                <a href="register.html" class="btn-black-nav">สมัครสมาชิก</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">หน้าแรก</a> &gt; <a href="jobs.html">ค้นหางาน</a> &gt; <span>พนักงานร้านกาแฟ</span>
         </div>
 
-        <p>เมื่อพัฒนาจริง: ต้องเข้าสู่ระบบนักศึกษา สมัครซ้ำไม่ได้ และงาน Closed ต้องปิดปุ่มสมัคร</p>
-        <p><a href="student/login.html">ไปหน้าเข้าสู่ระบบนักศึกษา</a> · <a href="jobs.html">กลับรายการงาน</a></p>
-    </article>
-</main>
-<footer>
-    <hr>
-    <p>Campus-jobs · โอปอ / มิก / เต้อ</p>
-    <p><a href="index.html">กลับหน้าหลัก</a></p>
-</footer>
+        <!-- Main Detail Layout -->
+        <div class="detail-layout">
+            
+            <!-- ฝั่งซ้าย: ข้อมูลรายละเอียดงาน -->
+            <div class="detail-main">
+                <div class="card-box">
+                    <div class="job-title-header">
+                        <div class="job-main-icon">☕</div>
+                        <div>
+                            <div class="job-badges">
+                                <span class="badge-pill badge-open">Open — เปิดรับสมัคร</span>
+                                <span class="badge-pill">ร้านอาหารและคาเฟ่</span>
+                            </div>
+                            <h1>พนักงานร้านกาแฟ</h1>
+                            <div class="job-company-sub">คาเฟ่ตัวอย่าง · โพสต์เมื่อเร็วๆ นี้</div>
+                        </div>
+                    </div>
+                </div>
 
-<!-- Script การทำงานของปุ่มกด -->
-<script>
-    // สมมติข้อมูลผู้ใช้ปัจจุบัน (student_id = 1) รอ Backend มาเชื่อมจริง
-    const currentStudentId = 1; 
+                <!-- รายละเอียดงาน -->
+                <div class="card-box">
+                    <h3 class="section-title">รายละเอียดงาน</h3>
+                    <p class="content-text">รับออเดอร์ เตรียมเครื่องดื่ม และดูแลความสะอาดร้าน เหมาะสำหรับนักศึกษาที่สะดวกทำงานวันหยุด บรรยากาศเป็นกันเอง สามารถปรับเวลาทำงานให้เข้ากับตารางเรียนได้</p>
+                </div>
 
-    async function applyJob(jobId) {
-        console.log(`Sending application for Job ID: ${jobId} by Student: ${currentStudentId}`);
-        alert("ส่งใบสมัครเรียบร้อยแล้ว! (สถานะ: Pending)");
-        
-        // ทดสอบปิดปุ่มหลังกดสมัครแล้ว (จำลองสถานการณ์)
-        const btn = document.getElementById('applyBtn');
-        btn.innerText = "สมัครแล้ว";
-        btn.disabled = true;
-    }
+                <!-- ความรับผิดชอบ -->
+                <div class="card-box">
+                    <h3 class="section-title">ความรับผิดชอบ</h3>
+                    <ul class="check-list">
+                        <li>รับออเดอร์และแนะนำเครื่องดื่มให้กับลูกค้าอย่างเป็นมิตร</li>
+                        <li>จัดเตรียมเครื่องดื่ม ขนม และวัตถุดิบตามมาตรฐานของร้าน</li>
+                        <li>ดูแลความสะอาดเรียบร้อยภายในบริเวณร้านและเคาน์เตอร์บาร์</li>
+                        <li>จัดการระบบชำระเงินและทอนเงินได้อย่างแม่นยำ</li>
+                    </ul>
+                </div>
 
-    async function toggleSaveJob(jobId) {
-        const btn = document.getElementById('saveBtn');
-        const isSaved = btn.classList.contains('saved');
+                <!-- คุณสมบัติผู้สมัคร -->
+                <div class="card-box">
+                    <h3 class="section-title">คุณสมบัติผู้สมัคร</h3>
+                    <ul class="check-list">
+                        <li>กำลังศึกษาอยู่ในระดับปริญญาตรี (ทุกชั้นปี)</li>
+                        <li>มีใจรักงานบริการ ยิ้มแย้มแจ่มใส และมนุษยสัมพันธ์ดี</li>
+                        <li>มีความรับผิดชอบ ตรงต่อเวลา และสามารถทำงานเสาร์-อาทิตย์ได้</li>
+                        <li>หากมีประสบการณ์ด้านบาริสต้าหรือร้านอาหารจะพิจารณาเป็นพิเศษ</li>
+                    </ul>
+                </div>
 
-        if (isSaved) {
-            console.log(`Unsaving Job ID: ${jobId}`);
-            btn.classList.remove('saved');
-            btn.innerText = "บันทึกงาน";
-            btn.style.backgroundColor = ""; // เคลียร์สีกลับเป็นค่าเดิม
-        } else {
-            console.log(`Saving Job ID: ${jobId}`);
-            btn.classList.add('saved');
-            btn.innerText = "ยกเลิกบันทึก";
-            btn.style.backgroundColor = "#ffc107"; // เปลี่ยนสีเพื่อให้รู้ว่ากดเซฟแล้ว
+                <!-- สวัสดิการ -->
+                <div class="card-box">
+                    <h3 class="section-title">สวัสดิการ</h3>
+                    <div class="benefit-grid">
+                        <div class="benefit-item">☕ <span>เครื่องดื่มฟรีประจำวัน</span></div>
+                        <div class="benefit-item">💸 <span>โบนัสพิเศษตามผลงาน</span></div>
+                        <div class="benefit-item">📚 <span>เวลาทำงานยืดหยุ่นตามตารางเรียน</span></div>
+                        <div class="benefit-item">🛡️ <span>การฝึกอบรมบาริสต้าฟรี</span></div>
+                    </div>
+                </div>
+
+                <!-- สถานที่ปฏิบัติงาน -->
+                <div class="card-box">
+                    <h3 class="section-title">สถานที่ปฏิบัติงาน</h3>
+                    <p class="content-text" style="margin-bottom: 10px;">📍 กรุงเทพฯ ใกล้มหาวิทยาลัย (เดินทางสะดวก มีรถไฟฟ้าผ่าน)</p>
+                    <div class="map-box">
+                        <span>แผนที่จำลองตำแหน่งร้าน (Google Maps Mockup)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ฝั่งขวา: Sticky Sidebar -->
+            <div class="detail-sidebar">
+                <div class="price-card">
+                    <div class="salary-highlight">฿60 <span>/ ชั่วโมง</span></div>
+                    
+                    <div class="info-summary-list">
+                        <div class="info-row">
+                            <span>📅</span>
+                            <div><strong>วันและเวลา:</strong><br><span style="color: #6b7280; font-size: 13px;">เสาร์–อาทิตย์ 09:00–16:00</span></div>
+                        </div>
+                        <div class="info-row">
+                            <span>🏢</span>
+                            <div><strong>นายจ้าง:</strong><br><span style="color: #6b7280; font-size: 13px;">คาเฟ่ตัวอย่าง</span></div>
+                        </div>
+                        <div class="info-row">
+                            <span>📍</span>
+                            <div><strong>สถานที่:</strong><br><span style="color: #6b7280; font-size: 13px;">กรุงเทพฯ ใกล้มหาวิทยาลัย</span></div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนปุ่มกด Action -->
+                    <div class="job-actions">
+                        <button id="applyBtn" type="button" class="btn-apply-main" onclick="applyJob(1)">สมัครงานนี้</button>
+                        <button id="saveBtn" type="button" class="btn-save-main" onclick="toggleSaveJob(1)">บันทึกงาน</button>
+                    </div>
+
+                    <!-- ข้อมูลนายจ้าง -->
+                    <div class="employer-mini-card">
+                        <div class="employer-avatar">ค</div>
+                        <div>
+                            <strong style="color: #111827; display: block; font-size: 14px;">คาเฟ่ตัวอย่าง</strong>
+                            <span>📞 000-000-0000</span><br>
+                            <span>✉️ employer@example.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; font-size: 13px; color: #6b7280;">
+                    <a href="student/login.html" style="text-decoration: underline;">เข้าสู่ระบบนักศึกษา</a> · 
+                    <a href="jobs.html" style="text-decoration: underline;">กลับรายการงาน</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer ตามเรฟ -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">CampusJob</div>
+                    <p style="color: #9ca3af; font-size: 13px; line-height: 1.5;">เชื่อมโยงนักศึกษาที่มีทักษะเข้ากับโอกาสทางอาชีพที่สำคัญทั่วประเทศ</p>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนักศึกษา</h4>
+                    <ul>
+                        <li><a href="jobs.html">หางาน</a></li>
+                        <li><a href="saved.html">งานที่บันทึก</a></li>
+                        <li><a href="my-applications.html">ประวัติสมัคร</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนายจ้าง</h4>
+                    <ul>
+                        <li><a href="employer/login.html">ลงประกาศงาน</a></li>
+                        <li><a href="employer/applicants.html">พิจารณาผู้สมัคร</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>การสนับสนุน</h4>
+                    <ul>
+                        <li><a href="#">เกี่ยวกับเรา</a></li>
+                        <li><a href="#">นโยบายความเป็นส่วนตัว</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CAMPUSJOB. สงวนลิขสิทธิ์ทั้งหมด.</p>
+                <div>โอปอ / มิก / เต้อ</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script การทำงานของปุ่มกด -->
+    <script>
+        const currentStudentId = 1; 
+
+        async function applyJob(jobId) {
+            console.log(`Sending application for Job ID: ${jobId} by Student: ${currentStudentId}`);
+            alert("ส่งใบสมัครเรียบร้อยแล้ว! (สถานะ: Pending)");
+            
+            const btn = document.getElementById('applyBtn');
+            btn.innerText = "สมัครแล้ว";
+            btn.disabled = true;
         }
-    }
-</script>
+
+        async function toggleSaveJob(jobId) {
+            const btn = document.getElementById('saveBtn');
+            const isSaved = btn.classList.contains('saved');
+
+            if (isSaved) {
+                console.log(`Unsaving Job ID: ${jobId}`);
+                btn.classList.remove('saved');
+                btn.innerText = "บันทึกงาน";
+            } else {
+                console.log(`Saving Job ID: ${jobId}`);
+                btn.classList.add('saved');
+                btn.innerText = "ยกเลิกบันทึก";
+            }
+        }
+    </script>
 </body>
 </html>
