@@ -1,24 +1,266 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>ภาพรวม | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ภาพรวมนักศึกษา - Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>ภาพรวม | Campus-jobs</title>
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar ด้านบน */
+        header { background: white; border-bottom: 1px solid #e5e7eb; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 600; color: #000; }
+        .nav-menu { display: flex; gap: 30px; list-style: none; font-size: 14px; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .icon-btn { font-size: 18px; color: #4b5563; cursor: pointer; }
+        .user-profile-chip { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; }
+        .user-avatar-sm { width: 32px; height: 32px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Dashboard Layout (Sidebar + Main Content) */
+        .dashboard-layout { display: flex; gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px; align-items: flex-start; }
+        
+        /* Sidebar เมนูด้านซ้าย */
+        .sidebar { width: 260px; background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        .profile-card { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #f3f4f6; margin-bottom: 20px; }
+        .avatar-lg { width: 70px; height: 70px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
+        .profile-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+        .profile-card p { font-size: 11px; color: #6b7280; line-height: 1.4; }
+
+        .sidebar-menu { display: flex; flex-direction: column; gap: 8px; list-style: none; }
+        .sidebar-menu a { padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 500; color: #4b5563; display: flex; align-items: center; gap: 12px; }
+        .sidebar-menu a:hover { background: #f3f4f6; color: #111827; }
+        .sidebar-menu a.active { background: #111827; color: white; }
+        .sidebar-menu a.logout { color: #dc2626; margin-top: 10px; border-top: 1px solid #f3f4f6; padding-top: 15px; }
+        .sidebar-menu a.logout:hover { background: #fee2e2; }
+
+        /* Main Content ฝั่งขวา */
+        .main-content { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+        
+        .welcome-box h1 { font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+        .welcome-box p { font-size: 13px; color: #6b7280; }
+
+        /* Stats Grid (สถิติ 3 กล่อง) */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-box { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); position: relative; }
+        .stat-box .icon-top { font-size: 20px; margin-bottom: 15px; display: block; }
+        .stat-box .number { font-size: 32px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+        .stat-box .label { font-size: 13px; color: #6b7280; }
+        .stat-box .badge-growth { position: absolute; top: 25px; right: 25px; background: #d1fae5; color: #065f46; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+        .stat-box .badge-pending { position: absolute; top: 25px; right: 25px; background: #fef3c7; color: #92400e; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+
+        /* Content Box & Tables */
+        .content-box { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .box-header h2 { font-size: 18px; font-weight: 600; }
+        .box-header a { font-size: 13px; color: #2563eb; font-weight: 500; }
+        .box-header a:hover { text-decoration: underline; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { padding: 12px 10px; color: #9ca3af; font-weight: 500; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+        td { padding: 15px 10px; border-bottom: 1px solid #f3f4f6; color: #111827; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        
+        .badge-status { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
+        .status-reviewing { background: #fef3c7; color: #92400e; }
+        .status-interview { background: #e0e7ff; color: #3730a3; }
+        .status-accepted { background: #111827; color: white; }
+
+        /* Saved Jobs & Banner Grid ล่าง */
+        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+        .saved-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+        .saved-item-row:last-child { border-bottom: none; }
+
+        .resume-banner { background: #111827; color: white; border-radius: 20px; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; }
+        .resume-banner h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .resume-banner p { font-size: 13px; color: #9ca3af; margin-bottom: 20px; }
+        .btn-banner { background: white; color: #111827; padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; text-align: center; display: block; }
+        .btn-banner:hover { background: #e5e7eb; }
+
+        /* Footer */
+        footer { background: #111827; color: white; padding: 40px 0; text-align: center; margin-top: 60px; font-size: 13px; }
+        footer a { color: #9ca3af; }
+
+        @media (max-width: 900px) {
+            .dashboard-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .bottom-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="index.html">หน้าหลัก</a></li><li><a href="jobs.html">ค้นหางาน</a></li><li><a href="dashboard.html" aria-current="page">ภาพรวม</a></li><li><a href="register.html">สมัครสมาชิก</a></li><li><a href="saved.html">งานที่บันทึก</a></li><li><a href="my-applications.html">ประวัติสมัคร</a></li><li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main">
-<h1>ภาพรวมของฉัน</h1>
-<p>ข้อมูลตัวอย่างสำหรับตรวจโครงหน้า ยังไม่เชื่อมระบบจริง</p>
-<section><h2>ยินดีต้อนรับ นักศึกษาตัวอย่าง</h2><p>ตรวจข้อมูลส่วนตัวและติดตามการสมัครงานของคุณ</p><a href="student/profile.html">จัดการโปรไฟล์</a></section>
-<section><h2>สรุปการสมัครงาน</h2><dl><dt>สมัครทั้งหมด</dt><dd>1 งาน</dd><dt>รอพิจารณา</dt><dd>1 งาน</dd><dt>กำลังพิจารณา</dt><dd>0 งาน</dd><dt>ได้รับเลือก</dt><dd>0 งาน</dd><dt>ไม่ผ่านการพิจารณา</dt><dd>0 งาน</dd></dl><a href="my-applications.html">ดูการสมัครของฉัน</a></section>
-<section><h2>งานที่บันทึก</h2><p>บันทึกไว้ 1 งาน</p><a href="saved.html">ดูงานที่บันทึก</a></section>
-<section><h2>ใบสมัครล่าสุด</h2><article><h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3><p>คาเฟ่ตัวอย่าง · Pending — รอพิจารณา</p></article></section>
-<section><h2>สำหรับนายจ้าง</h2><p>ตัวอย่างทางเข้าส่วนของนายจ้าง เมื่อมีระบบจริงต้องแสดงตามบทบาทที่เข้าสู่ระบบ</p><a href="employer/jobs.html">จัดการประกาศงาน</a> · <a href="employer/applicants.html">พิจารณาผู้สมัคร</a></section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="index.html">กลับหน้าหลัก</a></p></footer>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo"><a href="index.html">CampusJob</a></div>
+            <ul class="nav-menu">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="jobs.html">หางาน</a></li>
+                <li><a href="dashboard.html" class="active">แดชบอร์ด</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="icon-btn">🔔</div>
+                <div class="user-profile-chip">
+                    <div class="user-avatar-sm">พ</div>
+                    <span>พสิษฐ์ พลายโถ</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <a href="#main" style="position: absolute; left: -9999px;">ข้ามไปเนื้อหาหลัก</a>
+
+    <main id="main">
+        <div class="dashboard-layout">
+            
+            <!-- Sidebar เมนูด้านซ้าย -->
+            <aside class="sidebar">
+                <div class="profile-card">
+                    <div class="avatar-lg">👨‍💻</div>
+                    <h3>พสิษฐ์ พลายโถ</h3>
+                    <p>มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี<br>นักศึกษาปี 2</p>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html" class="active">📊 ภาพรวม</a></li>
+                    <li><a href="my-applications.html">📄 การสมัครของฉัน</a></li>
+                    <li><a href="saved.html">⭐ งานที่บันทึกไว้</a></li>
+                    <li><a href="student/profile.html">👤 โปรไฟล์</a></li>
+                    <li><a href="#">⚙️ ตั้งค่า</a></li>
+                    <li><a href="student/login.html" class="logout">🚪 ออกจากระบบ</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content ฝั่งขวา -->
+            <div class="main-content">
+                
+                <!-- ส่วนทักทาย -->
+                <div class="welcome-box">
+                    <h1>สวัสดี, พสิษฐ์</h1>
+                    <p>นี่คือกราฟภาพรวมกิจกรรมการสมัครงานของคุณ</p>
+                </div>
+
+                <!-- สถิติภาพรวม 3 ช่อง (อิงจากภาพตัวอย่าง) -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="icon-top">📄</span>
+                        <div class="number">24</div>
+                        <div class="label">การสมัครทั้งหมด</div>
+                        <span class="badge-growth">+12%</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="icon-top">⏱️</span>
+                        <div class="number">9</div>
+                        <div class="label">อยู่ระหว่างพิจารณา</div>
+                        <span class="badge-pending">รอคิว 9</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="icon-top">✅</span>
+                        <div class="number">5</div>
+                        <div class="label">ได้รับเข้าทำงาน</div>
+                    </div>
+                </div>
+
+                <!-- ตาราง: การสมัครล่าสุด -->
+                <div class="content-box">
+                    <div class="box-header">
+                        <h2>การสมัครล่าสุด</h2>
+                        <a href="my-applications.html">ดูทั้งหมด</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ตำแหน่งงาน</th>
+                                <th>บริษัท</th>
+                                <th>วันที่สมัคร</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MITH Bangkok</strong></td>
+                                <td>บริษัท มิติครบมาก จำกัด</td>
+                                <td>12 ต.ค. 2569</td>
+                                <td><span class="badge-status status-reviewing">รอพิจารณา</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ติวเตอร์คณิตศาสตร์</strong></td>
+                                <td>EduBright Center</td>
+                                <td>08 ต.ค. 2569</td>
+                                <td><span class="badge-status status-interview">สัมภาษณ์</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>เด็กฝึกงาน Frontend</strong></td>
+                                <td>TechStart Solutions</td>
+                                <td>01 ต.ค. 2569</td>
+                                <td><span class="badge-status status-accepted">ได้งานแล้ว</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bottom Grid: งานที่บันทึกไว้ & แบนเนอร์เรซูเม่ -->
+                <div class="bottom-grid">
+                    
+                    <!-- งานที่บันทึกไว้ -->
+                    <div class="content-box" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div class="box-header" style="margin-bottom: 10px;">
+                                <h2>งานที่บันทึกไว้</h2>
+                                <a href="saved.html">ดูทั้งหมด</a>
+                            </div>
+                            <div class="saved-item-row">
+                                <div>
+                                    <strong>นักออกแบบกราฟิก</strong>
+                                    <div style="font-size: 12px; color: #6b7280;">Creative Hub</div>
+                                </div>
+                                <span style="color: #9ca3af;">›</span>
+                            </div>
+                            <div class="saved-item-row">
+                                <div>
+                                    <strong>พนักงานโปรโมท</strong>
+                                    <div style="font-size: 12px; color: #6b7280;">Unilever Thailand</div>
+                                </div>
+                                <span style="color: #9ca3af;">›</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a href="saved.html" style="font-size: 12px; color: #9ca3af;">ดูงานที่บันทึกทั้งหมด</a>
+                        </div>
+                    </div>
+
+                    <!-- แบนเนอร์ปรับปรุงเรซูเม่ (ถอดแบบจากกล่องดำขวาล่างในเรฟ) -->
+                    <div class="resume-banner">
+                        <div>
+                            <h3>📄 ปรับปรุงเรซูเม่ของคุณ</h3>
+                            <p>ดูคู่มือการสร้างเรซูเม่ที่ช่วยให้คุณได้งานจากบริษัทชั้นนำ</p>
+                        </div>
+                        <a href="#" class="btn-banner">อ่านคู่มืออาชีพ</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 CAMPUSJOB · STUDENTS FIRST</p>
+        <p style="margin-top: 5px;"><a href="index.html">กลับหน้าหลัก</a></p>
+    </footer>
+
 </body>
 </html>
