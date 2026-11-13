@@ -1,83 +1,361 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>พิจารณาผู้สมัคร | Campus-jobs</title>
-<link rel="stylesheet" href="../assets/styles/global.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="พิจารณาผู้สมัคร - Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>พิจารณาผู้สมัคร | Campus-jobs</title>
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar */
+        header { background: white; border-bottom: 1px solid #e5e7eb; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 600; color: #000; line-height: 1.2; }
+        .nav-menu { display: flex; gap: 25px; list-style: none; font-size: 14px; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .profile-chip { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; background: #f3f4f6; padding: 6px 14px; border-radius: 30px; }
+        .profile-chip img { width: 28px; height: 28px; border-radius: 50%; background: #ccc; }
+
+        /* Header Content */
+        .page-header-section { margin: 30px 0 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; }
+        .page-header-section h1 { font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+        .page-header-section p { font-size: 13px; color: #6b7280; }
+
+        .filter-toolbar { display: flex; gap: 12px; align-items: center; }
+        .select-job-dropdown { padding: 8px 14px; border-radius: 10px; border: 1px solid #d1d5db; font-size: 13px; font-family: 'Kanit'; background: white; outline: none; }
+
+        /* Filter Status Pills Row */
+        .status-filter-row { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; align-items: center; }
+        .filter-pill { padding: 6px 16px; border-radius: 20px; font-size: 13px; background: white; border: 1px solid #e5e7eb; color: #4b5563; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+        .filter-pill.active { background: #111827; color: white; border-color: #111827; }
+        .filter-pill span { background: #f3f4f6; color: #111827; padding: 1px 6px; border-radius: 10px; font-size: 11px; }
+        .filter-pill.active span { background: #374151; color: white; }
+
+        /* Kanban Board Layout */
+        .kanban-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 60px; align-items: flex-start; }
+        .kanban-column { background: #f1f3f5; border-radius: 16px; padding: 16px; min-height: 550px; border: 1px solid #e5e7eb; }
+        .kanban-col-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; font-weight: 600; padding: 0 4px; }
+        .kanban-col-count { background: #e5e7eb; color: #374151; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+
+        /* Candidate Card */
+        .candidate-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; position: relative; transition: 0.2s; }
+        .candidate-card:hover { border-color: #111827; transform: translateY(-2px); }
+        
+        .card-top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .candidate-profile-flex { display: flex; gap: 10px; align-items: center; }
+        .avatar-circle { width: 38px; height: 38px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: #374151; overflow: hidden; flex-shrink: 0; }
+        .candidate-name { font-size: 13px; font-weight: 600; margin-bottom: 1px; }
+        .candidate-uni { font-size: 11px; color: #6b7280; line-height: 1.3; }
+
+        .match-badge { background: #d1fae5; color: #065f46; font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 8px; }
+
+        .candidate-meta-text { font-size: 11px; color: #4b5563; margin-bottom: 8px; }
+        .candidate-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+        .mini-tag { background: #f3f4f6; color: #4b5563; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+
+        .card-footer-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f3f4f6; padding-top: 8px; font-size: 11px; color: #9ca3af; }
+        .card-action-icons { display: flex; gap: 8px; }
+        .card-action-icons span { cursor: pointer; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px 0; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; margin-top: 40px; }
+        footer a { color: #6b7280; }
+
+        @media (max-width: 1100px) {
+            .kanban-board { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 700px) {
+            .kanban-board { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="../index.html">หน้าหลัก</a></li><li><a href="../jobs.html">ค้นหางาน</a></li><li><a href="../dashboard.html">ภาพรวม</a></li><li><a href="../register.html">สมัครสมาชิก</a></li><li><a href="../saved.html">งานที่บันทึก</a></li><li><a href="../my-applications.html">ประวัติสมัคร</a></li><li><a href="../student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="../employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="../student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main">
-    <h1>พิจารณาผู้สมัคร</h1>
-    <aside aria-label="สถานะต้นแบบ">
-        <p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง</p>
-    </aside>
-    <p>ประกาศ: <a href="../job-detail.html">พนักงานร้านกาแฟ</a> · คาเฟ่ตัวอย่าง</p>
-    
-    <section>
-        <h2>ผู้สมัคร — ข้อมูลตัวอย่าง</h2>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="../index.html">Campus<br><span style="font-size: 14px; font-weight: 400; color: #6b7280;">Job</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">แดชบอร์ด</a></li>
+                <li><a href="jobs.html">ประกาศงานของฉัน</a></li>
+                <li><a href="applicants.html" class="active">ผู้สมัคร</a></li>
+                <li><a href="#">ข้อความ</a></li>
+                <li><a href="#">โปรไฟล์บริษัท</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="profile-chip">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'><circle cx='12' cy='8' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>" alt="avatar">
+                    <span>คาเฟ่ บินนาร์</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
         
-        <article style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
-            <h3>นักศึกษาตัวอย่าง</h3>
-            <dl>
-                <dt>มหาวิทยาลัย / สาขา</dt><dd>มหาวิทยาลัยตัวอย่าง / เทคโนโลยีสารสนเทศ</dd>
-                <dt>อีเมล</dt><dd>student@example.com</dd>
-                <dt>ทักษะ</dt><dd>การสื่อสาร</dd>
-                <dt>Resume</dt><dd>ยังไม่ได้ระบุลิงก์</dd>
-                <dt>สถานะปัจจุบัน</dt><dd id="status-display-1" style="font-weight: bold; color: orange;">Pending</dd>
-            </dl>
+        <!-- Header & Toolbar -->
+        <div class="page-header-section">
+            <div>
+                <h1>ผู้สมัครทั้งหมด</h1>
+                <p>จัดการและติดตามสถานะผู้สมัครของแต่ละประกาศงาน KMUTT</p>
+            </div>
+            <div class="filter-toolbar">
+                <select class="select-job-dropdown">
+                    <option>☕ บาริสต้าพาร์ทไทม์</option>
+                    <option>🍔 พนักงานเสิร์ฟ (เสาร์-อาทิตย์)</option>
+                    <option>💻 พนักงานแคชเชียร์</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Status Filter Pills -->
+        <div class="status-filter-row">
+            <button class="filter-pill active">ทั้งหมด <span>14</span></button>
+            <button class="filter-pill">ใหม่ <span>3</span></button>
+            <button class="filter-pill">กำลังพิจารณา <span>3</span></button>
+            <button class="filter-pill">นัดสัมภาษณ์ <span>2</span></button>
+            <button class="filter-pill">ตอบรับแล้ว <span>1</span></button>
+            <button class="filter-pill">ปฏิเสธ <span>5</span></button>
+        </div>
+
+        <!-- Kanban Board (คอลัมน์สถานะผู้สมัคร) -->
+        <div class="kanban-board">
             
-            <form action="#" method="post" onsubmit="return false;">
-                <p>
-                    <label for="status-select-1">เปลี่ยนสถานะใบสมัคร</label><br>
-                    <select id="status-select-1" name="status">
-                        <option value="Pending">Pending — รอพิจารณา</option>
-                        <option value="Reviewing">Reviewing — กำลังพิจารณา</option>
-                        <option value="Accepted">Accepted — ได้รับเลือก</option>
-                        <option value="Rejected">Rejected — ไม่ผ่านการพิจารณา</option>
-                    </select>
-                </p>
-                <p>
-                    <!-- นำ disabled ออก และเพิ่ม onclick เพื่อเรียก JavaScript -->
-                    <button type="button" onclick="updateApplicationStatus(1)">บันทึกสถานะ</button>
-                </p>
-            </form>
-        </article>
+            <!-- Column 1: ใหม่ (Pending) -->
+            <div class="kanban-column">
+                <div class="kanban-col-header">
+                    <span>🔴 ใหม่</span>
+                    <span class="kanban-col-count">3</span>
+                </div>
 
-        <!-- ข้อความแสดงเมื่อไม่มีผู้สมัคร (ซ่อนไว้ก่อน) -->
-        <p id="empty-state" style="display: none; color: gray;">ยังไม่มีผู้สมัครงานนี้</p>
-        <p><small>ข้อมูลผู้สมัครต้องเข้าถึงได้เฉพาะนายจ้างเจ้าของงานเมื่อเชื่อม Backend</small></p>
-    </section>
-    
-    <a href="jobs.html">กลับประกาศงาน</a>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="../index.html">กลับหน้าหลัก</a></p></footer>
+                <!-- Candidate Card 1 -->
+                <div class="candidate-card">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #fbcfe8; color: #9d174d;">พ</div>
+                            <div>
+                                <div class="candidate-name">พิมพ์พชนก ศรีสุข</div>
+                                <div class="candidate-uni">มจธ. · ศิลปศาสตร์ ปี 3</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">92%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: บาริสต้าพาร์ทไทม์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">ชงกาแฟ</span>
+                        <span class="mini-tag">บริการลูกค้า</span>
+                    </div>
+                    <div class="card-footer-actions">
+                        <span>สมัครเมื่อ 10 นาทีที่แล้ว</span>
+                        <div class="card-action-icons">
+                            <span title="ส่งข้อความ">💬</span>
+                            <span title="ดูโปรไฟล์">👤</span>
+                        </div>
+                    </div>
+                </div>
 
-<!-- Script สำหรับจำลองการกดเปลี่ยนสถานะใบสมัคร -->
-<script>
-    function updateApplicationStatus(applicationId) {
-        const selectElement = document.getElementById(`status-select-${applicationId}`);
-        const newStatus = selectElement.value;
-        const statusDisplay = document.getElementById(`status-display-${applicationId}`);
-        
-        // เปลี่ยนข้อความบนหน้าเว็บ
-        statusDisplay.innerText = newStatus;
-        
-        // เปลี่ยนสีตัวอักษรตามสถานะให้ดูง่ายขึ้น
-        if(newStatus === 'Accepted') statusDisplay.style.color = 'green';
-        else if(newStatus === 'Rejected') statusDisplay.style.color = 'red';
-        else if(newStatus === 'Reviewing') statusDisplay.style.color = 'blue';
-        else statusDisplay.style.color = 'orange';
+                <!-- Candidate Card 2 -->
+                <div class="candidate-card">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #fed7aa; color: #9a3412;">ธ</div>
+                            <div>
+                                <div class="candidate-name">ธนกร วงศ์ใหญ่</div>
+                                <div class="candidate-uni">มจธ. · วิศวกรรมศาสตร์ ปี 3</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">85%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: พนักงานเสิร์ฟ</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">ยืดหยุ่นเวลา</span>
+                        <span class="mini-tag">คล่องแคล่ว</span>
+                    </div>
+                    <div class="card-footer-actions">
+                        <span>สมัครเมื่อ 1 วันที่แล้ว</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
 
-        alert(`บันทึกสำเร็จ! เปลี่ยนสถานะใบสมัครเป็น ${newStatus} เรียบร้อยแล้ว`);
-        console.log(`Update Application ID ${applicationId} to ${newStatus}`);
-        
-        // โค้ด Backend จะดึงข้อมูลไปใช้ UPDATE คำสั่งใน SQL ที่เราทำไว้ก่อนหน้านี้
-    }
-</script>
+                <!-- Candidate Card 3 -->
+                <div class="candidate-card">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #bae6fd; color: #0369a1;">ว</div>
+                            <div>
+                                <div class="candidate-name">วรเมธ พึ่งพา</div>
+                                <div class="candidate-uni">มจธ. · ครุศาสตร์อุตสาหกรรม ปี 1</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">72%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: บาริสต้าพาร์ทไทม์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">ขยัน</span>
+                        <span class="mini-tag">เรียนรู้เร็ว</span>
+                    </div>
+                    <div class="card-footer-actions">
+                        <span>สมัครเมื่อ 3 วันที่แล้ว</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: กำลังพิจารณา (Reviewing) -->
+            <div class="kanban-column">
+                <div class="kanban-col-header">
+                    <span>🟡 กำลังพิจารณา</span>
+                    <span class="kanban-col-count">3</span>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #fef08a; color: #854d0e;">ก</div>
+                            <div>
+                                <div class="candidate-name">กัญญาภัทร ไวดี</div>
+                                <div class="candidate-uni">มจธ. · วิทยาศาสตร์ ปี 2</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">88%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: บาริสต้าพาร์ทไทม์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">POS</span>
+                        <span class="mini-tag">แคชเชียร์</span>
+                    </div>
+                    <div class="card-footer-actions">
+                        <span>พิจารณาอยู่</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #e9d5ff; color: #6b21a8;">ศ</div>
+                            <div>
+                                <div class="candidate-name">ศิรินทิพย์ มั่นคง</div>
+                                <div class="candidate-uni">มจธ. · เทคโนโลยีสารสนเทศ ปี 2</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">81%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: พนักงานแคชเชียร์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">ละเอียดรอบคอบ</span>
+                    </div>
+                    <div class="card-footer-actions">
+                        <span>พิจารณาอยู่</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: นัดสัมภาษณ์ (Interview) -->
+            <div class="kanban-column">
+                <div class="kanban-col-header">
+                    <span>🔵 นัดสัมภาษณ์</span>
+                    <span class="kanban-col-count">2</span>
+                </div>
+
+                <div class="candidate-card" style="border-left: 4px solid #3b82f6;">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #ccfbf1; color: #115e59;">อ</div>
+                            <div>
+                                <div class="candidate-name">อริษา ทองดี</div>
+                                <div class="candidate-uni">มจธ. · เกษตรศาสตร์ ปี 2</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">90%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: บาริสต้าพาร์ทไทม์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag"> Latte Art </span>
+                    </div>
+                    <div style="font-size: 11px; color: #2563eb; margin-top: 6px; font-weight: 500;">
+                        📅 พฤ. 22 ต.ค. · 14:00 น.
+                    </div>
+                    <div class="card-footer-actions" style="margin-top: 8px;">
+                        <span>นัดแล้ว</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 4: ตอบรับแล้ว (Accepted) -->
+            <div class="kanban-column">
+                <div class="kanban-col-header">
+                    <span>🟢 ตอบรับแล้ว</span>
+                    <span class="kanban-col-count">1</span>
+                </div>
+
+                <div class="candidate-card" style="border-left: 4px solid #10b981;">
+                    <div class="card-top-row">
+                        <div class="candidate-profile-flex">
+                            <div class="avatar-circle" style="background: #d1fae5; color: #065f46;">ป</div>
+                            <div>
+                                <div class="candidate-name">ปวริศ สุขสันต์</div>
+                                <div class="candidate-uni">มจธ. · สถาปัตยกรรมศาสตร์ ปี 3</div>
+                            </div>
+                        </div>
+                        <span class="match-badge">94%</span>
+                    </div>
+                    <div class="candidate-meta-text">สมัคร: บาริสต้าพาร์ทไทม์</div>
+                    <div class="candidate-tags">
+                        <span class="mini-tag">ตรงเวลา</span>
+                        <span class="mini-tag">อัธยาศัยดี</span>
+                    </div>
+                    <div style="font-size: 11px; color: #059669; margin-top: 6px; font-weight: 500;">
+                        ✅ เริ่มงาน 25 ต.ค. 2569
+                    </div>
+                    <div class="card-footer-actions" style="margin-top: 8px;">
+                        <span>จ้างงานแล้ว</span>
+                        <div class="card-action-icons">
+                            <span>💬</span>
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 CAMPUSJOB · STUDENTS FIRST</p>
+        <p style="margin-top: 5px;"><a href="../index.html">กลับหน้าหลัก</a></p>
+    </footer>
+
 </body>
 </html>
