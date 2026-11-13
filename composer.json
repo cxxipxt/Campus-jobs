@@ -1,0 +1,8 @@
+{
+    "name": "campus-jobs/campus-jobs",
+    "description": "Campus Jobs web application",
+    "license": "proprietary",
+    "require": {
+        "jumbojett/openid-connect-php": "^1.0.2"
+    }
+}
