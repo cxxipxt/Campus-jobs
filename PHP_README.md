@@ -12,7 +12,14 @@
 php -S 127.0.0.1:8000 -t frontend frontend/router.php
 ```
 
-4. เปิด `http://127.0.0.1:8000/jobs.php` สมัครนายจ้างที่ `/employer/register.php` แล้วล็อกอินและสร้างงาน
+4. เปิด `http://127.0.0.1:8000/employer/login.php` แล้วเลือกเข้าสู่ระบบด้วย Google
+
+### ตั้งค่า Google Login สำหรับนายจ้าง
+
+- ฐานข้อมูลที่สร้างไว้ก่อนหน้านี้ให้รัน `database/migrations/002_employer_google_login.sql` หนึ่งครั้ง ฐานข้อมูลที่สร้างด้วย `schema.sql` ปัจจุบันมีคอลัมน์ครบแล้ว
+- ฐานข้อมูลเดิมให้รัน `database/migrations/003_employer_registration_details.sql` ต่อจาก 002 เพื่อรองรับชื่อผู้ใช้ ลักษณะธุรกิจ และอีเมลติดต่อ
+- เปิด PHP extension `curl` และตั้งค่า `EMPLOYER_GOOGLE_CLIENT_ID`, `EMPLOYER_GOOGLE_CLIENT_SECRET` และ `EMPLOYER_GOOGLE_REDIRECT_URI` ใน `.env` จาก OAuth client ประเภท Web application ใน Google Cloud
+- เพิ่ม URL เดียวกับ `EMPLOYER_GOOGLE_REDIRECT_URI` ใน Authorized redirect URIs และเปิดเว็บด้วย host เดียวกันเพื่อให้ session ใช้ได้เมื่อ Google ส่งกลับมา
 
 ตั้งค่า PHP `extension=pdo_mysql` และ `extension=mbstring` ใน php.ini หากยังไม่เปิด สำหรับ Apache ให้ document root ชี้ `frontend` เท่านั้น เปิด mod_rewrite/AllowOverride เพื่อให้ลิงก์ .html เดิมไปหน้า PHP และตั้ง APP_BASE_PATH ตาม prefix ของเว็บ ห้ามเปิดทั้ง repository เป็น web root เพราะมี `.env` และโค้ดภายใน
 

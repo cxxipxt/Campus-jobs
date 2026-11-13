@@ -1,6 +1,10 @@
 <?php
 require dirname(__DIR__,2) . '/app/bootstrap.php';
 $owner=employer(); $id=null; $error=null;
+if (query('SELECT 1 FROM EMPLOYER WHERE employer_id=? AND company_name IS NULL', [$owner])->fetchColumn()) {
+    $_SESSION['flash'] = 'กรอกชื่อบริษัทหรือร้านค้าก่อนลงประกาศงาน';
+    go('employer/profile.php');
+}
 try { if (isset($_GET['job_id'])) $id=positive_id(input('job_id',$_GET)); }
 catch (InvalidArgumentException $ex) { http_response_code(400); exit(e($ex->getMessage())); }
 $data=$id?owned_job($id,$owner):['job_title'=>'','category_id'=>'','description'=>'','hourly_wage'=>'','location'=>'','work_schedule'=>''];
@@ -36,9 +40,9 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         $_SESSION['flash']='บันทึกประกาศแล้ว'; go('employer/jobs.php');
     } catch(InvalidArgumentException $ex) { $error=$ex->getMessage(); }
 }
-start_page($id?'แก้ไขประกาศงาน':'สร้างประกาศงาน'); error_box($error);
+start_page($id?'แก้ไขประกาศงาน':'สร้างประกาศงาน', 'workspace-page posting-page'); error_box($error);
 ?>
-<form class="panel" method="post"><?php csrf_field(); field('job_title','ชื่อตำแหน่ง',(string)$data['job_title'],'text',true,150); ?>
+<div class="posting-layout"><form class="panel" method="post"><?php csrf_field(); field('job_title','ชื่อตำแหน่ง',(string)$data['job_title'],'text',true,150); ?>
 <p><label for="category_id">ประเภทงาน</label><select id="category_id" name="category_id" required><option value="">เลือกประเภทงาน</option>
 <?php foreach($categories as $category): ?><option value="<?= e($category['category_id']) ?>" <?= (string)$data['category_id']===(string)$category['category_id']?'selected':'' ?>><?= e($category['category_name']) ?></option><?php endforeach; ?></select></p>
 <?php if(!$categories): ?><p class="error">ยังไม่มีประเภทงาน กรุณารัน seed.sql ก่อนสร้างประกาศ</p><?php endif; ?>
@@ -47,4 +51,4 @@ start_page($id?'แก้ไขประกาศงาน':'สร้างป�
 <?php field('location','สถานที่',(string)$data['location']); field('work_schedule','วันและเวลางาน',(string)$data['work_schedule']); ?>
 <p><label for="skills">ทักษะที่ต้องการ (หนึ่งทักษะต่อบรรทัด ไม่บังคับ)</label><textarea id="skills" name="skills" maxlength="10000"><?= e($skills) ?></textarea></p>
 <button <?= !$categories?'disabled':'' ?>>บันทึกประกาศ</button> <a href="<?= e(url('employer/jobs.php')) ?>">กลับรายการประกาศ</a>
-</form><?php end_page(); ?>
+</form><aside class="panel"><span class="eyebrow">แนวทางลงประกาศ</span><h2>เขียนประกาศให้ชัดเจน</h2><ul><li>ระบุชื่อตำแหน่งและสถานที่</li><li>แจ้งค่าจ้างต่อชั่วโมง</li><li>บอกวันและเวลาทำงาน</li></ul></aside></div><?php end_page(); ?>

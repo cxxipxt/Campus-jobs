@@ -3,49 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ภาพรวม - CampusJob</title>
+  <title>ภาพรวม - CampusJobs</title>
+  <link rel="stylesheet" href="assets/styles/campus.css"><script src="assets/campus.js" defer></script>
 </head>
-<body>
+<body class="workspace-page student-dashboard">
+<a href="#main">ข้ามไปเนื้อหาหลัก</a>
 
   <!-- เมนูแบบล็อกอินแล้ว (ชื่อผู้ใช้เป็นข้อมูลตัวอย่าง) -->
-  <header class="site-header">
-    <a href="index.html" class="logo">CampusJob</a>
+  <header class="campus-header site-header">
+    <a href="index.html" class="brand">CampusJobs</a>
     <nav aria-label="เมนูหลัก">
       <ul>
         <li><a href="index.html">หน้าแรก</a></li>
         <li><a href="jobs.html">หางาน</a></li>
         <li><a href="my-applications.html">การสมัครของฉัน</a></li>
+        <li><a href="saved.html">งานที่บันทึก</a></li>
         <li><a href="dashboard.html" aria-current="page">ภาพรวม</a></li>
-        <li><a href="student/profile.html">สมชาย ใจดี</a></li>
+        <li><a class="dashboard-profile-link" href="student/profile.html">โปรไฟล์ · สมชาย ใจดี</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <h1>สวัสดี, สมชาย</h1>
-    <p>นี่คือภาพรวมกิจกรรมการสมัครงานของคุณ</p>
+  <main id="main" class="dashboard-content">
+    <div class="dashboard-intro">
+      <h1>ภาพรวมของฉัน</h1>
+      <p class="muted">ติดตามสถานะใบสมัครของคุณ</p>
+    </div>
 
-    <!-- เมนูข้างของนักศึกษา -->
-    <aside>
-      <section aria-labelledby="profile-title">
-        <h2 id="profile-title">สมชาย ใจดี</h2>
-        <p>วิทยาการคอมพิวเตอร์ · KMUTT</p>
-      </section>
+    <section class="dashboard-recent" aria-labelledby="recent-title">
+      <h2 id="recent-title">การสมัครล่าสุด</h2>
+      <ul class="dashboard-applications">
+        <li>
+          <div><h3>พนักงานเสิร์ฟพาร์ทไทม์</h3><p>คาเฟ่ตัวอย่าง · <time datetime="2026-10-12">12 ต.ค. 2569</time></p></div>
+          <span class="status-pill status-pending">รอพิจารณา</span>
+        </li>
+        <li>
+          <div><h3>ติวเตอร์คณิตศาสตร์ ม.ปลาย</h3><p>ศูนย์ติวตัวอย่าง · <time datetime="2026-10-08">8 ต.ค. 2569</time></p></div>
+          <span class="status-pill status-review">กำลังพิจารณา</span>
+        </li>
+        <li>
+          <div><h3>แคชเชียร์ช่วงเย็น</h3><p>ร้านสะดวกซื้อตัวอย่าง · <time datetime="2026-10-01">1 ต.ค. 2569</time></p></div>
+          <span class="status-pill status-accepted">ผ่านการคัดเลือก</span>
+        </li>
+      </ul>
+      <p><a href="my-applications.html">ดูการสมัครทั้งหมด</a></p>
+    </section>
 
-      <nav aria-label="เมนูบัญชี">
-        <ul>
-          <li><a href="dashboard.html" aria-current="page">ภาพรวม</a></li>
-          <li><a href="my-applications.html">การสมัครของฉัน</a></li>
-          <li><a href="saved.html">งานที่บันทึกไว้</a></li>
-          <li><a href="student/profile.html">โปรไฟล์</a></li>
-        </ul>
-        <!-- ปิดไว้ เพราะการออกจากระบบต้องใช้ Backend ล้าง session -->
-        <button type="button" disabled>ออกจากระบบ</button>
-      </nav>
-    </aside>
-
-    <!-- สรุปตัวเลข: ข้อมูลตัวอย่าง (ภายหลังนับจากตาราง APPLICATION ของนักศึกษาที่ล็อกอิน) -->
-    <section aria-labelledby="summary-title">
+    <section class="dashboard-summary" aria-labelledby="summary-title">
       <h2 id="summary-title">สรุปการสมัคร</h2>
       <dl>
         <div>
@@ -63,71 +67,23 @@
       </dl>
     </section>
 
-    <!-- การสมัครล่าสุด: ข้อมูลตัวอย่าง -->
-    <section aria-labelledby="recent-title">
-      <h2 id="recent-title">การสมัครล่าสุด</h2>
-      <table>
-        <caption>ใบสมัคร 3 รายการล่าสุดของคุณ</caption>
-        <thead>
-          <tr>
-            <th scope="col">ตำแหน่งงาน</th>
-            <th scope="col">นายจ้าง</th>
-            <th scope="col">วันที่สมัคร</th>
-            <th scope="col">สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="job-detail.html">พนักงานเสิร์ฟพาร์ทไทม์</a></td>
-            <td>คาเฟ่ตัวอย่าง</td>
-            <td><time datetime="2026-10-12">12 ต.ค. 2569</time></td>
-            <td>รอพิจารณา</td>
-          </tr>
-          <tr>
-            <td><a href="job-detail.html">ติวเตอร์คณิตศาสตร์ ม.ปลาย</a></td>
-            <td>ศูนย์ติวตัวอย่าง</td>
-            <td><time datetime="2026-10-08">8 ต.ค. 2569</time></td>
-            <td>กำลังพิจารณา</td>
-          </tr>
-          <tr>
-            <td><a href="job-detail.html">แคชเชียร์ช่วงเย็น</a></td>
-            <td>ร้านสะดวกซื้อตัวอย่าง</td>
-            <td><time datetime="2026-10-01">1 ต.ค. 2569</time></td>
-            <td>ผ่านการคัดเลือก</td>
-          </tr>
-        </tbody>
-      </table>
-      <p><a href="my-applications.html">ดูการสมัครทั้งหมด</a></p>
-    </section>
-
     <!-- งานที่บันทึกไว้: ข้อมูลตัวอย่าง (ภายหลังดึงจากตาราง SAVED_JOB) -->
-    <section aria-labelledby="saved-title">
+    <section class="dashboard-saved" aria-labelledby="saved-title">
       <h2 id="saved-title">งานที่บันทึกไว้</h2>
       <ul>
         <li>
-          <a href="job-detail.html">ออกแบบกราฟิกโพสต์โซเชียล</a>
+          <strong>ออกแบบกราฟิกโพสต์โซเชียล</strong>
           <p>ฟรีแลนซ์ · 150 บาท/ชั่วโมง</p>
         </li>
         <li>
-          <a href="job-detail.html">ผู้ช่วยสอนภาษาอังกฤษ</a>
+          <strong>ผู้ช่วยสอนภาษาอังกฤษ</strong>
           <p>กรุงเทพฯ · 120 บาท/ชั่วโมง</p>
         </li>
       </ul>
       <p><a href="saved.html">ดูงานที่บันทึกทั้งหมด</a></p>
     </section>
   </main>
-
-  <footer class="site-footer">
-    <p class="logo">CampusJob</p>
-    <nav aria-label="ลิงก์ท้ายหน้า">
-      <ul>
-        <li><a href="jobs.html">หางาน</a></li>
-        <li><a href="my-applications.html">การสมัครของฉัน</a></li>
-        <li><a href="saved.html">งานที่บันทึกไว้</a></li>
-      </ul>
-    </nav>
-    <p><small>© 2026 CampusJob สงวนลิขสิทธิ์</small></p>
-  </footer>
+  <footer><small>© 2026 CampusJobs</small></footer>
 
 </body>
 </html>

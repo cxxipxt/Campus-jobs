@@ -47,15 +47,20 @@ function owned_job(int $jobId, int $owner, bool $lock = false): array {
 }
 function statuses(): array { return ['Pending' => 'รอพิจารณา', 'Reviewing' => 'กำลังพิจารณา', 'Accepted' => 'ได้รับเลือก', 'Rejected' => 'ไม่ผ่านการพิจารณา']; }
 function thai_time(string $utc): string { return (new DateTimeImmutable($utc, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Asia/Bangkok'))->format('d/m/Y H:i'); }
-function start_page(string $title): void {
-    echo '<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . e($title) . ' | Campus-jobs</title><link rel="stylesheet" href="' . e(url('assets/styles/mik.css')) . '"></head><body><a class="skip" href="#main">ข้ามไปเนื้อหาหลัก</a><header><a class="brand" href="' . e(url('index.html')) . '">Campus-jobs</a><nav aria-label="เมนูหลัก">';
-    foreach (['jobs.php' => 'ค้นหางาน', 'my-applications.php' => 'การสมัครของฉัน', 'employer/jobs.php' => 'จัดการประกาศ', 'employer/profile.php' => 'ข้อมูลบริษัท'] as $path => $label) echo '<a href="' . e(url($path)) . '">' . e($label) . '</a>';
+function start_page(string $title, string $layout = '', bool $showHeading = true): void {
+    echo '<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . e($title) . ' | CampusJobs</title><link rel="stylesheet" href="' . e(url('assets/styles/campus.css')) . '"><script defer src="' . e(url('assets/campus.js')) . '"></script></head><body class="' . e($layout) . '"><a class="skip" href="#main">ข้ามไปเนื้อหาหลัก</a><header class="campus-header"><a class="brand" href="' . e(url('index.html')) . '">CampusJobs</a><nav aria-label="เมนูหลัก">';
+    $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    $links = ['jobs.php' => 'ค้นหางาน'];
+    if (identity('student')) $links += ['dashboard.php' => 'ภาพรวม', 'my-applications.php' => 'การสมัครของฉัน', 'saved.php' => 'งานที่บันทึก', 'student/profile.php' => 'โปรไฟล์'];
+    if (identity('employer')) $links += ['employer/jobs.php' => 'จัดการประกาศ', 'employer/profile.php' => 'ข้อมูลบริษัท'];
+    foreach ($links as $path => $label) echo '<a href="' . e(url($path)) . '"' . ($currentPath === url($path) ? ' aria-current="page"' : '') . '>' . e($label) . '</a>';
     if (identity('employer')) { echo '<form method="post" action="' . e(url('employer/logout.php')) . '">'; csrf_field(); echo '<button>ออกจากระบบ</button></form>'; }
     else echo '<a href="' . e(url('employer/login.php')) . '">เข้าสู่ระบบนายจ้าง</a>';
-    echo '</nav></header><main id="main"><h1>' . e($title) . '</h1>';
+    echo '</nav></header><main id="main">';
+    if ($showHeading) echo '<h1>' . e($title) . '</h1>';
     if (isset($_SESSION['flash'])) { echo '<p class="notice" role="status">' . e($_SESSION['flash']) . '</p>'; unset($_SESSION['flash']); }
 }
-function end_page(): void { echo '</main><footer>Campus-jobs · งานพาร์ทไทม์สำหรับนักศึกษา</footer></body></html>'; }
+function end_page(): void { echo '</main><footer>CampusJobs · งานพาร์ทไทม์สำหรับนักศึกษา</footer></body></html>'; }
 function error_box(?string $error): void { if ($error) echo '<p class="error" role="alert">' . e($error) . '</p>'; }
 function field(string $name, string $label, string $value = '', string $type = 'text', bool $required = true, int $max = 255): void {
     echo '<p><label for="' . e($name) . '">' . e($label) . '</label><input id="' . e($name) . '" name="' . e($name) . '" type="' . e($type) . '" maxlength="' . $max . '" value="' . e($value) . '"' . ($required ? ' required' : '') . '></p>';

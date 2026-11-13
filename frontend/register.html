@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-    <title>สมัครสมาชิก - Campusjobs</title>
+    <meta name="description" content="โครงหน้า CampusJobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>สมัครสมาชิก - CampusJobs</title>
+  <link rel="stylesheet" href="assets/styles/campus.css"><script src="assets/campus.js" defer></script>
 </head>
-<body>
+<body class="auth-page signup-page">
 
 <a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header>
-    <p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
+<header class="campus-header">
+    <p><a class="brand" href="index.html">CampusJobs</a></p>
     <nav aria-label="เมนูหลัก">
         <ul>
             <li><a href="index.html">หน้าหลัก</a></li>
             <li><a href="jobs.html">ค้นหางาน</a></li>
             <li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li>
             <li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
-            <li><a href="register.html" aria-current="page">สมัครสมาชิก</a></li>
         </ul>
     </nav>
 </header>
 
 <main id="main">
+<div class="auth-layout"><aside><a class="auth-brand" href="index.html">CampusJobs</a><span class="eyebrow">CampusJobs · Students First</span><h2>หารายได้เสริม<br>ระหว่างเรียน<br><em>ได้ง่ายกว่าที่คิด.</em></h2><p>เชื่อมต่อนักศึกษากับงานพาร์ทไทม์ที่เหมาะกับตารางเรียน</p></aside><div class="auth-content">
     <h1>สมัครสมาชิก</h1>
     <p>เลือกประเภทบัญชีที่ต้องการ</p>
 
@@ -42,14 +43,14 @@
         <a href="student/login.html">สมัครในฐานะนักศึกษา</a>
     </section>
 
-    <!-- นายจ้าง: ใช้อีเมลและรหัสผ่าน (ฟอร์มอยู่ที่ employer/register.html) -->
     <section aria-labelledby="employer-title">
         <h2 id="employer-title">นายจ้าง</h2>
         <p>
             สำหรับเจ้าของร้านหรือบริษัทที่ต้องการประกาศงานพาร์ทไทม์
-            สมัครด้วยอีเมลและรหัสผ่านที่ตั้งเอง
+            ใช้บัญชี Google หรือสมัครด้วยอีเมลและรหัสผ่าน แล้วค่อยกรอกข้อมูลบริษัทหรือร้านค้า
         </p>
-        <a href="employer/register.html">สมัครในฐานะนายจ้าง</a>
+        <a href="employer/login.html">เริ่มต้นด้วยบัญชี Google</a>
+        <a href="employer/register.html">สมัครด้วยอีเมล</a>
     </section>
 
     <p>
@@ -57,6 +58,7 @@
         <a href="student/login.html">เข้าสู่ระบบนักศึกษา</a> ·
         <a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a>
     </p>
+</div></div>
 </main>
 
 </body>

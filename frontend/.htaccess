@@ -6,4 +6,8 @@ RewriteEngine On
 RewriteRule ^jobs\.html$ jobs.php [R=302,L]
 RewriteRule ^job-detail\.html$ job-detail.php [R=302,L]
 RewriteRule ^my-applications\.html$ my-applications.php [R=302,L]
+RewriteRule ^(dashboard|saved)\.html$ $1.php [R=302,L]
+RewriteRule ^student/profile\.html$ student/profile.php [R=302,L]
+RewriteRule ^student/register\.html$ student/confirm.php [R=302,L]
+RewriteRule ^employer/applicants\.html$ employer/applicants.php [R=302,L]
 RewriteRule ^employer/(login|register|profile|jobs|job-form)\.html$ employer/$1.php [R=302,L]

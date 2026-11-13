@@ -17,11 +17,12 @@ header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
 set_exception_handler(function (Throwable $error): void {
     // Do not log SQL parameters, passwords or personal data.
-    error_log('Campus-jobs error: ' . get_class($error) . ' code ' . $error->getCode());
+    error_log('CampusJobs error: ' . get_class($error) . ' code ' . $error->getCode());
     http_response_code(500);
     echo '<!doctype html><html lang="th"><meta charset="utf-8"><title>ระบบขัดข้อง</title><h1>ระบบขัดข้องชั่วคราว</h1><p>กรุณาลองอีกครั้ง หรือตรวจการตั้งค่าฐานข้อมูลกับผู้ดูแล</p></html>';
 });
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/student.php';
 
 function db(): PDO {
     static $pdo;
