@@ -1,18 +1,208 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>จัดการประกาศงาน | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="จัดการประกาศงานนายจ้าง - Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>จัดการประกาศงาน | Campus-jobs</title>
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar */
+        header { background: white; border-bottom: 1px solid #e5e7eb; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 600; color: #000; line-height: 1.2; }
+        .nav-menu { display: flex; gap: 25px; list-style: none; font-size: 14px; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .profile-chip { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; background: #f3f4f6; padding: 6px 14px; border-radius: 30px; }
+        .profile-chip img { width: 28px; height: 28px; border-radius: 50%; background: #ccc; }
+
+        /* Main Container */
+        .main-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; }
+        .page-header h1 { font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+        .page-header p { font-size: 13px; color: #6b7280; }
+        
+        .btn-primary { background: #111827; color: white; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-primary:hover { background: #374151; }
+
+        /* Tabs Filter */
+        .tabs-group { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 14px; border: 1px solid #e5e7eb; width: fit-content; margin-bottom: 25px; }
+        .tab-btn { padding: 6px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer; background: transparent; border: none; font-family: 'Kanit'; }
+        .tab-btn.active { background: #111827; color: white; }
+
+        /* Table Card Box */
+        .table-card { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { color: #9ca3af; font-weight: 500; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+        td { padding: 18px 0; border-bottom: 1px solid #f3f4f6; color: #111827; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+
+        .job-title { font-weight: 600; margin-bottom: 2px; }
+        .job-sub { font-size: 12px; color: #6b7280; }
+
+        /* Status Pills */
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
+        .status-open { background: #111827; color: white; }
+        .status-draft { background: #f3f4f6; color: #6b7280; }
+
+        .action-links { display: flex; gap: 15px; align-items: center; font-size: 13px; font-weight: 500; }
+        .action-links a { color: #2563eb; }
+        .action-links a:hover { text-decoration: underline; }
+        .action-links button { background: none; border: none; color: #dc2626; cursor: pointer; font-family: 'Kanit'; font-size: 13px; }
+        .action-links button:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px 0; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; margin-top: 60px; }
+        footer a { color: #6b7280; }
+
+        @media (max-width: 900px) {
+            .page-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="../index.html">หน้าหลัก</a></li><li><a href="../jobs.html">ค้นหางาน</a></li><li><a href="../dashboard.html">ภาพรวม</a></li><li><a href="../register.html">สมัครสมาชิก</a></li><li><a href="../saved.html">งานที่บันทึก</a></li><li><a href="../my-applications.html">ประวัติสมัคร</a></li><li><a href="../student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="../employer/jobs.html" aria-current="page">ส่วนของนายจ้าง</a></li><li><a href="../student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>จัดการประกาศงาน</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<p><a href="job-form.html">สร้างประกาศใหม่</a> · <a href="profile.html">ข้อมูลนายจ้าง</a></p><section><h2>ประกาศของคาเฟ่ตัวอย่าง</h2><table><caption>ประกาศงานของนายจ้าง — ข้อมูลตัวอย่าง</caption><thead><tr><th scope="col">ตำแหน่ง</th><th scope="col">สถานะ</th><th scope="col">ผู้สมัคร</th><th scope="col">จัดการ</th></tr></thead><tbody><tr><td><a href="../job-detail.html">พนักงานร้านกาแฟ</a></td><td>Open</td><td><a href="applicants.html">ดูผู้สมัคร 1 คน</a></td><td><a href="job-form.html">ตรวจหน้าฟอร์มแก้ไข</a> <button type="button" disabled>ปิดรับสมัคร</button></td></tr></tbody></table><p>เมื่อยังไม่มีงาน ให้แสดง “ยังไม่มีประกาศงาน” พร้อมลิงก์สร้างประกาศ</p></section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="../index.html">กลับหน้าหลัก</a></p></footer>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="../index.html">Campus<br><span style="font-size: 14px; font-weight: 400; color: #6b7280;">Job</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">แดชบอร์ด</a></li>
+                <li><a href="jobs.html" class="active">ประกาศงานของฉัน</a></li>
+                <li><a href="applicants.html">ผู้สมัคร</a></li>
+                <li><a href="#">ข้อความ</a></li>
+                <li><a href="#">โปรไฟล์บริษัท</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="profile-chip">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'><circle cx='12' cy='8' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>" alt="avatar">
+                    <span>คาเฟ่ บินนาร์</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <a href="#main" style="position: absolute; left: -9999px;">ข้ามไปเนื้อหาหลัก</a>
+
+    <main id="main">
+        <div class="main-container">
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>จัดการประกาศงาน</h1>
+                    <p>ตรวจสอบและบริหารสถานะประกาศงานพาร์ทไทม์ทั้งหมดของ คาเฟ่ บินนาร์</p>
+                </div>
+                <a href="jobs.html" class="btn-primary">+ ลงประกาศงานใหม่</a>
+            </div>
+
+            <!-- Tabs Filter -->
+            <div class="tabs-group">
+                <button class="tab-btn active">ทั้งหมด (4)</button>
+                <button class="tab-btn">กำลังเปิดรับ (3)</button>
+                <button class="tab-btn">ฉบับร่าง (1)</button>
+            </div>
+
+            <!-- Table Card -->
+            <div class="table-card">
+                <table>
+                    <caption>ประกาศงานของนายจ้าง</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 35%;">ตำแหน่งงาน</th>
+                            <th scope="col" style="width: 15%;">ค่าตอบแทน</th>
+                            <th scope="col" style="width: 15%;">ผู้สมัคร</th>
+                            <th scope="col" style="width: 15%;">สถานะ</th>
+                            <th scope="col" style="width: 20%;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="job-title"><a href="../job-detail.html">บาริสต้าพาร์ทไทม์</a></div>
+                                <div class="job-sub">สาขาลาดพร้าว · 18 ต.ค. 2569</div>
+                            </td>
+                            <td>฿400/วัน</td>
+                            <td><a href="applicants.html" style="color: #2563eb; font-weight: 500;">ดูผู้สมัคร (14 คน)</a></td>
+                            <td><span class="status-pill status-open">เปิดรับ</span></td>
+                            <td>
+                                <div class="action-links">
+                                    <a href="jobs.html">แก้ไข</a>
+                                    <button type="button">ปิดรับ</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title"><a href="../job-detail.html">พนักงานเสิร์ฟ (เสาร์-อาทิตย์)</a></div>
+                                <div class="job-sub">สาขาสยาม · 15 ต.ค. 2569</div>
+                            </td>
+                            <td>฿60/ชม.</td>
+                            <td><a href="applicants.html" style="color: #2563eb; font-weight: 500;">ดูผู้สมัคร (9 คน)</a></td>
+                            <td><span class="status-pill status-open">เปิดรับ</span></td>
+                            <td>
+                                <div class="action-links">
+                                    <a href="jobs.html">แก้ไข</a>
+                                    <button type="button">ปิดรับ</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title"><a href="../job-detail.html">ผู้ช่วยแอดมินโซเชียล</a></div>
+                                <div class="job-sub">ทำงานที่บ้านได้ · 12 ก.ค. 2569</div>
+                            </td>
+                            <td>฿8,000/เดือน</td>
+                            <td><span style="color: #9ca3af;">0 คน</span></td>
+                            <td><span class="status-pill status-draft">ฉบับร่าง</span></td>
+                            <td>
+                                <div class="action-links">
+                                    <a href="jobs.html">แก้ไข</a>
+                                    <button type="button" style="color: #dc2626;">ลบ</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title"><a href="../job-detail.html">พนักงานแคชเชียร์</a></div>
+                                <div class="job-sub">สาขาลาดพร้าว · 02 ก.ค. 2569</div>
+                            </td>
+                            <td>฿350/วัน</td>
+                            <td><a href="applicants.html" style="color: #2563eb; font-weight: 500;">ดูผู้สมัคร (21 คน)</a></td>
+                            <td><span class="status-pill status-open">เปิดรับ</span></td>
+                            <td>
+                                <div class="action-links">
+                                    <a href="jobs.html">แก้ไข</a>
+                                    <button type="button">ปิดรับ</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 CAMPUSJOB · STUDENTS FIRST</p>
+        <p style="margin-top: 5px;"><a href="../index.html">กลับหน้าหลัก</a></p>
+    </footer>
+
 </body>
 </html>
