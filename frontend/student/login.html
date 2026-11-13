@@ -1,51 +1,81 @@
+
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>เข้าสู่ระบบ | CampusJobs</title>
-  <link rel="stylesheet" href="../assets/styles/campus.css"><script src="../assets/campus.js" defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="เข้าสู่ระบบ CampusJobs สำหรับนักศึกษา KMUTT">
+    <title>เข้าสู่ระบบ | CampusJobs</title>
+    <link rel="stylesheet" href="../assets/styles/campus.css">
+    <script src="../assets/campus.js" defer></script>
 </head>
 <body class="company-auth-page student-login-page">
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header class="campus-header">
-  <a class="brand" href="../index.html">CampusJobs</a>
-  <nav aria-label="เมนูหลัก">
-    <a href="../jobs.html">ค้นหางาน</a>
-  </nav>
-</header>
-<main id="main">
-<div class="company-auth" data-login-tabs data-default-panel="student">
-  <nav class="company-auth-tabs" aria-label="ประเภทบัญชี">
-    <a href="#student" aria-controls="student">หางาน</a>
-    <a href="#employer" aria-controls="employer">หาคน</a>
-  </nav>
-  <div class="company-auth-card company-login-card">
-    <div id="student" data-login-panel>
-    <h1>เข้าสู่ระบบสำหรับนักศึกษา</h1>
-    <p class="company-auth-note">ใช้บัญชีอีเมลนักศึกษา KMUTT</p>
-    <div class="student-providers">
-      <button type="button" disabled>
-        <span class="provider-mark microsoft-mark" aria-hidden="true"></span>
-        <span>เข้าสู่ระบบด้วย Microsoft <small>@kmutt.ac.th</small></span>
-      </button>
-      <button type="button" disabled>
-        <span class="provider-mark google-mark" aria-hidden="true">G</span>
-        <span>เข้าสู่ระบบด้วย Google <small>@mail.kmutt.ac.th</small></span>
-      </button>
-    </div>
-    </div>
-    <div id="employer" data-login-panel>
-    <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
-    <div class="company-auth-fields">
-      <p><label for="username">ชื่อผู้ใช้</label><input id="username" disabled></p>
-      <p><label for="password">รหัสผ่าน</label><input id="password" type="password" disabled></p>
-      <a class="button" href="../employer/login.php">เข้าสู่ระบบ</a>
-    </div>
-    <p class="company-auth-link">ยังไม่มีบัญชี? <a href="../employer/register.html">สมัครสมาชิก</a></p>
-    </div>
-  </div>
-</div>
-</main>
+    <a href="#main">ข้ามไปเนื้อหาหลัก</a>
+
+    <header class="campus-header">
+        <a class="brand" href="../index.html">CampusJobs</a>
+        <nav aria-label="เมนูหลัก">
+            <a href="../jobs.html">ค้นหางาน</a>
+        </nav>
+    </header>
+
+    <main id="main">
+        <div class="company-auth" data-login-tabs data-default-panel="student">
+            <nav class="company-auth-tabs" aria-label="ประเภทบัญชี">
+                <a href="#student" aria-controls="student">หางาน</a>
+                <a href="#employer" aria-controls="employer">หาคน</a>
+            </nav>
+
+            <div class="company-auth-card company-login-card">
+                <div id="student" data-login-panel>
+                    <h1>เข้าสู่ระบบสำหรับนักศึกษา</h1>
+                    <p class="company-auth-note">
+                        ใช้บัญชีอีเมลนักศึกษา KMUTT เท่านั้น
+                    </p>
+
+                    <div class="student-providers">
+                        <form action="oauth-start.php" method="get">
+                            <input type="hidden" name="provider" value="microsoft">
+                            <button type="submit">
+                                <span class="provider-mark microsoft-mark" aria-hidden="true"></span>
+                                <span>เข้าสู่ระบบด้วย Microsoft <small>@kmutt.ac.th</small></span>
+                            </button>
+                        </form>
+
+                        <form action="oauth-start.php" method="get">
+                            <input type="hidden" name="provider" value="google">
+                            <button type="submit">
+                                <span class="provider-mark google-mark" aria-hidden="true">G</span>
+                                <span>เข้าสู่ระบบด้วย Google <small>@mail.kmutt.ac.th</small></span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <p class="company-auth-note">
+                        ไม่รองรับบัญชีอีเมลส่วนตัว เช่น Gmail หรือ Outlook ส่วนตัว
+                    </p>
+                </div>
+
+                <div id="employer" data-login-panel>
+                    <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
+                    <div class="company-auth-fields">
+                        <p>
+                            <label for="username">ชื่อผู้ใช้</label>
+                            <input id="username" disabled>
+                        </p>
+                        <p>
+                            <label for="password">รหัสผ่าน</label>
+                            <input id="password" type="password" disabled>
+                        </p>
+                        <a class="button" href="../employer/login.php">เข้าสู่ระบบ</a>
+                    </div>
+                    <p class="company-auth-link">
+                        ยังไม่มีบัญชี?
+                        <a href="../employer/register.html">สมัครสมาชิก</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

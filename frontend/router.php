@@ -6,7 +6,7 @@ $routes += [
     '/dashboard.html' => '/dashboard.php',
     '/saved.html' => '/saved.php',
     '/student/profile.html' => '/student/profile.php',
-    '/student/register.html' => '/student/confirm.php',
+    '/student/register.html' => '/student/register.php',
     '/employer/applicants.html' => '/employer/applicants.php',
 ];
 if (preg_match('~(?:^|/)\.~', rawurldecode((string)$path))) { http_response_code(404); echo 'Not found'; return true; }
