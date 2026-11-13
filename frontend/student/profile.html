@@ -1,18 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>โปรไฟล์นักศึกษา | Campus-jobs</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>โปรไฟล์นักศึกษา | CampusJobs</title>
+  <link rel="stylesheet" href="../assets/styles/campus.css"><script src="../assets/campus.js" defer></script>
 </head>
-<body>
+<body class="workspace-page student-profile">
 <a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="../index.html">หน้าหลัก</a></li><li><a href="../jobs.html">ค้นหางาน</a></li><li><a href="../dashboard.html">ภาพรวม</a></li><li><a href="../register.html">สมัครสมาชิก</a></li><li><a href="../saved.html">งานที่บันทึก</a></li><li><a href="../my-applications.html">ประวัติสมัคร</a></li><li><a href="../student/profile.html" aria-current="page">โปรไฟล์นักศึกษา</a></li><li><a href="../employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="../student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>โปรไฟล์นักศึกษา</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<form action="#" method="post"><fieldset><legend>ข้อมูลนักศึกษา — ตัวอย่าง</legend><p><label for="full_name">ชื่อ–นามสกุล (จำเป็น)</label><br><input id="full_name" name="full_name" type="text" value="นักศึกษาตัวอย่าง" required></p><p><label for="email">อีเมล (จำเป็น)</label><br><input id="email" name="email" type="email" readonly value="student@example.com" required></p><p><label for="phone">เบอร์โทร</label><br><input id="phone" name="phone" type="tel"></p><p><label for="major">สาขา</label><br><input id="major" name="major" type="text" value="เทคโนโลยีสารสนเทศ"></p><p><label for="resume_url">ลิงก์ Resume</label><br><input id="resume_url" name="resume_url" type="url"></p></fieldset><fieldset><legend>ทักษะ</legend><ul><li>การสื่อสาร <button type="button" disabled>ลบทักษะการสื่อสาร</button></li></ul><p><label for="skill_name">ชื่อทักษะใหม่</label><br><input id="skill_name" name="skill_name" type="text"></p><button type="button" disabled>เพิ่มทักษะ</button></fieldset><p><button type="submit" disabled>บันทึกโปรไฟล์</button></p><p>ปุ่มยังไม่ทำงานในโครง HTML นี้</p></form>
+<header class="campus-header profile-header">
+  <a class="brand" href="../index.html">CampusJobs</a>
+  <nav aria-label="เมนูหลัก"><a href="../index.html">หน้าแรก</a><a href="../jobs.html">หางาน</a><a href="../dashboard.html">แดชบอร์ด</a></nav>
+  <div class="profile-account"><span class="profile-avatar" aria-hidden="true">น</span><div><strong>นักศึกษาตัวอย่าง</strong><small>บัญชีนักศึกษา</small></div></div>
+</header>
+<main id="main" class="dashboard-layout">
+  <aside class="dashboard-sidebar">
+    <div class="profile-person"><span class="profile-avatar" aria-hidden="true">น</span><strong>นักศึกษาตัวอย่าง</strong><small>มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี</small><span class="status-pill">บัญชีนักศึกษา</span></div>
+    <nav aria-label="เมนูบัญชีนักศึกษา">
+      <ul>
+        <li><a href="../dashboard.html">ภาพรวม</a></li>
+        <li><a href="../my-applications.html">การสมัครของฉัน</a></li>
+        <li><a href="../saved.html">งานที่บันทึกไว้</a></li>
+        <li><a href="profile.html" aria-current="page">โปรไฟล์</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="dashboard-content">
+    <div class="profile-heading"><h1>โปรไฟล์นักศึกษา</h1><span class="status-pill">ข้อมูลตัวอย่าง</span></div>
+    <p class="muted">จัดการข้อมูลส่วนตัว ทักษะ และเรซูเม่สำหรับสมัครงาน</p>
+    <form method="post" action="#">
+      <section aria-labelledby="personal-title">
+        <h2 id="personal-title">ข้อมูลส่วนตัว</h2>
+        <div class="profile-fields">
+          <div><label for="full_name">ชื่อ–นามสกุล</label><input id="full_name" name="full_name" value="นักศึกษาตัวอย่าง" maxlength="150" required></div>
+          <div><label for="email">อีเมลมหาวิทยาลัย</label><input id="email" name="email" type="email" value="student@example.com" readonly></div>
+          <div><label for="phone">เบอร์โทร</label><input id="phone" name="phone" type="tel" maxlength="20"></div>
+          <div><label for="major">สาขา</label><input id="major" name="major" value="เทคโนโลยีสารสนเทศ" maxlength="150"></div>
+        </div>
+      </section>
+      <section aria-labelledby="skills-title">
+        <h2 id="skills-title">ทักษะ</h2>
+        <ul class="profile-skills"><li><span class="status-pill">การสื่อสาร</span> <button class="profile-remove" type="button" aria-label="ลบทักษะการสื่อสาร" disabled>×</button></li></ul>
+        <label for="skill_name">ชื่อทักษะใหม่</label>
+        <div class="profile-inline"><input id="skill_name" name="skill_name" maxlength="100" placeholder="เช่น การบริการลูกค้า"><button class="button--outline" type="button" disabled>เพิ่มทักษะ</button></div>
+      </section>
+      <section aria-labelledby="resume-title">
+        <h2 id="resume-title">เรซูเม่</h2>
+        <label for="resume_url">ลิงก์ Resume</label><input id="resume_url" name="resume_url" type="url" maxlength="2048" placeholder="https://">
+      </section>
+      <div class="profile-actions"><a class="button button--outline" href="../dashboard.html">กลับภาพรวม</a><button type="submit" disabled>บันทึกโปรไฟล์</button></div>
+    </form>
+  </div>
 </main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="../index.html">กลับหน้าหลัก</a></p></footer>
+<footer>© 2026 CampusJobs · STUDENTS FIRST</footer>
 </body>
 </html>

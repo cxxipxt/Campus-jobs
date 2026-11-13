@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ค้นหางานพาร์ทไทม์สำหรับนักศึกษา - Campus-jobs">
@@ -326,5 +327,74 @@
         </div>
     </footer>
 
+=======
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ค้นหางาน — งานพาร์ทไทม์สำหรับนักศึกษา CampusJobs">
+  <title>ค้นหางาน | CampusJobs</title>
+  <link rel="stylesheet" href="assets/styles/campus.css"><script src="assets/campus.js" defer></script>
+</head>
+<body class="search-page">
+  <a href="#main">ข้ามไปเนื้อหาหลัก</a>
+  <header class="campus-header">
+    <p><a class="brand" href="index.html">CampusJobs</a></p>
+    <nav aria-label="เมนูหลัก">
+      <ul>
+        <li><a href="index.html">หน้าหลัก</a></li>
+        <li><a href="jobs.html" aria-current="page">ค้นหางาน</a></li>
+        <li><a href="my-applications.html">การสมัครของฉัน</a></li>
+        <li><a href="dashboard.html">ภาพรวม</a></li>
+        <li><a href="saved.html">งานที่บันทึก</a></li>
+        <li><a href="student/profile.html">โปรไฟล์</a></li>
+        <li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li>
+        <li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+    <div class="job-search-hero">
+    <h1>หางานพาร์ทไทม์ที่เข้ากับตารางเรียน</h1>
+    <div class="search-bar">
+      <p><label for="q">ชื่อตำแหน่งงาน</label><input id="q" name="q" form="job-filters" type="search" placeholder="เช่น บาริสต้า ติวเตอร์"></p>
+      <p><label for="location">สถานที่</label><input id="location" name="location" form="job-filters" placeholder="เช่น กรุงเทพฯ"></p>
+      <button type="submit" form="job-filters">ค้นหา</button>
+    </div>
+    </div>
+    <div class="search-layout">
+      <details class="job-filters" open><summary>ตัวกรองงาน</summary>
+<form id="job-filters" class="panel" method="get" action="jobs.html">
+
+        <p><label for="category_id">หมวดหมู่งาน</label><select id="category_id" name="category_id"><option value="">ทุกประเภทงาน</option><option>ร้านอาหารและคาเฟ่</option><option>ขายสินค้าและบริการ</option><option>ติวเตอร์และการสอน</option><option>งานสำนักงาน</option><option>งานอีเวนต์</option><option>งานออนไลน์</option><option>อื่น ๆ</option></select></p>
+        <fieldset>
+          <legend>ค่าจ้างต่อชั่วโมง (บาท)</legend>
+          <p><label for="min_wage">ขั้นต่ำ</label><input id="min_wage" name="min_wage" type="number" min="0" step="0.01"></p>
+          <p><label for="max_wage">สูงสุด</label><input id="max_wage" name="max_wage" type="number" min="0" step="0.01"></p>
+        </fieldset>
+        <p><button type="submit">ใช้ตัวกรอง</button> <a href="jobs.html">ล้างตัวกรอง</a></p>
+      </form>
+</details>
+      <div class="search-results" data-job-preview>
+        <h2 data-job-count aria-live="polite">พบประกาศตัวอย่าง 1 รายการ</h2>
+        <p data-job-empty hidden>ไม่พบงานตามเงื่อนไข ลองเปลี่ยนคำค้นหาหรือล้างตัวกรอง</p>
+        <div class="active-job-filters" data-active-job-filters hidden></div>
+<div class="grid">
+          <article class="job-card" data-wage="60" data-location="กรุงเทพฯ ใกล้มหาวิทยาลัย" data-category="ร้านอาหารและคาเฟ่"><div class="job-card-copy">
+            <span class="job-category status-pill">ร้านอาหารและคาเฟ่</span>
+            <h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3>
+            <p class="muted">คาเฟ่ตัวอย่าง · กรุงเทพฯ ใกล้มหาวิทยาลัย</p>
+            <p class="job-meta">เสาร์–อาทิตย์ 09:00–16:00 · เปิดรับสมัคร</p></div><div class="job-card-actions"><p class="rate">฿60<small>/ชม.</small></p>
+            <a class="button" href="job-detail.html">รายละเอียด</a></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <hr>
+    <p>CampusJobs</p>
+    <p><a href="index.html">หน้าหลัก</a> · <a href="employer/jobs.html">จัดการประกาศงานสำหรับนายจ้าง</a></p>
+  </footer>
+<script src="assets/job-filters.js" defer></script>
+>>>>>>> 4cbca6c223bd89c3dadfe5e125036845a7387ff6
 </body>
 </html>
