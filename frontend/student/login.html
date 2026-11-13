@@ -1,25 +1,150 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>เข้าสู่ระบบนักศึกษา | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="เข้าสู่ระบบนักศึกษา Campus-jobs">
+    <title>เข้าสู่ระบบนักศึกษา | Campus-jobs</title>
+    
+    <!-- เชื่อม CSS กลาง (ย้อนกลับ 1 โฟลเดอร์เพราะอยู่ใน student/) -->
+    <link rel="stylesheet" href="../assets/styles/global.css">
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #ffffff; color: #111827; display: flex; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        
+        /* Layout การแบ่งครึ่งหน้าจอ */
+        .split-layout { display: flex; width: 100vw; min-height: 100vh; }
+        
+        /* ฝั่งซ้าย (Branding - Dark Theme) */
+        .left-panel { flex: 1; background-color: #1a1a1a; color: white; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .logo-wrap { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; }
+        .logo-icon { background: white; color: #1a1a1a; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 18px; }
+        
+        .hero-text { margin-top: 60px; }
+        .badge { background: #2a2a2a; color: #a1a1aa; font-size: 12px; padding: 6px 12px; border-radius: 20px; font-weight: 500; display: inline-block; margin-bottom: 20px; letter-spacing: 1px; }
+        .badge span { color: #fbbf24; margin-right: 5px; }
+        .hero-text h1 { font-size: 48px; line-height: 1.3; margin-bottom: 25px; font-weight: 500; }
+        .hero-text p { color: #a1a1aa; font-size: 16px; line-height: 1.6; max-width: 450px; }
+        
+        .stats-row { display: flex; gap: 40px; margin-top: 80px; }
+        .stat-item h2 { font-size: 32px; font-weight: 600; margin-bottom: 5px; }
+        .stat-item p { color: #71717a; font-size: 13px; font-weight: 500; }
+
+        /* ฝั่งขวา (Login Options - Light Theme) */
+        .right-panel { flex: 1; background-color: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px; }
+        .login-container { width: 100%; max-width: 420px; }
+        
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .lock-icon { font-size: 32px; margin-bottom: 15px; }
+        .form-header h2 { font-size: 28px; font-weight: 600; margin-bottom: 10px; }
+        .form-header p { color: #a1a1aa; font-size: 15px; }
+
+        /* กล่องแจ้งเตือนเงื่อนไข KMUTT */
+        .alert-box { background-color: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: center; }
+        .alert-box strong { display: block; color: #111827; margin-bottom: 8px; font-size: 15px; }
+        .alert-box p { color: #4b5563; font-size: 14px; margin-bottom: 5px; }
+        .alert-box .text-small { color: #ef4444; font-size: 13px; margin-top: 8px; }
+
+        /* ปุ่ม SSO Login */
+        .btn-sso { width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; background-color: white; border: 1px solid #d1d5db; color: #111827; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; margin-bottom: 15px; }
+        .btn-sso:hover { background-color: #f3f4f6; border-color: #9ca3af; }
+        .btn-sso.microsoft:hover { border-color: #00a4ef; color: #00a4ef; }
+        .btn-sso.google:hover { border-color: #ea4335; color: #ea4335; }
+        
+        /* สัญลักษณ์จำลองของปุ่ม */
+        .sso-icon { font-size: 20px; font-weight: bold; }
+        .icon-ms { color: #00a4ef; }
+        .icon-gg { color: #ea4335; }
+
+        /* Dev Note & Links */
+        .dev-note { text-align: center; font-size: 12px; color: #9ca3af; margin-top: 10px; }
+        .dev-back { text-align: center; margin-top: 40px; font-size: 14px; }
+        .dev-back a { color: #6b7280; font-weight: 500; }
+        .dev-back a:hover { color: #111827; text-decoration: underline; }
+
+        /* Responsive สำหรับมือถือ */
+        @media (max-width: 900px) {
+            .split-layout { flex-direction: column; }
+            .left-panel { padding: 40px 20px; }
+            .hero-text h1 { font-size: 36px; }
+            .stats-row { flex-wrap: wrap; gap: 20px; }
+            .right-panel { padding: 40px 20px; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="../index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="../index.html">หน้าหลัก</a></li><li><a href="../jobs.html">ค้นหางาน</a></li><li><a href="../dashboard.html">ภาพรวม</a></li><li><a href="../register.html">สมัครสมาชิก</a></li><li><a href="../saved.html">งานที่บันทึก</a></li><li><a href="../my-applications.html">ประวัติสมัคร</a></li><li><a href="../student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="../employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="../student/login.html" aria-current="page">เข้าสู่ระบบนักศึกษา</a></li><li><a href="../employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>เข้าสู่ระบบนักศึกษา</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<section aria-labelledby="login-options">
-<h2 id="login-options">เลือกบัญชีสำหรับเข้าสู่ระบบ</h2>
-<p>เข้าสู่ระบบด้วยบัญชีอีเมลนักศึกษาของมหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (KMUTT) เท่านั้น</p>
-<p>ไม่รองรับบัญชีอีเมลส่วนตัว เช่น Gmail หรือ Outlook ส่วนตัว</p>
-<p><button type="button" disabled>เข้าสู่ระบบด้วย Microsoft (@kmutt.ac.th)</button></p>
-<p><button type="button" disabled>เข้าสู่ระบบด้วย Google (@mail.kmutt.ac.th)</button></p>
-<p>ปุ่มยังไม่ทำงานในโครง HTML นี้</p>
-</section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="../index.html">กลับหน้าหลัก</a></p></footer>
+
+    <a href="#main" style="position: absolute; left: -9999px;">ข้ามไปเนื้อหาหลัก</a>
+
+    <main id="main" class="split-layout">
+        
+        <!-- ฝั่งซ้าย (Dark Panel) -->
+        <div class="left-panel">
+            <div class="logo-wrap">
+                <a href="../index.html" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="logo-icon">🎓</div>
+                    CampusJob
+                </a>
+            </div>
+            
+            <div class="hero-text">
+                <div class="badge"><span>⚡</span> PART-TIME JOBS FOR STUDENTS</div>
+                <h1>หารายได้เสริม<br>ระหว่างเรียน<br>ได้ง่ายกว่าที่คิด.</h1>
+                <p>เข้าสู่ระบบเพื่อค้นหางานพาร์ทไทม์ และงานรายเสริมที่เหมาะกับตารางเรียนของคุณ พร้อมติดตามสถานะการสมัครงานได้ทุกเวลา</p>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-item"><h2>2,500+</h2><p>งานเปิดรับ</p></div>
+                <div class="stat-item"><h2>15,000+</h2><p>นักศึกษาหางานได้</p></div>
+                <div class="stat-item"><h2>800+</h2><p>บริษัทพาร์ทเนอร์</p></div>
+            </div>
+        </div>
+
+        <!-- ฝั่งขวา (Login Options) -->
+        <div class="right-panel">
+            <div class="login-container">
+                <div class="form-header">
+                    <div class="lock-icon">🔐</div>
+                    <h2>เข้าสู่ระบบนักศึกษา</h2>
+                    <p>เลือกบัญชีเพื่อยืนยันตัวตนเข้าสู่ระบบ</p>
+                </div>
+
+                <!-- กรอบแจ้งเตือนเงื่อนไขตามโค้ดเดิม -->
+                <div class="alert-box">
+                    <strong>ข้อกำหนดการเข้าสู่ระบบ:</strong>
+                    <p>ระบบรองรับเฉพาะบัญชีอีเมลนักศึกษาของ<br>มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (KMUTT)</p>
+                    <p class="text-small">*ไม่รองรับบัญชีอีเมลส่วนตัว เช่น Gmail หรือ Outlook</p>
+                </div>
+
+                <!-- ปุ่มล็อกอิน (กดแล้วจำลองวิ่งไปหน้า Dashboard) -->
+                <button type="button" class="btn-sso microsoft" onclick="location.href='../dashboard.html'">
+                    <span class="sso-icon icon-ms">⊞</span> เข้าสู่ระบบด้วย Microsoft (@kmutt.ac.th)
+                </button>
+                
+                <button type="button" class="btn-sso google" onclick="location.href='../dashboard.html'">
+                    <span class="sso-icon icon-gg">G</span> เข้าสู่ระบบด้วย Google (@mail.kmutt.ac.th)
+                </button>
+                
+                <div class="dev-note">
+                    <aside aria-label="สถานะต้นแบบ">
+                        โครง HTML สำหรับตรวจหน้าเว็บ (ปุ่มด้านบนจำลองการคลิกไปหน้าภาพรวม)
+                    </aside>
+                </div>
+
+                <!-- ลิงก์สำหรับ Dev กดกลับหน้าหลักได้ง่ายๆ -->
+                <div class="dev-back">
+                    <a href="../index.html">← กลับหน้าหลัก</a>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
 </body>
 </html>
