@@ -1,18 +1,330 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>ค้นหางาน | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ค้นหางานพาร์ทไทม์สำหรับนักศึกษา - Campus-jobs">
+    <title>ค้นหางาน | Campus-jobs</title>
+    
+    <!-- เชื่อม CSS กลาง -->
+    <link rel="stylesheet" href="assets/styles/global.css">
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #ffffff; color: #111827; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navbar ตามเรฟ */
+        header { border-bottom: 1px solid #e5e7eb; padding: 15px 0; background: white; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 600; color: #000; }
+        .nav-menu { display: flex; gap: 30px; font-size: 14px; list-style: none; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-outline-nav { background: transparent; border: none; font-size: 14px; cursor: pointer; color: #111827; }
+        .btn-black-nav { background: #000; color: #fff; padding: 8px 20px; border-radius: 30px; font-weight: 500; font-size: 14px; }
+        .btn-black-nav:hover { background: #333; }
+
+        /* Search Bar Section */
+        .search-section { background: #ffffff; padding: 30px 0; border-bottom: 1px solid #e5e7eb; }
+        .search-bar-box { display: flex; background: white; border: 1px solid #e5e7eb; border-radius: 50px; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); align-items: center; }
+        .search-field { display: flex; align-items: center; flex: 1; padding: 0 20px; gap: 12px; }
+        .search-field input { border: none; outline: none; width: 100%; font-size: 14px; background: transparent; font-family: 'Kanit'; }
+        .search-divider { width: 1px; height: 25px; background: #e5e7eb; }
+        .search-bar-box button { background: #000; color: #fff; border: none; padding: 12px 35px; border-radius: 30px; cursor: pointer; font-family: 'Kanit'; font-weight: 500; font-size: 14px; }
+        
+        .popular-tags { display: flex; gap: 12px; margin-top: 15px; align-items: center; font-size: 13px; color: #6b7280; }
+        .tag-pill { background: #f3f4f6; padding: 2px 12px; border-radius: 20px; color: #4b5563; font-size: 12px; cursor: pointer; }
+        .tag-pill:hover { background: #e5e7eb; }
+
+        /* Main Content Layout */
+        .main-layout { display: flex; gap: 50px; padding: 40px 0 80px; max-width: 1200px; margin: 0 auto; }
+        
+        /* Sidebar Filters */
+        .sidebar { width: 240px; flex-shrink: 0; }
+        .filter-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .filter-title { font-size: 15px; font-weight: 600; color: #111827; }
+        .clear-filter { font-size: 12px; color: #9ca3af; cursor: pointer; }
+        
+        .filter-group { margin-bottom: 30px; }
+        .filter-group-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #111827; }
+        .filter-options { display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #4b5563; }
+        .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .checkbox-label input { width: 16px; height: 16px; accent-color: #000; cursor: pointer; border-radius: 4px; }
+
+        /* Results Area */
+        .results-area { flex: 1; }
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; color: #6b7280; }
+        .results-header strong { color: #111827; font-weight: 500; }
+        
+        /* Job Card List */
+        .job-card-list { display: flex; flex-direction: column; gap: 16px; }
+        .job-item { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        .job-item:hover { border-color: #111827; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        
+        .job-info-left { display: flex; gap: 18px; align-items: flex-start; }
+        .job-code-badge { background: #f3f4f6; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; font-weight: 500; }
+        
+        .job-tags { display: flex; gap: 6px; margin-bottom: 6px; }
+        .tag-badge { background: #f3f4f6; padding: 2px 10px; border-radius: 8px; font-size: 11px; color: #4b5563; font-weight: 500; }
+        .job-item h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; color: #111827; }
+        .job-company-location { font-size: 13px; color: #6b7280; }
+
+        .job-info-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .job-salary { font-size: 18px; font-weight: 600; color: #111827; }
+        .job-time-ago { font-size: 11px; color: #9ca3af; }
+        .btn-detail { background: #111827; color: white; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; display: inline-block; }
+        .btn-detail:hover { background: #374151; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 40px; }
+        .page-btn { width: 36px; height: 36px; border: 1px solid #e5e7eb; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; color: #374151; }
+        .page-btn.active { background: #111827; color: white; border-color: #111827; }
+        .page-btn:hover:not(.active) { background: #f3f4f6; }
+
+        /* Footer ตามเรฟ */
+        footer { background: #111827; color: white; padding: 60px 0 30px; margin-top: 40px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-logo { font-size: 22px; font-weight: 600; margin-bottom: 15px; }
+        .footer-links h4 { margin-bottom: 15px; color: #9ca3af; font-size: 14px; font-weight: 500; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; font-size: 13px; }
+        .footer-links a { color: #d1d5db; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { border-top: 1px solid #374151; padding-top: 25px; display: flex; justify-content: space-between; color: #9ca3af; font-size: 12px; }
+
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .search-bar-box { flex-direction: column; border-radius: 16px; padding: 12px; gap: 8px; }
+            .search-divider { display: none; }
+            .job-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .job-info-right { align-items: flex-start; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="index.html">หน้าหลัก</a></li><li><a href="jobs.html" aria-current="page">ค้นหางาน</a></li><li><a href="dashboard.html">ภาพรวม</a></li><li><a href="register.html">สมัครสมาชิก</a></li><li><a href="saved.html">งานที่บันทึก</a></li><li><a href="my-applications.html">ประวัติสมัคร</a></li><li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>ค้นหางาน</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<section><h2>ค้นหาและกรองงาน</h2><form action="#" method="get"><p><label for="keyword">ชื่องาน</label><br><input id="keyword" name="keyword" type="text"></p><p><label for="location">สถานที่</label><br><input id="location" name="location" type="text"></p><p><label for="category_id">ประเภทงาน</label><br><select id="category_id" name="category_id"><option value="">ทุกประเภท</option value="1">ร้านอาหารและคาเฟ่</option><option value="2">ขายสินค้าและบริการ</option><option value="3">ติวเต้อและการสอน</option><option value="4">งานสำนักงาน</option><option value="5">งานอีเวนต์</option><option value="6">งานออนไลน์</option><option value="7">อื่น ๆ</option></select></p><p><label for="min_wage">ค่าจ้างขั้นต่ำต่อชั่วโมง (บาท)</label><br><input id="min_wage" name="min_wage" type="number"></p><p><button type="submit" disabled>ค้นหางาน</button></p><p>ปุ่มยังไม่ทำงานในโครง HTML นี้</p></form></section><section><h2>รายการงานตัวอย่าง</h2><article><h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3><p>คาเฟ่ตัวอย่าง · ร้านอาหารและคาเฟ่ · กรุงเทพฯ</p><p>60 บาท/ชั่วโมง · เสาร์–อาทิตย์ · เปิดรับสมัคร</p><a href="job-detail.html">ดูรายละเอียด</a></article><article><h3>ผู้ช่วยจัดกิจกรรม</h3><p>บริษัทอีเวนต์ตัวอย่าง · งานอีเวนต์ · ปทุมธานี</p><p>75 บาท/ชั่วโมง · วันเสาร์ · ตัวอย่างรายการเพิ่มเติม</p></article><p>พื้นที่สำหรับข้อความ “ไม่พบงานตามเงื่อนไข” และการแบ่งหน้าเมื่อพัฒนาระบบจริง</p></section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="index.html">กลับหน้าหลัก</a></p></footer>
+
+    <!-- Navbar ตามเรฟ[cite: 7] -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">CampusJob</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="jobs.html" class="active">หางาน</a></li>
+                <li><a href="dashboard.html">สำหรับนายจ้าง</a></li>
+                <li><a href="#">เกี่ยวกับเรา</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="student/login.html" class="btn-outline-nav">เข้าสู่ระบบ</a>
+                <a href="register.html" class="btn-black-nav">สมัครสมาชิก</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section ตามเรฟ[cite: 7] -->
+    <div class="search-section">
+        <div class="container">
+            <form action="jobs.html" method="GET" class="search-bar-box">
+                <div class="search-field">
+                    <span>🔍</span>
+                    <input type="text" name="keyword" placeholder="Frontend Developer" value="Frontend Developer">
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-field">
+                    <span>📍</span>
+                    <input type="text" name="location" placeholder="สถานที่">
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-field">
+                    <span>💼</span>
+                    <input type="text" name="category" placeholder="ประเภทงาน">
+                </div>
+                <button type="submit">ค้นหา</button>
+            </form>
+            
+            <div class="popular-tags">
+                <span>ยอดนิยม:</span>
+                <span class="tag-pill">ออกแบบ</span>
+                <span class="tag-pill">การตลาด</span>
+                <span class="tag-pill">ธุรการ</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="container main-layout">
+        
+        <!-- Sidebar Filters ตามเรฟ[cite: 7] -->
+        <aside class="sidebar">
+            <div class="filter-header-row">
+                <span class="filter-title">ตัวกรอง</span>
+                <span class="clear-filter">ล้างทั้งหมด</span>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">ประเภทงาน</div>
+                <div class="filter-options">
+                    <label class="checkbox-label"><input type="checkbox"> งานประจำ</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> พาร์ทไทม์</label>
+                    <label class="checkbox-label"><input type="checkbox"> ฝึกงาน</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">หมวดหมู่</div>
+                <div class="filter-options">
+                    <label class="checkbox-label"><input type="checkbox" checked> เทคโนโลยี</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> ออกแบบ</label>
+                    <label class="checkbox-label"><input type="checkbox"> การศึกษา</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">ช่วงรายได้ (฿/ชม.)</div>
+                <input type="range" min="50" max="1000" value="500" style="width: 100%; accent-color: #000; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af; margin-top: 6px;">
+                    <span>฿50</span>
+                    <span>฿500+</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Job Results Area ตามเรฟ[cite: 7] -->
+        <main class="results-area">
+            <div class="results-header">
+                <span>แสดง <strong>42 ผลลัพธ์</strong></span>
+                <div style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <span>เรียงโดย:</span>
+                    <strong style="color: #111827;">ล่าสุด ▼</strong>
+                </div>
+            </div>
+
+            <!-- Job List Cards -->
+            <div class="job-card-list">
+                <!-- Job Item 1 -->
+                <div class="job-item">
+                    <div class="job-info-left">
+                        <div class="job-code-badge">&lt;/&gt;</div>
+                        <div>
+                            <div class="job-tags">
+                                <span class="tag-badge">พาร์ทไทม์</span>
+                                <span class="tag-badge">ออกแบบ</span>
+                            </div>
+                            <h3>Web Developer</h3>
+                            <div class="job-company-location">Manao Software Co., Ltd. · เมืองเชียงใหม่, เชียงใหม่ (ไฮบริด)</div>
+                        </div>
+                    </div>
+                    <div class="job-info-right">
+                        <div>
+                            <div class="job-salary">฿120<span style="font-size: 12px; font-weight: normal; color: #6b7280;">/ชม.</span></div>
+                            <div class="job-time-ago">โพสต์เมื่อ 2 ชม. ที่แล้ว</div>
+                        </div>
+                        <a href="job-detail.html" class="btn-detail">รายละเอียด</a>
+                    </div>
+                </div>
+
+                <!-- Job Item 2 -->
+                <div class="job-item">
+                    <div class="job-info-left">
+                        <div class="job-code-badge">&lt;/&gt;</div>
+                        <div>
+                            <div class="job-tags">
+                                <span class="tag-badge">พาร์ทไทม์</span>
+                                <span class="tag-badge">แปลภาษา</span>
+                            </div>
+                            <h3>Frontend Developer (Angular), Fullstack Developer</h3>
+                            <div class="job-company-location">Orcsoft Co., Ltd. · กรุงเทพมหานคร (ไฮบริด)</div>
+                        </div>
+                    </div>
+                    <div class="job-info-right">
+                        <div>
+                            <div class="job-salary">฿400<span style="font-size: 12px; font-weight: normal; color: #6b7280;">/ชม.</span></div>
+                            <div class="job-time-ago">โพสต์เมื่อ 5 ชม. ที่แล้ว</div>
+                        </div>
+                        <a href="job-detail.html" class="btn-detail">รายละเอียด</a>
+                    </div>
+                </div>
+
+                <!-- Job Item 3 -->
+                <div class="job-item">
+                    <div class="job-info-left">
+                        <div class="job-code-badge">&lt;/&gt;</div>
+                        <div>
+                            <div class="job-tags">
+                                <span class="tag-badge">พาร์ทไทม์</span>
+                                <span class="tag-badge">คาเฟ่</span>
+                            </div>
+                            <h3>Web Developer</h3>
+                            <div class="job-company-location">RAVIPA JEWELRY COMPANY LIMITED · กรุงเทพมหานคร</div>
+                        </div>
+                    </div>
+                    <div class="job-info-right">
+                        <div>
+                            <div class="job-salary">฿150<span style="font-size: 12px; font-weight: normal; color: #6b7280;">/ชม.</span></div>
+                            <div class="job-time-ago">โพสต์เมื่อวานนี้</div>
+                        </div>
+                        <a href="job-detail.html" class="btn-detail">รายละเอียด</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination ตามเรฟ[cite: 7] -->
+            <div class="pagination">
+                <div class="page-btn">&lt;</div>
+                <div class="page-btn active">1</div>
+                <div class="page-btn">2</div>
+                <div class="page-btn">3</div>
+                <div class="page-btn">&gt;</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer ตามเรฟ[cite: 7] -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">CampusJob</div>
+                    <p style="color: #9ca3af; font-size: 13px; line-height: 1.5;">เชื่อมโยงนักศึกษาที่มีทักษะเข้ากับโอกาสทางอาชีพที่สำคัญทั่วประเทศ</p>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนักศึกษา</h4>
+                    <ul>
+                        <li><a href="jobs.html">หางาน</a></li>
+                        <li><a href="student/profile.html">สร้างโปรไฟล์</a></li>
+                        <li><a href="saved.html">งานที่บันทึก</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>สำหรับนายจ้าง</h4>
+                    <ul>
+                        <li><a href="employer/login.html">ลงประกาศงาน</a></li>
+                        <li><a href="#">ราคาแพ็กเกจ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>การสนับสนุน</h4>
+                    <ul>
+                        <li><a href="#">เกี่ยวกับเรา</a></li>
+                        <li><a href="#">นโยบายความเป็นส่วนตัว</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CAMPUSJOB. สงวนลิขสิทธิ์ทั้งหมด.</p>
+                <div>โอปอ / มิก / เต้อ</div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
