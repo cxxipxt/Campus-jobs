@@ -46,3 +46,39 @@ FROM JOB
 WHERE job_id = ? AND status = 'Open'
 FOR UPDATE;
 COMMIT;
+
+
+-- ==========================================
+-- 1. ฟีเจอร์: ยกเลิกบันทึกงาน (Unsave Job)
+-- ==========================================
+DELETE FROM SAVED_JOB 
+WHERE student_id = ? AND job_id = ?;
+
+-- ==========================================
+-- 2. ฟีเจอร์: ดึงรายการงานที่บันทึกไว้ (Saved Jobs Page)
+-- ==========================================
+SELECT j.job_id, j.job_title, j.hourly_wage, j.location, sj.saved_at 
+FROM JOB j
+JOIN SAVED_JOB sj ON j.job_id = sj.job_id
+WHERE sj.student_id = ?
+ORDER BY sj.saved_at DESC;
+
+-- ==========================================
+-- 3. ฟีเจอร์: นายจ้างดูผู้สมัครเฉพาะงานของตัวเอง (Employer Applicants)
+-- ==========================================
+SELECT a.application_id, a.applied_at, a.status AS application_status, 
+       s.full_name, s.email, s.resume_url, 
+       j.job_title 
+FROM APPLICATION a
+JOIN STUDENT s ON a.student_id = s.student_id
+JOIN JOB j ON a.job_id = j.job_id
+WHERE j.employer_id = ?
+ORDER BY a.applied_at DESC;
+
+-- ==========================================
+-- 4. ฟีเจอร์: นายจ้างเปลี่ยนสถานะใบสมัคร (Update Application Status)
+-- ==========================================
+-- สถานะที่ยอมรับ: 'Pending', 'Reviewed', 'Accepted', 'Rejected'
+UPDATE APPLICATION 
+SET status = ? 
+WHERE application_id = ?;
