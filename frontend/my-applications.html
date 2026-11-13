@@ -1,18 +1,212 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โครงหน้า Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
-<title>ประวัติสมัครงาน | Campus-jobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ประวัติสมัครงานของฉัน - Campus-jobs เว็บไซต์งานพาร์ทไทม์สำหรับนักศึกษา">
+    <title>ประวัติสมัครงาน | Campus-jobs</title>
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; line-height: 1.5; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar */
+        header { background: white; border-bottom: 1px solid #e5e7eb; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 600; color: #000; }
+        .nav-menu { display: flex; gap: 30px; list-style: none; font-size: 14px; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .icon-btn { font-size: 18px; color: #4b5563; cursor: pointer; }
+        .profile-avatar { width: 32px; height: 32px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+        /* Main Content */
+        .main-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; }
+        .page-header h1 { font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+        .page-header p { font-size: 13px; color: #6b7280; }
+
+        /* Tabs Filter */
+        .tabs-group { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 14px; border: 1px solid #e5e7eb; width: fit-content; }
+        .tab-btn { padding: 6px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer; background: transparent; border: none; font-family: 'Kanit'; }
+        .tab-btn.active { background: #111827; color: white; }
+
+        /* Table Card Box */
+        .table-card { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); margin-bottom: 30px; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { color: #9ca3af; font-weight: 500; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+        td { padding: 18px 0; border-bottom: 1px solid #f3f4f6; color: #111827; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+
+        .job-cell-flex { display: flex; gap: 14px; align-items: center; }
+        .job-icon-box { width: 42px; height: 42px; background: #f3f4f6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .job-title { font-weight: 600; margin-bottom: 2px; }
+        .job-company { font-size: 12px; color: #6b7280; }
+
+        /* Status Pills */
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
+        .status-reviewing { background: #111827; color: white; }
+        .status-interview { background: #e0e7ff; color: #3730a3; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-accepted { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+
+        .action-link { font-size: 13px; color: #2563eb; font-weight: 500; }
+        .action-link:hover { text-decoration: underline; }
+
+        /* Guide Banner Card */
+        .guide-card { background: #111827; color: white; border-radius: 20px; padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .guide-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .guide-card p { font-size: 13px; color: #9ca3af; }
+        .btn-guide { background: white; color: #111827; padding: 10px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; }
+        .btn-guide:hover { background: #e5e7eb; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px 0; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; margin-top: 60px; }
+        footer a { color: #6b7280; }
+
+        @media (max-width: 900px) {
+            .page-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .guide-card { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
 </head>
 <body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-<header><p><a href="index.html"><strong>Campus-jobs</strong></a> — งานพาร์ทไทม์สำหรับนักศึกษา</p>
-<nav aria-label="เมนูหลัก"><ul><li><a href="index.html">หน้าหลัก</a></li><li><a href="jobs.html">ค้นหางาน</a></li><li><a href="dashboard.html">ภาพรวม</a></li><li><a href="register.html">สมัครสมาชิก</a></li><li><a href="saved.html">งานที่บันทึก</a></li><li><a href="my-applications.html" aria-current="page">ประวัติสมัคร</a></li><li><a href="student/profile.html">โปรไฟล์นักศึกษา</a></li><li><a href="employer/jobs.html">ส่วนของนายจ้าง</a></li><li><a href="student/login.html">เข้าสู่ระบบนักศึกษา</a></li><li><a href="employer/login.html">เข้าสู่ระบบนายจ้าง</a></li></ul></nav></header>
-<main id="main"><h1>ประวัติสมัครงาน</h1><aside aria-label="สถานะต้นแบบ"><p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง ไม่มี CSS หรือ JavaScript</p></aside>
-<section><h2>ใบสมัครของนักศึกษา — ข้อมูลตัวอย่าง</h2><table><caption>รายการใบสมัคร</caption><thead><tr><th scope="col">งาน</th><th scope="col">นายจ้าง</th><th scope="col">วันที่สมัคร (เวลาไทย)</th><th scope="col">สถานะ</th></tr></thead><tbody><tr><td><a href="job-detail.html">พนักงานร้านกาแฟ</a></td><td>คาเฟ่ตัวอย่าง</td><td>13 ตุลาคม 2569</td><td>Pending — รอพิจารณา</td></tr></tbody></table><h3>ความหมายของสถานะ</h3><dl><dt>Pending</dt><dd>รอพิจารณา</dd><dt>Reviewing</dt><dd>กำลังพิจารณา</dd><dt>Accepted</dt><dd>ได้รับเลือก</dd><dt>Rejected</dt><dd>ไม่ผ่านการพิจารณา</dd></dl><p>เมื่อไม่มีใบสมัคร ให้แสดง “ยังไม่ได้สมัครงาน”</p><a href="jobs.html">ค้นหางาน</a></section>
-</main>
-<footer><hr><p>Campus-jobs · โอปอ / มิก / เต้อ</p><p><a href="index.html">กลับหน้าหลัก</a></p></footer>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">CampusJob</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="jobs.html">หางาน</a></li>
+                <li><a href="my-applications.html" class="active">การสมัครของฉัน</a></li>
+                <li><a href="#">ข้อความ</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="icon-btn">🔔</div>
+                <div class="profile-avatar">พ</div>
+            </div>
+        </div>
+    </header>
+
+    <a href="#main" style="position: absolute; left: -9999px;">ข้ามไปเนื้อหาหลัก</a>
+
+    <main id="main">
+        <div class="main-container">
+            
+            <!-- Page Header & Tabs -->
+            <div class="page-header">
+                <div>
+                    <h1>การสมัครของฉัน</h1>
+                    <p>ติดตามและจัดการใบสมัครงานที่กำลังดำเนินการอยู่ของคุณ</p>
+                </div>
+                <div class="tabs-group">
+                    <button class="tab-btn active">ดำเนินการอยู่ (4)</button>
+                    <button class="tab-btn">ที่ผ่านมา (12)</button>
+                    <button class="tab-btn">ฉบับร่าง (1)</button>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="table-card">
+                <table>
+                    <caption>รายการใบสมัครงานของนักศึกษา</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 45%;">ตำแหน่งงาน & บริษัท</th>
+                            <th scope="col" style="width: 20%;">วันที่สมัคร</th>
+                            <th scope="col" style="width: 20%;">สถานะ</th>
+                            <th scope="col" style="width: 15%;">การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="job-cell-flex">
+                                    <div class="job-icon-box">&lt;/&gt;</div>
+                                    <div>
+                                        <div class="job-title"><a href="job-detail.html">Junior Frontend Developer</a></div>
+                                        <div class="job-company">TECHFLOW INC.</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #6b7280; font-size: 13px;">14 ต.ค. 2569</td>
+                            <td><span class="status-pill status-reviewing">อยู่ระหว่างตรวจสอบ</span></td>
+                            <td><a href="job-detail.html" class="action-link">ดูรายละเอียด</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-cell-flex">
+                                    <div class="job-icon-box" style="background: #fdf2f8; color: #db2777;">🎨</div>
+                                    <div>
+                                        <div class="job-title"><a href="job-detail.html">UI/UX Design Intern</a></div>
+                                        <div class="job-company">CREATIVE STUDIO</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #6b7280; font-size: 13px;">12 ต.ค. 2569</td>
+                            <td><span class="status-pill status-interview">นัดสัมภาษณ์</span></td>
+                            <td><a href="job-detail.html" class="action-link">ดูรายละเอียด</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-cell-flex">
+                                    <div class="job-icon-box" style="background: #fefce8; color: #ca8a04;">📊</div>
+                                    <div>
+                                        <div class="job-title"><a href="job-detail.html">Marketing Assistant</a></div>
+                                        <div class="job-company">GROWTH LAB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #6b7280; font-size: 13px;">08 ต.ค. 2569</td>
+                            <td><span class="status-pill status-pending">รอพิจารณา</span></td>
+                            <td><a href="job-detail.html" class="action-link">ดูรายละเอียด</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-cell-flex">
+                                    <div class="job-icon-box" style="background: #f0fdf4; color: #16a34a;">☕</div>
+                                    <div>
+                                        <div class="job-title"><a href="job-detail.html">พนักงานร้านกาแฟ</a></div>
+                                        <div class="job-company">คาเฟ่ตัวอย่าง</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #6b7280; font-size: 13px;">13 ตุลาคม 2569</td>
+                            <td><span class="status-pill status-accepted">ได้รับเลือกแล้ว</span></td>
+                            <td><a href="job-detail.html" class="action-link">ดูรายละเอียด</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Guide Banner -->
+            <div class="guide-card">
+                <div>
+                    <h3>ต้องการความช่วยเหลือในการสัมภาษณ์?</h3>
+                    <p>ดูคู่มือการเตรียมตัวสัมภาษณ์งานสำหรับนักศึกษา เพื่อเพิ่มโอกาสในการได้งาน</p>
+                </div>
+                <a href="#" class="btn-guide">อ่านคู่มือ</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 CAMPUSJOB · STUDENTS FIRST</p>
+        <p style="margin-top: 5px;"><a href="index.html">กลับหน้าหลัก</a></p>
+    </footer>
+
 </body>
 </html>
