@@ -539,3 +539,62 @@ main :is(button, input, select, textarea, a):focus-visible {
   .dashboard-applications li { grid-template-columns: minmax(0, 1fr); }
   .dashboard-applications .status-pill { justify-self: start; }
 }
+.campus-header {
+  border-bottom-color: #e5e7eb;
+}
+
+/* Adapt the minimal cards and controls from PR #3 to the live page structure. */
+.workspace-page, .detail-page, .company-auth-page, .student-login-page {
+  background: #f8f9fa;
+  color: #111827;
+}
+.landing .hero, .job-search-hero {
+  background: #fff;
+  border-color: #e5e7eb;
+  color: #111827;
+}
+.landing .hero h1, .job-search-hero h1 {
+  font-weight: 750;
+  letter-spacing: -.025em;
+}
+.search-page .job-search-hero .search-bar, .landing .hero form {
+  padding: .65rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.75rem;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
+}
+.search-page .search-bar input, .landing .hero form input {
+  background: #fff;
+  border-color: #d1d5db;
+}
+.search-page .job-card, .workspace-page .stats-row article,
+.workspace-page .table-wrap, .detail-page .detail-action {
+  border-color: #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 3%);
+}
+.search-page .job-card:is(:hover, :focus-within) {
+  border-color: #9ca3af;
+}
+.search-page .search-bar button, .landing .hero button,
+.search-page .job-card .button {
+  border-radius: 2rem;
+}
+.company-auth-page .company-auth-fields > :is(button, .button) {
+  background: #111827;
+  border-color: #111827;
+  border-radius: .75rem;
+}
+.company-auth-page .company-auth-fields > :is(button, .button):hover {
+  background: #000;
+}
+.student-providers button:disabled {
+  background: #fff;
+  border-color: #d1d5db;
+  border-radius: .75rem;
+}
+@media (max-width: 650px) {
+  .search-page .job-search-hero .search-bar, .landing .hero form {
+    border-radius: 1rem;
+  }
+}
