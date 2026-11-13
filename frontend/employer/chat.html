@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="แชทและเจรจาต่อรองผู้สมัคร - Campus-jobs">
+    <title>ข้อความ | Campus-jobs</title>
+    
+    <!-- ฟอนต์ Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+        body { background-color: #f8f9fa; color: #111827; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        
+        /* Navbar */
+        header { background: white; border-bottom: 1px solid #e5e7eb; padding: 12px 20px; flex-shrink: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 100%; }
+        .logo { font-size: 18px; font-weight: 600; color: #000; line-height: 1.1; }
+        .nav-menu { display: flex; gap: 25px; list-style: none; font-size: 13px; }
+        .nav-menu a { color: #6b7280; }
+        .nav-menu a:hover, .nav-menu a.active { color: #000; font-weight: 500; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .profile-chip { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; background: #f3f4f6; padding: 4px 14px; border-radius: 30px; }
+
+        /* Main 3-Column Layout */
+        .chat-layout { display: grid; grid-template-columns: 280px 1fr 320px; height: calc(100vh - 58px); background: #fff; overflow: hidden; }
+        
+        /* Column 1: Chat List (ซ้าย) */
+        .chat-list-sidebar { border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; background: #fff; }
+        .search-wrapper { padding: 12px; border-bottom: 1px solid #e5e7eb; }
+        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 13px; outline: none; background: #f9fafb; font-family: 'Kanit'; }
+        
+        .filter-tabs { display: flex; gap: 6px; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; font-size: 12px; }
+        .filter-tab { padding: 4px 10px; border-radius: 8px; background: #f3f4f6; color: #4b5563; cursor: pointer; font-weight: 500; }
+        .filter-tab.active { background: #111827; color: white; }
+
+        .chat-list-scroll { overflow-y: auto; flex: 1; }
+        .chat-list-item { display: flex; gap: 12px; padding: 12px; border-bottom: 1px solid #f3f4f6; cursor: pointer; position: relative; }
+        .chat-list-item:hover, .chat-list-item.active { background: #f9fafb; }
+        .chat-list-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #111827; }
+        
+        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+        .chat-info { flex: 1; min-width: 0; }
+        .chat-info-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+        .chat-name { font-size: 13px; font-weight: 600; color: #111827; }
+        .chat-time { font-size: 10px; color: #9ca3af; }
+        .chat-snippet { font-size: 12px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-badge { background: #111827; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; }
+
+        /* Column 2: Chat Main Area (ตรงกลาง) */
+        .chat-main-area { display: flex; flex-direction: column; background: #fcfcfc; position: relative; }
+        .chat-main-header { padding: 10px 20px; background: white; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .header-profile { display: flex; gap: 10px; align-items: center; }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+        
+        .btn-header-action { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #e5e7eb; background: white; cursor: pointer; font-family: 'Kanit'; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-header-dark { background: #111827; color: white; border-color: #111827; }
+
+        .chat-messages-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+        .date-divider { text-align: center; font-size: 11px; color: #9ca3af; margin: 10px 0; }
+        
+        .msg-bubble-row { display: flex; gap: 10px; max-width: 75%; }
+        .msg-bubble-row.incoming { align-self: flex-start; }
+        .msg-bubble-row.outgoing { align-self: flex-end; flex-direction: row-reverse; }
+        
+        .bubble-box { background: white; padding: 12px 16px; border-radius: 12px; font-size: 13px; border: 1px solid #e5e7eb; }
+        .msg-bubble-row.outgoing .bubble-box { background: #111827; color: white; border-color: #111827; }
+        
+        .msg-timestamp { font-size: 10px; color: #9ca3af; margin-top: 3px; padding: 0 4px; }
+        .msg-bubble-row.outgoing .msg-timestamp { text-align: right; }
+
+        /* Negotiation Box Inside Chat */
+        .negotiation-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; margin-top: 10px; width: 300px; color: #111827; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .negotiation-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; margin-bottom: 8px; color: #4b5563; }
+        .price-compare-box { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+        .negotiation-btn-group { display: flex; gap: 6px; margin-top: 10px; }
+        .btn-neg-action { flex: 1; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1px solid #e5e7eb; font-family: 'Kanit'; text-align: center; background: white; }
+        .btn-neg-accept { background: #111827; color: white; border-color: #111827; }
+
+        /* Interview Schedule Card Inside Chat */
+        .interview-card { background: #111827; color: white; border-radius: 12px; padding: 14px; margin-top: 10px; width: 280px; }
+        .interview-card-header { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.8; margin-bottom: 6px; }
+        .interview-date-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+        .interview-date-box { background: white; color: #111827; padding: 4px 8px; border-radius: 6px; font-size: 14px; text-align: center; font-weight: bold; }
+        .interview-btn-group { display: flex; gap: 6px; }
+
+        /* Chat Input Footer */
+        .chat-footer { padding: 12px 20px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; align-items: center; }
+        .chat-text-input { flex: 1; padding: 10px 16px; border: 1px solid #e5e7eb; border-radius: 20px; font-size: 13px; outline: none; background: #f9fafb; font-family: 'Kanit'; }
+        .btn-offer-chip { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 8px 14px; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Kanit'; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-send-icon { width: 36px; height: 36px; background: #111827; color: white; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        /* Column 3: Applicant Sidebar (ขวา) */
+        .applicant-sidebar { border-left: 1px solid #e5e7eb; background: white; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .sidebar-title { font-size: 12px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        
+        .applicant-profile-card { text-align: center; padding-bottom: 15px; border-bottom: 1px solid #f3f4f6; }
+        .avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: #e5e7eb; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; }
+        
+        .detail-kv-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+        .detail-kv-row { display: flex; justify-content: space-between; }
+        .detail-k { color: #6b7280; }
+        .detail-v { font-weight: 500; text-align: right; }
+
+        .btn-hire-action { width: 100%; background: #111827; color: white; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Kanit'; text-align: center; }
+        .btn-hire-action:hover { background: #374151; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="../index.html">Campus<br><span style="font-size: 12px; font-weight: 400; color: #6b7280;">Job</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">แดชบอร์ด</a></li>
+                <li><a href="jobs.html">ประกาศงานของฉัน</a></li>
+                <li><a href="applicants.html">ผู้สมัคร</a></li>
+                <li><a href="chat.html" class="active">ข้อความ</a></li>
+                <li><a href="#">โปรไฟล์บริษัท</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="profile-chip">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'><circle cx='12' cy='8' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>" alt="avatar">
+                    <span>คาเฟ่ บินนาร์</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main 3-Column Layout -->
+    <div class="chat-layout">
+        
+        <!-- Column 1: Chat List Sidebar -->
+        <div class="chat-list-sidebar">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="ค้นหาการสนทนา...">
+            </div>
+            <div class="filter-tabs">
+                <span class="filter-tab active">ทั้งหมด</span>
+                <span class="filter-tab">ยังไม่อ่าน 4</span>
+                <span class="filter-tab">คำสั่งต่อรอง</span>
+            </div>
+            <div class="chat-list-scroll">
+                
+                <!-- Active Item -->
+                <div class="chat-list-item active">
+                    <div class="avatar" style="background: #fbcfe8; color: #9d174d;">พ</div>
+                    <div class="chat-info">
+                        <div class="chat-info-top">
+                            <span class="chat-name">พิมพ์พชนก ศรีสุข</span>
+                            <span class="chat-time">09:48</span>
+                        </div>
+                        <div class="chat-snippet">ขอบคุณค่ะ เรื่องเวลาโอเคเลยค่ะ...</div>
+                    </div>
+                    <span class="unread-badge">2</span>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="chat-list-item">
+                    <div class="avatar" style="background: #fed7aa; color: #9a3412;">ธ</div>
+                    <div class="chat-info">
+                        <div class="chat-info-top">
+                            <span class="chat-name">ธนกร วงศ์ใหญ่</span>
+                            <span class="chat-time">09:15</span>
+                        </div>
+                        <div class="chat-snippet">สะดวก็เข้าไปสัมภาษณ์พรุ่งนี้ครับ</div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="chat-list-item">
+                    <div class="avatar" style="background: #fef08a; color: #854d0e;">ก</div>
+                    <div class="chat-info">
+                        <div class="chat-info-top">
+                            <span class="chat-name">กัญญาภัทร ไวดี</span>
+                            <span class="chat-time">เมื่อวาน</span>
+                        </div>
+                        <div class="chat-snippet">ส่งเรซูเม่ให้แล้วนะคะ</div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="chat-list-item">
+                    <div class="avatar" style="background: #ccfbf1; color: #115e59;">อ</div>
+                    <div class="chat-info">
+                        <div class="chat-info-top">
+                            <span class="chat-name">อริษา ทองดี</span>
+                            <span class="chat-time">เมื่อวาน</span>
+                        </div>
+                        <div class="chat-snippet">ได้เลยค่ะ ยินดีนัดวันรับวันพุธนะคะ</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Column 2: Chat Window Main -->
+        <div class="chat-main-area">
+            
+            <!-- Header -->
+            <div class="chat-main-header">
+                <div class="header-profile">
+                    <div class="avatar" style="background: #fbcfe8; color: #9d174d;">พ</div>
+                    <div>
+                        <h4 style="font-size: 13px; font-weight: 600;">พิมพ์พชนก ศรีสุข <span style="font-size: 10px; background: #d1fae5; color: #065f46; padding: 1px 6px; border-radius: 4px; font-weight: normal;">ออนไลน์</span></h4>
+                        <p style="font-size: 11px; color: #6b7280;">สมัครตำแหน่ง: บาริสต้าพาร์ทไทม์</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-header-action btn-header-dark">📅 นัดสัมภาษณ์</button>
+                    <button class="btn-header-action">⋮</button>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div class="chat-messages-container">
+                <div class="date-divider">วันนี้ · 20 ต.ค. 2569</div>
+
+                <!-- Incoming -->
+                <div class="msg-bubble-row incoming">
+                    <div class="bubble-box">
+                        สวัสดีค่ะ ได้เห็นประกาศรับบาริสต้าพาร์ทไทม์ในร้านแล้วสนใจมากค่ะ ไม่ทราบว่ายังเปิดรับอยู่ไหมคะ
+                    </div>
+                </div>
+                <div class="msg-timestamp">09:48</div>
+
+                <!-- Outgoing -->
+                <div class="msg-bubble-row outgoing">
+                    <div class="bubble-box">
+                        สวัสดีครับคุณพิมพ์พชนก ยังเปิดรับอยู่ครับ ขอบคุณที่สนใจนะคะ ตอนนี้ทางร้านต้องการคนช่วยงานวันเสาร์-อาทิตย์เป็นหลักครับ
+                    </div>
+                </div>
+                <div class="msg-timestamp">09:52</div>
+
+                <!-- Incoming Resume File -->
+                <div class="msg-bubble-row incoming">
+                    <div class="bubble-box" style="width: 250px;">
+                        <p style="margin-bottom: 6px;">โอเคค่ะ ว่าที่เสาร์และอาทิตย์ค่ะ ตอนนี้ที่ร้านทำกาแฟอยู่ประมาณ 6 เดือนแล้ว พอเจอเอสเปรสโซ่ก็น่าจะเอาการ์ดทำได้ค่ะ</p>
+                        <div style="background: #f3f4f6; padding: 6px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; font-size: 11px;">
+                            <span>📄</span>
+                            <div style="flex: 1; overflow: hidden; text-overflow: ellipsis;">Resume_Pimchanok.pdf</div>
+                            <span>⬇️</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-timestamp">10:05</div>
+
+                <!-- Outgoing Response -->
+                <div class="msg-bubble-row outgoing">
+                    <div class="bubble-box">
+                        ได้รับเรซูเม่แล้วครับ ประสบการณ์ดีมาก ทางร้านเสนอค่าตอบแทน 60 บาทต่อชั่วโมง ทำงานวันเสาร์-อาทิตย์ ประมาณ 6 ชม./วัน โทนร้านครับ
+                    </div>
+                </div>
+                <div class="msg-timestamp">10:20</div>
+
+                <!-- Incoming Negotiation Box -->
+                <div class="msg-bubble-row incoming">
+                    <div class="bubble-box">
+                        ขอบคุณค่ะ เรื่องเวลาโอเคเลยค่ะ แต่ค่าตอบแทนขอขยับขึ้นได้ไหมคะ เพราะหนูมีประสบการณ์บาริสต้าและเคยเดินทางไกลหน่อยค่ะ
+                        
+                        <!-- Negotiation Card -->
+                        <div class="negotiation-card">
+                            <div class="negotiation-header">
+                                <span>📊 ข้อเสนอค่าตอบแทน</span>
+                                <span style="color: #6b7280; font-weight: normal;">นักศึกษาเสนอ</span>
+                            </div>
+                            <div class="price-compare-box">
+                                <span style="color: #9ca3af; text-decoration: line-through;">฿60/ชม.</span>
+                                <span>➔</span>
+                                <span style="color: #059669;">฿70/ชม.</span>
+                            </div>
+                            <p style="font-size: 10px; color: #6b7280; margin-bottom: 8px;">เสาร์-อาทิตย์ · 6 ชม./วัน · รวมประมาณ 8840/สัปดาห์</p>
+                            <div class="negotiation-btn-group">
+                                <button class="btn-neg-action btn-neg-accept" onclick="alert('ยอมรับข้อเสนอแล้ว')">✓ ยอมรับ</button>
+                                <button class="btn-neg-action">⟳ ต่อรองใหม่</button>
+                                <button class="btn-neg-action" style="color: #dc2626;">× ปฏิเสธ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-timestamp">10:38</div>
+
+                <!-- Outgoing Reply & Interview Card -->
+                <div class="msg-bubble-row outgoing">
+                    <div class="bubble-box">
+                        <p style="margin-bottom: 6px;">ยินดีพิจารณาเป็นพิเศษครับ ระหว่างนี้สะดวกคุยที่ร้านก่อนได้ไหมครับ เดี๋ยวส่งนัดให้ดูครับ</p>
+                        
+                        <!-- Interview Schedule Card -->
+                        <div class="interview-card">
+                            <div class="interview-card-header">
+                                <span>📅 นัดสัมภาษณ์</span>
+                                <span>รอยืนยัน</span>
+                            </div>
+                            <div class="interview-date-row">
+                                <div class="interview-date-box">22<br><span style="font-size: 9px; font-weight: normal;">ต.ค.</span></div>
+                                <div style="font-size: 12px;">พฤหัสบดี 22 ต.ค. 2569 · 14:00 น.<br><span style="font-size: 10px; opacity: 0.8; font-weight: normal;">📍 ที่ร้านคาเฟ่ บินนาร์ สาขาสยาม</span></div>
+                            </div>
+                            <div class="interview-btn-group">
+                                <button style="flex:1; background: white; color: #111827; border:none; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">✓ ยืนยัน</button>
+                                <button style="flex:1; background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px; border-radius: 6px; font-size: 11px; cursor: pointer;">เสนอเวลาอื่น</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-timestamp">10:43</div>
+
+            </div>
+
+            <!-- Footer Input -->
+            <div class="chat-footer">
+                <input type="text" class="chat-text-input" placeholder="พิมพ์ข้อความ...">
+                <button class="btn-offer-chip">📊 ส่งข้อเสนอ</button>
+                <button class="btn-send-icon">➤</button>
+            </div>
+        </div>
+
+        <!-- Column 3: Applicant Details Sidebar -->
+        <div class="applicant-sidebar">
+            <div class="applicant-profile-card">
+                <div class="avatar-lg" style="background: #fbcfe8; color: #9d174d;">พ</div>
+                <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 1px;">พิมพ์พชนก ศรีสุข</h3>
+                <p style="font-size: 11px; color: #6b7280;">มจธ. · ศิลปศาสตร์ ปี 3<br>⭐ 4.8 (12 รีวิว)</p>
+            </div>
+
+            <div>
+                <div class="sidebar-title">สรุปงาน</div>
+                <div class="detail-kv-list">
+                    <div class="detail-kv-row"><span class="detail-k">ตำแหน่ง:</span><span class="detail-v">บาริสต้าพาร์ทไทม์</span></div>
+                    <div class="detail-kv-row"><span class="detail-k">ค่าจ้างประกาศ:</span><span class="detail-v">฿60/ชม.</span></div>
+                    <div class="detail-kv-row"><span class="detail-k">ที่ผู้สมัครขอ:</span><span class="detail-v" style="color: #059669;">฿70/ชม.</span></div>
+                    <div class="detail-kv-row"><span class="detail-k">วัน-เวลา:</span><span class="detail-v">ส.-อา. · 08:00-14:00</span></div>
+                    <div class="detail-kv-row"><span class="detail-k">สถานที่:</span><span class="detail-v">สาขาสยาม</span></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="sidebar-title">ไฟล์ที่แนบ</div>
+                <div style="background: #f9fafb; padding: 8px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font-size: 11px; border: 1px solid #e5e7eb;">
+                    <span>📄</span>
+                    <div style="flex: 1; overflow: hidden; text-overflow: ellipsis;">Resume_Pimchanok.pdf</div>
+                    <span>⬇️</span>
+                </div>
+            </div>
+
+            <div style="margin-top: auto;">
+                <button class="btn-hire-action" onclick="alert('ยืนยันจ้างงานสำเร็จ!')">✅ ยืนยันจ้างงาน</button>
+                <button class="btn-header-action" style="width: 100%; margin-top: 8px; justify-content: center; padding: 10px;">👤 ดูโปรไฟล์เต็ม</button>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
