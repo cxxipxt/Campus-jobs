@@ -34,9 +34,9 @@
         .stat-item h2 { font-size: 32px; font-weight: 600; margin-bottom: 5px; }
         .stat-item p { color: #71717a; font-size: 13px; font-weight: 500; }
 
-        /* ฝั่งขวา (Register Form - Light Theme) */
+        /* ฝั่งขวา (Register Options - Light Theme) */
         .right-panel { flex: 1; background-color: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px; overflow-y: auto; }
-        .login-container { width: 100%; max-width: 460px; }
+        .login-container { width: 100%; max-width: 420px; }
         
         .form-header { text-align: center; margin-bottom: 30px; }
         .form-header h2 { font-size: 28px; font-weight: 600; margin-bottom: 5px; }
@@ -44,33 +44,25 @@
 
         /* Role Selector (นักศึกษา / นายจ้าง) */
         .role-tabs { display: flex; background: #f4f4f5; border-radius: 12px; padding: 5px; margin-bottom: 30px; }
-        .role-tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 500; border-radius: 8px; color: #71717a; cursor: pointer; transition: 0.2s; }
+        .role-tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 500; border-radius: 8px; color: #71717a; cursor: pointer; transition: 0.2s; display: block; }
         .role-tab.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .role-tab:hover:not(.active) { color: #111827; }
 
-        /* ฟอร์มกรอกข้อมูล */
-        .fieldset-custom { border: none; margin-bottom: 20px; }
-        .fieldset-legend { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 15px; border-bottom: 1px solid #f4f4f5; padding-bottom: 5px; }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; color: #71717a; margin-bottom: 8px; font-weight: 500; }
-        
-        .input-wrapper { position: relative; display: flex; align-items: center; }
-        .input-wrapper .icon-left { position: absolute; left: 15px; color: #a1a1aa; font-size: 16px; }
-        .input-wrapper input { width: 100%; padding: 14px 15px 14px 45px; border: 1px solid #e4e4e7; background-color: #ffffff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; }
-        .input-wrapper input:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
-        
-        /* Input ที่แก้ไขไม่ได้ (Readonly) */
-        .input-wrapper input[readonly] { background-color: #f4f4f5; color: #71717a; cursor: not-allowed; border-color: #e4e4e7; }
-        .input-wrapper input[readonly]:focus { box-shadow: none; border-color: #e4e4e7; }
+        /* กล่องแจ้งเตือนเงื่อนไข KMUTT */
+        .alert-box { background-color: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center; }
+        .alert-box strong { display: block; color: #111827; margin-bottom: 6px; font-size: 14px; }
+        .alert-box p { color: #4b5563; font-size: 13px; margin-bottom: 4px; }
+        .alert-box .text-small { color: #d97706; font-size: 12px; margin-top: 6px; }
 
-        .terms-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 30px; margin-top: 20px; }
-        .terms-check input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; cursor: pointer; accent-color: #111827; }
-        .terms-check label { font-size: 13px; color: #71717a; line-height: 1.5; }
-        .terms-check label a { color: #111827; font-weight: 600; }
-
-        .btn-submit { width: 100%; background-color: #111827; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        .btn-submit:hover { background-color: #000000; }
+        /* ปุ่ม SSO Login */
+        .btn-sso { width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; background-color: white; border: 1px solid #d1d5db; color: #111827; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; margin-bottom: 15px; font-family: 'Kanit'; }
+        .btn-sso:hover { background-color: #f3f4f6; border-color: #9ca3af; }
+        .btn-sso.microsoft:hover { border-color: #00a4ef; color: #00a4ef; }
+        .btn-sso.google:hover { border-color: #ea4335; color: #ea4335; }
+        
+        .sso-icon { font-size: 18px; font-weight: bold; }
+        .icon-ms { color: #00a4ef; }
+        .icon-gg { color: #ea4335; }
 
         .login-link { text-align: center; margin-top: 30px; font-size: 14px; color: #71717a; }
         .login-link a { color: #111827; font-weight: 600; }
@@ -92,7 +84,7 @@
 
     <main id="main" class="split-layout">
         
-        <!-- ฝั่งซ้าย (Dark Panel) ถอดแบบจากเรฟเฟอเรนซ์ -->
+        <!-- ฝั่งซ้าย (Dark Panel) -->
         <div class="left-panel">
             <div class="logo-wrap">
                 <a href="../index.html" style="display: flex; align-items: center; gap: 10px;">
@@ -114,77 +106,35 @@
             </div>
         </div>
 
-        <!-- ฝั่งขวา (Register Form) -->
+        <!-- ฝั่งขวา (Register Options - SSO Verification) -->
         <div class="right-panel">
             <div class="login-container">
                 <div class="form-header">
-                    <h2>สร้างบัญชีผู้ใช้</h2>
-                    <p>กรอกโปรไฟล์ครั้งแรกหลังยืนยันบัญชี KMUTT</p>
+                    <h2>สร้างบัญชีนักศึกษา</h2>
+                    <p>ยืนยันตัวตนผ่านระบบมหาวิทยาลัยเพื่อเริ่มใช้งาน</p>
                 </div>
 
                 <!-- แท็บเลือก Role -->
                 <div class="role-tabs">
                     <div class="role-tab active">🎓 นักศึกษา</div>
-                    <!-- กดแท็บนายจ้างแล้วลิงก์ไปหน้านายจ้าง -->
                     <a href="../employer/register.html" class="role-tab">🏢 นายจ้าง</a>
                 </div>
 
-                <aside aria-label="สถานะต้นแบบ" style="display:none;">
-                    <p>โครง HTML สำหรับตรวจหน้าเว็บ ใช้ข้อมูลสมมติ ยังไม่เชื่อมระบบจริง</p>
-                </aside>
+                <!-- กรอบแจ้งเตือนเงื่อนไขตามที่เพื่อนต้องการ -->
+                <div class="alert-box">
+                    <strong>การยืนยันตัวตนครั้งแรก:</strong>
+                    <p>ระบบจะใช้ผลยืนยันตัวตนจากระบบจริงของมหาวิทยาลัย</p>
+                    <p class="text-small">💡 เมื่อสมัครผ่านแล้ว จะเข้าสู่ Dashboard ทันทีเพื่อกรอกโปรไฟล์เพิ่มเติม</p>
+                </div>
 
-                <!-- ฟอร์มจำลองวิ่งไปหน้า Dashboard -->
-                <form action="../dashboard.html" method="GET">
-                    
-                    <fieldset class="fieldset-custom">
-                        <legend class="fieldset-legend">ข้อมูลบัญชีหลัก</legend>
-                        
-                        <div class="form-group">
-                            <label for="full_name">ชื่อ-นามสกุล (จำเป็น)</label>
-                            <div class="input-wrapper">
-                                <span class="icon-left">👤</span>
-                                <input id="full_name" name="full_name" type="text" placeholder="พิมพ์ชื่อ-นามสกุลของคุณ" required>
-                            </div>
-                        </div>
+                <!-- ปุ่ม SSO Google & Microsoft (จำลองลิงก์ไปหน้า Dashboard พร้อมเปิด Modal กรอกโปรไฟล์) -->
+                <button type="button" class="btn-sso google" onclick="location.href='../dashboard.html?setup=true'">
+                    <span class="sso-icon icon-gg">G</span> สมัครด้วย Google (@mail.kmutt.ac.th)
+                </button>
 
-                        <div class="form-group">
-                            <label for="email">อีเมลมหาวิทยาลัย (ดึงจากระบบอัตโนมัติ)</label>
-                            <div class="input-wrapper">
-                                <span class="icon-left">✉️</span>
-                                <!-- ใส่ readonly เพื่อให้คลิกแก้ไม่ได้ตามโค้ดเดิม -->
-                                <input id="email" name="email" type="email" value="student_sso@kmutt.ac.th" readonly required>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="fieldset-custom">
-                        <legend class="fieldset-legend">ข้อมูลเพิ่มเติม (เว้นว่างได้)</legend>
-
-                        <div class="form-group">
-                            <label for="phone">เบอร์โทรศัพท์</label>
-                            <div class="input-wrapper">
-                                <span class="icon-left">📱</span>
-                                <input id="phone" name="phone" type="tel" placeholder="08X-XXX-XXXX">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="major">สาขาวิชา / คณะ</label>
-                            <div class="input-wrapper">
-                                <span class="icon-left">🏛️</span>
-                                <input id="major" name="major" type="text" placeholder="ระบุสาขาวิชาของคุณ">
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <div class="terms-check">
-                        <input type="checkbox" id="terms" required>
-                        <label for="terms">ฉันยอมรับ <a href="#">ข้อกำหนดการให้บริการ</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a> ของ CampusJob</label>
-                    </div>
-                    
-                    <!-- ปุ่มกดยืนยัน -->
-                    <button type="submit" class="btn-submit">บันทึกข้อมูลนักศึกษา</button>
-                </form>
+                <button type="button" class="btn-sso microsoft" onclick="location.href='../dashboard.html?setup=true'">
+                    <span class="sso-icon icon-ms">⊞</span> สมัครด้วย Microsoft (@kmutt.ac.th)
+                </button>
 
                 <div class="login-link">
                     มีบัญชีผู้ใช้อยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a>
