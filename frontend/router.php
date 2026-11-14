@@ -10,6 +10,7 @@ $routes += [
     '/employer/applicants.html' => '/employer/applicants.php',
 ];
 if (preg_match('~(?:^|/)\.~', rawurldecode((string)$path))) { http_response_code(404); echo 'Not found'; return true; }
+if ($path === '/job-detail.html' && !isset($_GET['job_id'])) return false;
 if(isset($routes[$path])) { $query=$_SERVER['QUERY_STRING']??''; header('Location: '.$routes[$path].($query!==''?'?'.$query:''),true,302); return true; }
 if($path==='/') { header('Location: /jobs.php'); return true; }
 return false;
