@@ -10,10 +10,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     catch (InvalidArgumentException $ex) { http_response_code(400); exit('รหัสใบสมัครไม่ถูกต้อง'); }
     $status = input('status');
     if (!isset(statuses()[$status])) { http_response_code(400); exit('สถานะไม่ถูกต้อง'); }
-    if (!query('SELECT application_id FROM APPLICATION WHERE application_id=? AND job_id=?', [$application,$id])->fetchColumn()) {
-        http_response_code(404); exit('ไม่พบใบสมัคร');
+    db()->beginTransaction();
+    try {
+        $authorizedApplication = query(
+            'SELECT a.application_id
+             FROM APPLICATION a
+             JOIN JOB j ON j.job_id = a.job_id
+             WHERE a.application_id = ? AND a.job_id = ? AND j.employer_id = ?
+             FOR UPDATE',
+            [$application, $id, $owner]
+        )->fetchColumn();
+
+        if ($authorizedApplication === false) {
+            db()->rollBack();
+            http_response_code(404);
+            exit('ไม่พบใบสมัคร');
+        }
+
+        query(
+            'UPDATE APPLICATION a
+             JOIN JOB j ON j.job_id = a.job_id
+             SET a.status = ?
+             WHERE a.application_id = ? AND a.job_id = ? AND j.employer_id = ?',
+            [$status, $application, $id, $owner]
+        );
+        db()->commit();
+    } catch (Throwable $ex) {
+        if (db()->inTransaction()) {
+            db()->rollBack();
+        }
+        throw $ex;
     }
-    query('UPDATE APPLICATION a JOIN JOB j ON j.job_id=a.job_id SET a.status=? WHERE a.application_id=? AND a.job_id=? AND j.employer_id=?', [$status,$application,$id,$owner]);
     $_SESSION['flash'] = 'บันทึกสถานะใบสมัครแล้ว';
     go('employer/applicants.php?job_id='.$id);
 }

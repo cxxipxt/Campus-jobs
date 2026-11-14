@@ -14,7 +14,7 @@
     <nav aria-label="เมนูหลัก">
       <ul>
         <li><a href="index.html">หน้าหลัก</a></li>
-        <li><a href="jobs.html" aria-current="page">ค้นหางาน</a></li>
+        <li><a href="jobs.php" aria-current="page">ค้นหางาน</a></li>
         <li><a href="my-applications.html">การสมัครของฉัน</a></li>
         <li><a href="dashboard.html">ภาพรวม</a></li>
         <li><a href="saved.html">งานที่บันทึก</a></li>
@@ -28,22 +28,22 @@
     <div class="job-search-hero">
     <h1>หางานพาร์ทไทม์ที่เข้ากับตารางเรียน</h1>
     <div class="search-bar">
-      <p><label for="q">ชื่อตำแหน่งงาน</label><input id="q" name="q" form="job-filters" type="search" placeholder="เช่น บาริสต้า ติวเตอร์"></p>
+      <p><label for="q">ชื่อตำแหน่งงาน</label><input id="q" name="q" form="job-filters" type="search" maxlength="150" placeholder="เช่น บาริสต้า ติวเตอร์"></p>
       <p><label for="location">สถานที่</label><input id="location" name="location" form="job-filters" placeholder="เช่น กรุงเทพฯ"></p>
       <button type="submit" form="job-filters">ค้นหา</button>
     </div>
     </div>
     <div class="search-layout">
       <details class="job-filters" open><summary>ตัวกรองงาน</summary>
-<form id="job-filters" class="panel" method="get" action="jobs.html">
+<form id="job-filters" class="panel" method="get" action="jobs.php">
 
-        <p><label for="category_id">หมวดหมู่งาน</label><select id="category_id" name="category_id"><option value="">ทุกประเภทงาน</option><option>ร้านอาหารและคาเฟ่</option><option>ขายสินค้าและบริการ</option><option>ติวเตอร์และการสอน</option><option>งานสำนักงาน</option><option>งานอีเวนต์</option><option>งานออนไลน์</option><option>อื่น ๆ</option></select></p>
+        <p><label for="category_id">หมวดหมู่งาน</label><select id="category_id" name="category_id"><option value="">ทุกประเภทงาน</option><option value="1">ร้านอาหารและคาเฟ่</option><option value="2">ขายสินค้าและบริการ</option><option value="3">ติวเตอร์และการสอน</option><option value="4">งานสำนักงาน</option><option value="5">งานอีเวนต์</option><option value="6">งานออนไลน์</option><option value="7">อื่น ๆ</option></select></p>
         <fieldset>
           <legend>ค่าจ้างต่อชั่วโมง (บาท)</legend>
           <p><label for="min_wage">ขั้นต่ำ</label><input id="min_wage" name="min_wage" type="number" min="0" step="0.01"></p>
           <p><label for="max_wage">สูงสุด</label><input id="max_wage" name="max_wage" type="number" min="0" step="0.01"></p>
         </fieldset>
-        <p><button type="submit">ใช้ตัวกรอง</button> <a href="jobs.html">ล้างตัวกรอง</a></p>
+        <p><button type="submit">ใช้ตัวกรอง</button> <a href="jobs.php">ล้างตัวกรอง</a></p>
       </form>
 </details>
       <div class="search-results" data-job-preview>
@@ -51,12 +51,12 @@
         <p data-job-empty hidden>ไม่พบงานตามเงื่อนไข ลองเปลี่ยนคำค้นหาหรือล้างตัวกรอง</p>
         <div class="active-job-filters" data-active-job-filters hidden></div>
 <div class="grid">
-          <article class="job-card" data-wage="60" data-location="กรุงเทพฯ ใกล้มหาวิทยาลัย" data-category="ร้านอาหารและคาเฟ่"><div class="job-card-copy">
+          <article class="job-card" data-wage="60" data-location="กรุงเทพฯ ใกล้มหาวิทยาลัย" data-category="1"><div class="job-card-copy">
             <span class="job-category status-pill">ร้านอาหารและคาเฟ่</span>
-            <h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3>
+            <h3><a href="job-detail.php?job_id=1">พนักงานร้านกาแฟ</a></h3>
             <p class="muted">คาเฟ่ตัวอย่าง · กรุงเทพฯ ใกล้มหาวิทยาลัย</p>
             <p class="job-meta">เสาร์–อาทิตย์ 09:00–16:00 · เปิดรับสมัคร</p></div><div class="job-card-actions"><p class="rate">฿60<small>/ชม.</small></p>
-            <a class="button" href="job-detail.html">รายละเอียด</a></div>
+            <a class="button" href="job-detail.php?job_id=1">รายละเอียด</a></div>
           </article>
         </div>
       </div>

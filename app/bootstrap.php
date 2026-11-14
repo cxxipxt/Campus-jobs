@@ -23,6 +23,7 @@ set_exception_handler(function (Throwable $error): void {
 });
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/student.php';
+enforce_student_profile_setup();
 
 function db(): PDO {
     static $pdo;

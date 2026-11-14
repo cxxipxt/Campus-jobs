@@ -59,7 +59,8 @@ if ($action === 'link') {
 
     // Do not accidentally replace an existing account session.
     if (identity('student') !== null) {
-        go('dashboard.php');
+        http_response_code(409);
+        exit('คุณเข้าสู่ระบบนักศึกษาอยู่แล้ว');
     }
 
     if (isset($_SESSION['auth']) && is_array($_SESSION['auth'])) {

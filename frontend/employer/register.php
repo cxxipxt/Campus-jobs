@@ -43,7 +43,7 @@ start_page('สมัครสมาชิกสำหรับบริษั�
     <h1>สมัครสมาชิกสำหรับบริษัท</h1>
     <?php error_box($error); ?>
     <p class="company-auth-note">ใช้ชื่อผู้ใช้และรหัสผ่านเพื่อเข้าสู่ระบบ</p>
-    <form class="company-auth-fields" method="post">
+    <form class="company-auth-fields" method="post" action="<?= e(url('employer/register.php')) ?>">
       <?php csrf_field(); ?>
       <p><label for="username">ชื่อผู้ใช้</label><input id="username" type="text" name="username" autocomplete="username" maxlength="80" value="<?= e(input('username')) ?>" required></p>
       <p><label for="password">รหัสผ่าน (12–72 ไบต์)</label><input id="password" type="password" name="password" autocomplete="new-password" required></p>
@@ -51,7 +51,7 @@ start_page('สมัครสมาชิกสำหรับบริษั�
       <p><label for="email">อีเมลสำหรับบัญชี</label><input id="email" type="email" name="email" autocomplete="email" maxlength="255" value="<?= e(input('email')) ?>" required></p>
       <p><label for="company_name">ชื่อบริษัทหรือร้านค้า (ไม่บังคับ)</label><input id="company_name" type="text" name="company_name" autocomplete="organization" maxlength="150" value="<?= e(input('company_name')) ?>"></p>
       <p><label for="business_type">ลักษณะธุรกิจ</label><select id="business_type" name="business_type" required><option value="">เลือกลักษณะธุรกิจ</option><?php foreach ($businessTypes as $type): ?><option value="<?= e($type) ?>" <?= input('business_type') === $type ? 'selected' : '' ?>><?= e($type) ?></option><?php endforeach; ?></select></p>
-      <p id="business-type-other"><label for="business_type_other">ระบุลักษณะธุรกิจ (เมื่อเลือกอื่น ๆ)</label><input id="business_type_other" name="business_type_other" maxlength="100" value="<?= e(input('business_type_other')) ?>"></p>
+      <p id="business-type-other"<?= input('business_type') === 'อื่น ๆ' ? '' : ' hidden' ?>><label for="business_type_other">ระบุลักษณะธุรกิจ (เมื่อเลือกอื่น ๆ)</label><input id="business_type_other" name="business_type_other" maxlength="100" value="<?= e(input('business_type_other')) ?>"<?= input('business_type') === 'อื่น ๆ' ? ' required' : '' ?>></p>
       <p><label for="phone">โทรศัพท์ (ไม่บังคับ)</label><input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="20" value="<?= e(input('phone')) ?>"></p>
       <p><label for="contact_email">อีเมลติดต่อ</label><input id="contact_email" type="email" name="contact_email" autocomplete="section-contact email" maxlength="255" value="<?= e(input('contact_email')) ?>" required></p>
       <button type="submit">สมัครสมาชิก</button>

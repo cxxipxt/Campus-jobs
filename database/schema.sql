@@ -13,6 +13,7 @@ CREATE TABLE STUDENT (
     phone VARCHAR(20) NULL,
     major VARCHAR(150) NULL,
     resume_url VARCHAR(2048) NULL,
+    profile_completed TINYINT(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (student_id),
     CONSTRAINT uq_student_university_username UNIQUE (university_username),
     CONSTRAINT uq_student_email UNIQUE (email),
@@ -26,7 +27,8 @@ CREATE TABLE STUDENT (
     ),
     CONSTRAINT chk_student_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
     CONSTRAINT chk_student_major CHECK (major IS NULL OR CHAR_LENGTH(TRIM(major)) > 0),
-    CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR REGEXP_LIKE(resume_url, '^https?://', 'c'))
+    CONSTRAINT chk_student_resume CHECK (resume_url IS NULL OR REGEXP_LIKE(resume_url, '^https?://', 'c')),
+    CONSTRAINT chk_student_profile_completed CHECK (profile_completed IN (0, 1))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE EMPLOYER (

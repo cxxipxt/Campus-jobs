@@ -21,11 +21,23 @@ start_page($job['job_title'], 'detail-page');
 <?php if ($job['status'] !== 'Open'): ?><p>งานนี้ปิดรับสมัครแล้ว</p><?php endif; ?>
 <?php if ($applied): ?><p><a href="<?= e(url('my-applications.php')) ?>">ดูสถานะใบสมัครของคุณ</a></p><?php endif; ?>
 <?php if ($student): ?>
+<?php if (!$applied && $job['status'] === 'Open'): ?>
 <form method="post" action="<?= e(url('student/job-action.php')) ?>">
   <?php csrf_field(); ?><input type="hidden" name="job_id" value="<?= e($id) ?>">
-  <?php if (!$applied && $job['status'] === 'Open'): ?><button name="action" value="apply">สมัครงาน</button><?php endif; ?>
-  <?php if ($saved || $job['status'] === 'Open'): ?><button name="action" value="<?= $saved ? 'unsave' : 'save' ?>"><?= $saved ? 'ยกเลิกบันทึก' : 'บันทึกงาน' ?></button><?php endif; ?>
+  <button name="action" value="apply">สมัครงาน</button>
 </form>
+<?php endif; ?>
+<?php if ($saved): ?>
+<form method="post" action="<?= e(url('student/job-action.php')) ?>">
+  <?php csrf_field(); ?><input type="hidden" name="job_id" value="<?= e($id) ?>">
+  <button class="button--outline" name="action" value="unsave">ยกเลิกบันทึก</button>
+</form>
+<?php elseif ($job['status'] === 'Open'): ?>
+<form method="post" action="<?= e(url('student/job-action.php')) ?>">
+  <?php csrf_field(); ?><input type="hidden" name="job_id" value="<?= e($id) ?>">
+  <button class="button--outline" name="action" value="save">บันทึกงาน</button>
+</form>
+<?php endif; ?>
 <?php elseif ($job['status'] === 'Open'): ?>
 <p><a class="button" href="<?= e(url('student/login.html#student')) ?>">เข้าสู่ระบบนักศึกษา</a></p>
 <?php endif; ?>

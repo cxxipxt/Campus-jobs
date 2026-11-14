@@ -93,7 +93,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                  SET full_name = ?,
                      major = ?,
                      phone = ?,
-                     resume_url = ?
+                     resume_url = ?,
+                     profile_completed = 1
                  WHERE student_id = ?',
                 [$name, $major, $phone, $resume, $id]
             );
@@ -123,6 +124,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             throw $ex;
         }
 
+        $_SESSION['student_profile_setup'] = false;
         $_SESSION['flash'] = 'บันทึกโปรไฟล์แล้ว';
         go('student/profile.php');
 

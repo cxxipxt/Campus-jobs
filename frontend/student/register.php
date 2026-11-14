@@ -277,50 +277,19 @@ if (
     }
 }
 
-// Default values for new student registration.
-$fullName = $providerName;
-$phone = '';
-$major = '';
-$resumeUrl = '';
+// Use the verified provider name for account creation; profile details are
+// completed from the dashboard after the student signs in.
+$fullName = $providerName !== '' ? $providerName : $username;
 
-// Handle new student registration only when no existing account was found.
+// Create the account after the OAuth callback has verified the university
+// identity. Profile details are collected from the dashboard after sign-in.
 if (
-    $_SERVER['REQUEST_METHOD'] === 'POST' &&
-    ($_POST['action'] ?? '') === 'register_new' &&
+    $_SERVER['REQUEST_METHOD'] === 'GET' &&
     $error === null &&
     $existingStudentId === null
 ) {
     try {
-        check_csrf();
-
-        $fullName = input('full_name');
-        $phone = input('phone');
-        $major = input('major');
-        $resumeUrl = input('resume_url');
-
         required_text($fullName, 150, 'ชื่อ-นามสกุล');
-
-        $phoneValue = optional_text($phone, 20, 'เบอร์โทร');
-        $majorValue = optional_text($major, 150, 'สาขา');
-        $resumeValue = optional_text($resumeUrl, 2048, 'ลิงก์ Resume');
-
-        if ($resumeValue !== null) {
-            $parts = parse_url($resumeValue);
-
-            if (
-                filter_var($resumeValue, FILTER_VALIDATE_URL) === false ||
-                !is_array($parts) ||
-                !in_array(
-                    strtolower($parts['scheme'] ?? ''),
-                    ['http', 'https'],
-                    true
-                )
-            ) {
-                throw new InvalidArgumentException(
-                    'กรุณากรอกลิงก์ Resume ที่ถูกต้อง'
-                );
-            }
-        }
 
         $pdo = db();
         $pdo->beginTransaction();
@@ -329,15 +298,15 @@ if (
             // Create the student account.
             query(
                 'INSERT INTO STUDENT
-                    (university_username, full_name, email, phone, major, resume_url)
-                 VALUES (?, ?, ?, ?, ?, ?)',
+                    (university_username, full_name, email, phone, major, resume_url, profile_completed)
+                 VALUES (?, ?, ?, ?, ?, ?, 0)',
                 [
                     $username,
                     $fullName,
                     $email,
-                    $phoneValue,
-                    $majorValue,
-                    $resumeValue,
+                    null,
+                    null,
+                    null,
                 ]
             );
 
@@ -366,7 +335,7 @@ if (
         }
 
         unset($_SESSION['student_oauth_pending']);
-        sign_in_student($studentId);
+        sign_in_student($studentId, true);
 
     } catch (PDOException $exception) {
         error_log(
@@ -406,18 +375,14 @@ if (
 
     <section>
         <h2>บัญชีมหาวิทยาลัยที่ยืนยันแล้ว</h2>
-
         <dl>
             <dt>ผู้ให้บริการ</dt>
             <dd><?= e($provider) ?></dd>
-
             <dt>อีเมลมหาวิทยาลัย</dt>
             <dd><?= e($email) ?></dd>
-
             <dt>ชื่อผู้ใช้มหาวิทยาลัย</dt>
             <dd><?= e($username) ?></dd>
         </dl>
-
         <p><a href="login.html">เข้าสู่ระบบด้วยบัญชีอื่น</a></p>
     </section>
 
@@ -426,84 +391,17 @@ if (
     <?php if ($existingStudentId !== null): ?>
         <section>
             <h2>พบบัญชีเดิมในระบบ</h2>
-
             <p>
                 บัญชีมหาวิทยาลัยนี้ตรงกับบัญชีนักศึกษาที่มีอยู่แล้ว
                 หากเป็นบัญชีของคุณ สามารถกดยืนยันเพื่อเชื่อมบัญชี
                 <?= e(ucfirst($provider)) ?> ได้
             </p>
-
             <form method="post" action="<?= e(url('student/register.php')) ?>">
                 <?php csrf_field(); ?>
-
                 <input type="hidden" name="action" value="link_existing">
-
                 <button type="submit">
                     ยืนยันและเชื่อมบัญชี <?= e(ucfirst($provider)) ?>
                 </button>
-            </form>
-        </section>
-
-    <?php elseif ($error === null): ?>
-        <section>
-            <h2>ข้อมูลโปรไฟล์</h2>
-
-            <p>กรอกข้อมูลเพิ่มเติมเพื่อสร้างบัญชีนักศึกษาใหม่</p>
-
-            <form method="post" action="<?= e(url('student/register.php')) ?>">
-                <?php csrf_field(); ?>
-
-                <input type="hidden" name="action" value="register_new">
-
-                <p>
-                    <label for="full_name">ชื่อ-นามสกุล</label><br>
-                    <input
-                        type="text"
-                        id="full_name"
-                        name="full_name"
-                        maxlength="150"
-                        value="<?= e($fullName) ?>"
-                        autocomplete="name"
-                        required
-                    >
-                </p>
-
-                <p>
-                    <label for="phone">เบอร์โทร (ไม่บังคับ)</label><br>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        maxlength="20"
-                        value="<?= e($phone) ?>"
-                        autocomplete="tel"
-                    >
-                </p>
-
-                <p>
-                    <label for="major">สาขา (ไม่บังคับ)</label><br>
-                    <input
-                        type="text"
-                        id="major"
-                        name="major"
-                        maxlength="150"
-                        value="<?= e($major) ?>"
-                    >
-                </p>
-
-                <p>
-                    <label for="resume_url">ลิงก์ Resume (ไม่บังคับ)</label><br>
-                    <input
-                        type="url"
-                        id="resume_url"
-                        name="resume_url"
-                        maxlength="2048"
-                        value="<?= e($resumeUrl) ?>"
-                        placeholder="https://"
-                    >
-                </p>
-
-                <button type="submit">ยืนยันและสร้างบัญชี</button>
             </form>
         </section>
     <?php endif; ?>
