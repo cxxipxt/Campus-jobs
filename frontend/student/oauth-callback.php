@@ -63,7 +63,8 @@ if ($flowType === 'link') {
         $_SESSION['student_oauth_provider']
     );
 
-    go('dashboard.php');
+    http_response_code(409);
+    exit('สถานะเข้าสู่ระบบเปลี่ยนแปลง กรุณาเริ่มยืนยันบัญชีใหม่');
 }
 
 $oidc = null;

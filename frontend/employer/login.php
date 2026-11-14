@@ -43,7 +43,7 @@ start_page('เข้าสู่ระบบ', 'company-auth-page student-login
     <div id="employer" data-login-panel>
     <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
     <?php error_box($error); ?>
-    <form class="company-auth-fields" method="post">
+    <form class="company-auth-fields" method="post" action="<?= e(url('employer/login.php')) ?>">
       <?php csrf_field(); ?>
       <p><label for="username">ชื่อผู้ใช้</label><input id="username" name="username" autocomplete="username" maxlength="255" value="<?= e(input('username')) ?>" required></p>
       <p><label for="password">รหัสผ่าน</label><input id="password" name="password" type="password" autocomplete="current-password" required></p>

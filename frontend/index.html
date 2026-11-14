@@ -15,7 +15,7 @@
     <nav aria-label="เมนูหลัก">
       <ul>
         <li><a href="index.html" aria-current="page">หน้าหลัก</a></li>
-        <li><a href="jobs.html">ค้นหางาน</a></li>
+        <li><a href="jobs.php">ค้นหางาน</a></li>
         <li><a href="student/login.html">เข้าสู่ระบบ</a></li>
       </ul>
     </nav>
@@ -28,7 +28,7 @@
       <div><h1 id="hero-title">หางานที่ยืดหยุ่นและเหมาะกับ <span>ตารางเรียนของคุณ.</span></h1>
       <p>รวมงานพาร์ทไทม์และงานเสริมสำหรับนักศึกษา ค้นหา สมัคร และติดตามสถานะได้ในที่เดียว</p></div>
 
-      <form action="jobs.html" method="get" role="search">
+      <form action="jobs.php" method="get" role="search">
         <p>
           <label for="q">ตำแหน่งงาน</label>
           <input type="search" id="q" name="q" placeholder="เช่น พนักงานเสิร์ฟ ติวเตอร์">
@@ -39,7 +39,7 @@
         </p>
         <button type="submit">ค้นหางาน</button>
       </form>
-      <p><a href="jobs.html">หรือดูงานทั้งหมด</a></p>
+      <p><a href="jobs.php">หรือดูงานทั้งหมด</a></p>
     </section>
 
     <!-- งานล่าสุด: ข้อมูลตัวอย่าง (ภายหลังดึงจากตาราง JOB) -->
@@ -48,27 +48,27 @@
       <div class="card-grid">
 
       <article>
-        <h3><a href="job-detail.html">พนักงานร้านกาแฟ</a></h3>
+        <h3><a href="job-detail.php?job_id=1">พนักงานร้านกาแฟ</a></h3>
         <p>คาเฟ่ตัวอย่าง · กรุงเทพฯ ใกล้มหาวิทยาลัย</p>
         <p>เสาร์–อาทิตย์ 09:00–16:00</p>
         <p><strong>60 บาท/ชั่วโมง</strong></p>
       </article>
 
       </div>
-      <p><a href="jobs.html">ดูงานทั้งหมด</a></p>
+      <p><a href="jobs.php">ดูงานทั้งหมด</a></p>
     </section>
 
     <!-- หมวดหมู่งาน: ชื่อด้านล่างเป็นตัวอย่าง ให้แก้ให้ตรงกับ database/seed.sql -->
     <section aria-labelledby="category-title">
       <h2 id="category-title">หมวดหมู่งานยอดนิยม</h2>
       <ul class="category-list">
-        <li><a href="jobs.html?category=%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%84%E0%B8%B2%E0%B9%80%E0%B8%9F%E0%B9%88">ร้านอาหารและคาเฟ่</a></li>
-        <li><a href="jobs.html?category=%E0%B8%82%E0%B8%B2%E0%B8%A2%E0%B8%AA%E0%B8%B4%E0%B8%99%E0%B8%84%E0%B9%89%E0%B8%B2%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%9A%E0%B8%A3%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3">ขายสินค้าและบริการ</a></li>
-        <li><a href="jobs.html?category=%E0%B8%95%E0%B8%B4%E0%B8%A7%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%AD%E0%B8%99">ติวเตอร์และการสอน</a></li>
-        <li><a href="jobs.html?category=%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%AA%E0%B8%B3%E0%B8%99%E0%B8%B1%E0%B8%81%E0%B8%87%E0%B8%B2%E0%B8%99">งานสำนักงาน</a></li>
-        <li><a href="jobs.html?category=%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%AD%E0%B8%B5%E0%B9%80%E0%B8%A7%E0%B8%99%E0%B8%95%E0%B9%8C">งานอีเวนต์</a></li>
-        <li><a href="jobs.html?category=%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C">งานออนไลน์</a></li>
-        <li><a href="jobs.html?category=%E0%B8%AD%E0%B8%B7%E0%B9%88%E0%B8%99%20%E0%B9%86">อื่น ๆ</a></li>
+        <li><a href="jobs.php?category_id=1">ร้านอาหารและคาเฟ่</a></li>
+        <li><a href="jobs.php?category_id=2">ขายสินค้าและบริการ</a></li>
+        <li><a href="jobs.php?category_id=3">ติวเตอร์และการสอน</a></li>
+        <li><a href="jobs.php?category_id=4">งานสำนักงาน</a></li>
+        <li><a href="jobs.php?category_id=5">งานอีเวนต์</a></li>
+        <li><a href="jobs.php?category_id=6">งานออนไลน์</a></li>
+        <li><a href="jobs.php?category_id=7">อื่น ๆ</a></li>
       </ul>
     </section>
 
@@ -112,7 +112,7 @@
     <nav aria-label="สำหรับนักศึกษา">
       <h2>สำหรับนักศึกษา</h2>
       <ul>
-        <li><a href="jobs.html">ค้นหางาน</a></li>
+        <li><a href="jobs.php">ค้นหางาน</a></li>
         <li><a href="my-applications.html">การสมัครของฉัน</a></li>
         <li><a href="saved.html">งานที่บันทึกไว้</a></li>
       </ul>

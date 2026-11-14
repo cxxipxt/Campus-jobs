@@ -123,6 +123,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             throw $ex;
         }
 
+        unset($_SESSION['student_profile_setup']);
         $_SESSION['flash'] = 'บันทึกโปรไฟล์แล้ว';
         go('student/profile.php');
 
