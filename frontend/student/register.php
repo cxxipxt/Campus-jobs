@@ -298,8 +298,8 @@ if (
             // Create the student account.
             query(
                 'INSERT INTO STUDENT
-                    (university_username, full_name, email, phone, major, resume_url)
-                 VALUES (?, ?, ?, ?, ?, ?)',
+                    (university_username, full_name, email, phone, major, resume_url, profile_completed)
+                 VALUES (?, ?, ?, ?, ?, ?, 0)',
                 [
                     $username,
                     $fullName,

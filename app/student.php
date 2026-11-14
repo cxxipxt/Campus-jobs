@@ -26,21 +26,41 @@ function require_student(): int {
 }
 
 function enforce_student_profile_setup(): void {
-    if (identity('student') === null || empty($_SESSION['student_profile_setup'])) {
+    $studentId = identity('student');
+    if ($studentId === null) {
+        return;
+    }
+
+    if (!array_key_exists('student_profile_setup', $_SESSION)) {
+        $profileCompleted = query(
+            'SELECT profile_completed FROM STUDENT WHERE student_id = ?',
+            [$studentId]
+        )->fetchColumn();
+
+        if ($profileCompleted === false) {
+            http_response_code(404);
+            exit('ไม่พบโปรไฟล์');
+        }
+
+        $_SESSION['student_profile_setup'] = (int) $profileCompleted === 0;
+    }
+
+    if (empty($_SESSION['student_profile_setup'])) {
         return;
     }
 
     $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     $dashboardPath = parse_url(url('dashboard.php'), PHP_URL_PATH);
     $profilePath = parse_url(url('student/profile.php'), PHP_URL_PATH);
+    $logoutPath = parse_url(url('student/logout.php'), PHP_URL_PATH);
 
     if ($path === $dashboardPath) {
         return;
     }
 
     if (
-        $path === $profilePath &&
         ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
+        && ($path === $profilePath || $path === $logoutPath)
     ) {
         return;
     }

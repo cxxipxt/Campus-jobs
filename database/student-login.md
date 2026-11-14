@@ -17,9 +17,9 @@ EMPLOYER ใช้ company_name และยังมี password_hash
 3. ตรวจโดเมนให้ตรง provider ตามตาราง ไม่ใช้แค่ endsWith และไม่รับ subdomain อื่นอัตโนมัติ
 4. แยก university_username จากอีเมลที่ตรวจแล้ว ใช้ lowercase แบบ ASCII ตามข้อกำหนด v2
 5. ค้น STUDENT ด้วย university_username ถ้าพบให้ใช้ student_id เดิม ไม่สร้างบัญชีอีกแถว แม้อีเมลจากอีก provider ต่างกัน
-6. ถ้าไม่พบ ให้เก็บผลยืนยันบัญชีชั่วคราวใน session ฝั่ง Backend แล้วไป student/register.html โดยยังไม่ INSERT ถ้า provider ส่งชื่อมาให้เติมในฟอร์มเพื่อให้นักศึกษาตรวจและยืนยัน
+6. ถ้าไม่พบ ให้เก็บผลยืนยันบัญชีชั่วคราวใน session ฝั่ง Backend แล้วไป student/register.html; หลังยืนยันบัญชีครั้งแรกจึงสร้างบัญชีและไป Dashboard เพื่อกรอกโปรไฟล์
 7. กรณีคำขอครั้งแรกมาพร้อมกัน ให้ UNIQUE ป้องกันซ้ำ ถ้า INSERT ชน duplicate key ให้ rollback แล้วค้นด้วย username เดิมอีกครั้ง ถ้าไม่พบต้องรายงาน conflict ไม่ใช้บัญชีจากอีเมลอื่นอัตโนมัติ
-8. เมื่อนักศึกษายืนยันชื่อและโปรไฟล์แล้ว ตรวจ full_name ว่าไม่ว่าง จากนั้น INSERT STUDENT ใน transaction ด้วย username/อีเมลจาก session ที่ยืนยันแล้ว สร้าง session ของนักศึกษาและไป dashboard.html ครั้งถัดไปค้นบัญชีเดิมด้วย university_username
+8. เมื่อนักศึกษายืนยันบัญชีที่ผ่าน SSO แล้ว ให้ INSERT STUDENT ใน transaction ด้วย username/อีเมลจาก session ที่ยืนยันแล้ว ตั้ง profile_completed เป็น 0 และสร้าง session ของนักศึกษาเพื่อไป dashboard.html; ต้องบันทึกโปรไฟล์ผ่านฟอร์มบน Dashboard ก่อนใช้หน้าอื่น ครั้งถัดไปค้นบัญชีเดิมด้วย university_username
 9. ระหว่างกรอกครั้งแรกใช้สถานะยืนยันตัวตนชั่วคราวฝั่ง Backend ไม่รับอีเมล/username จากฟอร์มเป็นหลักฐาน หลังสร้างบัญชีแล้วใช้ student_id จาก session สำหรับแก้โปรไฟล์ ใช้ parameterized queries ทุกครั้ง
 
 Repository มีการพัฒนา Backend สำหรับ Microsoft และ Google OAuth แล้ว แต่ยังต้องทดสอบการติดตั้งจาก Fresh checkout, Composer dependencies, Migration 005 และการเข้าสู่ระบบจากสภาพแวดล้อมใหม่ก่อนยืนยันว่าพร้อมใช้งาน
@@ -42,10 +42,11 @@ Repository มีการพัฒนา Backend สำหรับ Microsoft �
 5. รัน database/migrations/005_student_oauth.sql เพื่อสร้างตาราง STUDENT_OAUTH เป็นตารางที่ 9 สำหรับเชื่อมบัญชี Microsoft และ Google
 
 ไม่ต้องรัน Migration 001 กับฐานข้อมูลใหม่ เพราะ Migration ดังกล่าวใช้สำหรับอัปเกรดฐานข้อมูล v1 เท่านั้น
+ฐานข้อมูลใหม่มีคอลัมน์ `STUDENT.profile_completed` จาก schema.sql อยู่แล้ว จึงไม่ต้องรัน Migration 006
 
 # ฐานข้อมูล v1 ที่มีอยู่
 
-สำรองทั้งโครงสร้างและข้อมูล → หยุดการเขียนข้อมูล → รัน database/migrations/preflight.sql → แก้ไขรายการที่พบ → รัน database/migrations/001_student_university_login.sql → ตรวจสอบด้วย database/verify.sql → รัน database/migrations/005_student_oauth.sql
+สำรองทั้งโครงสร้างและข้อมูล → หยุดการเขียนข้อมูล → รัน database/migrations/preflight.sql → แก้ไขรายการที่พบ → รัน database/migrations/001_student_university_login.sql → database/migrations/005_student_oauth.sql → database/migrations/006_student_profile_completion.sql → ตรวจสอบด้วย database/verify.sql
 
 # ข้อควรระวังในการ Migration
 
