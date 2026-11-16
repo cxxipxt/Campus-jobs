@@ -21,9 +21,10 @@
 
     <main id="main">
         <div class="company-auth" data-login-tabs data-default-panel="student">
+            <p class="company-auth-note">เลือกประเภทบัญชีที่ต้องการเข้าสู่ระบบ</p>
             <nav class="company-auth-tabs" aria-label="ประเภทบัญชี">
-                <a href="#student" aria-controls="student">สำหรับนักศึกษา</a>
-                <a href="#employer" aria-controls="employer">สำหรับบริษัท</a>
+                <a href="#student" aria-controls="student">นักศึกษา</a>
+                <a href="#employer" aria-controls="employer">นายจ้าง</a>
             </nav>
 
             <div class="company-auth-card company-login-card">
@@ -54,10 +55,13 @@
                     <p class="company-auth-note">
                         ไม่รองรับบัญชีอีเมลส่วนตัว เช่น Gmail หรือ Outlook ส่วนตัว
                     </p>
+                    <p class="company-auth-link">
+                        ยังไม่มีบัญชี? <a href="../register.html">สมัครสมาชิก</a>
+                    </p>
                 </div>
 
                 <div id="employer" data-login-panel>
-                    <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
+                    <h1>เข้าสู่ระบบสำหรับนายจ้าง</h1>
                     <div class="company-auth-fields">
                         <p>
                             <label for="username">ชื่อผู้ใช้</label>
