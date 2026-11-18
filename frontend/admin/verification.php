@@ -70,7 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $employers = query(
     "SELECT employer_id,username,company_name,business_type,business_type_other,
             email,contact_email,phone,address
-     FROM EMPLOYER WHERE verification_status='Pending'
+     FROM EMPLOYER
+     WHERE verification_status='Pending'
+       AND company_name IS NOT NULL AND CHAR_LENGTH(TRIM(company_name)) > 0
+       AND business_type IS NOT NULL AND CHAR_LENGTH(TRIM(business_type)) > 0
+       AND (business_type <> 'อื่น ๆ' OR
+            (business_type_other IS NOT NULL AND CHAR_LENGTH(TRIM(business_type_other)) > 0))
+       AND phone IS NOT NULL AND CHAR_LENGTH(TRIM(phone)) > 0
+       AND contact_email IS NOT NULL AND CHAR_LENGTH(TRIM(contact_email)) > 0
+       AND address IS NOT NULL AND CHAR_LENGTH(TRIM(address)) > 0
      ORDER BY employer_id"
 )->fetchAll();
 
@@ -81,7 +89,7 @@ error_box($error);
   <p class="muted">ตรวจชื่อกิจการ เบอร์โทร อีเมลติดต่อ และที่อยู่ก่อนอนุมัติ</p>
   <form method="post" action="<?= e(url('admin/logout.php')) ?>"><?php csrf_field(); ?><button>ออกจากระบบ Admin</button></form>
 </div>
-<?php if (!$employers): ?><section class="panel"><h2>ไม่มีบัญชีรอตรวจสอบ</h2></section><?php endif; ?>
+<?php if (!$employers): ?><section class="panel"><h2>ไม่มีบัญชีที่มีข้อมูลครบพร้อมตรวจสอบ</h2></section><?php endif; ?>
 <?php foreach ($employers as $employer): ?>
 <section class="panel">
   <h2><?= e($employer['company_name'] ?? 'ยังไม่ระบุชื่อกิจการ') ?></h2>

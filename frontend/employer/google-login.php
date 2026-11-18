@@ -97,14 +97,18 @@ if (!$account) {
 }
 
 session_regenerate_id(true);
-$_SESSION = ['auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']]];
-go(
-    $account['company_name'] === null ||
-    $account['business_type'] === null ||
-    ($account['business_type'] === 'อื่น ๆ' && $account['business_type_other'] === null) ||
-    $account['phone'] === null ||
-    $account['contact_email'] === null ||
-    $account['address'] === null
-        ? 'employer/profile.php'
-        : 'employer/jobs.php'
-);
+$profileComplete =
+    is_string($account['company_name']) && trim($account['company_name']) !== '' &&
+    is_string($account['business_type']) && trim($account['business_type']) !== '' &&
+    ($account['business_type'] !== 'อื่น ๆ' ||
+        (is_string($account['business_type_other']) && trim($account['business_type_other']) !== '')) &&
+    is_string($account['phone']) && trim($account['phone']) !== '' &&
+    is_string($account['contact_email']) && filter_var($account['contact_email'], FILTER_VALIDATE_EMAIL) !== false &&
+    is_string($account['address']) && trim($account['address']) !== '';
+$_SESSION = [
+    'auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']],
+    'flash' => $profileComplete
+        ? 'เข้าสู่ระบบสำเร็จ'
+        : 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบ เพื่อส่งบัญชีให้ Admin ตรวจสอบ',
+];
+go($profileComplete ? 'employer/jobs.php' : 'employer/profile.php');

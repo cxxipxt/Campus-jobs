@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
         if (str_contains($password, "\0") || strlen($password) < 12 || strlen($password) > 72) throw new InvalidArgumentException('รหัสผ่านต้องยาว 12–72 ไบต์ และไม่มีอักขระว่างพิเศษ');
         if ($password !== ($_POST['password_confirmation'] ?? null)) throw new InvalidArgumentException('รหัสผ่านไม่ตรงกัน');
-        $company = optional_text(input('company_name'), 150, 'ชื่อบริษัท');
-        $phone = optional_text(input('phone'), 20, 'โทรศัพท์');
+        $company = input('company_name'); required_text($company, 150, 'ชื่อบริษัท');
+        $phone = input('phone'); required_text($phone, 20, 'เบอร์โทร');
         $businessType = input('business_type');
         if (!in_array($businessType, $businessTypes, true)) throw new InvalidArgumentException('กรุณาเลือกลักษณะธุรกิจ');
         $businessTypeOther = null;
@@ -24,9 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $contactEmail = input('same_contact_email')==='1' ? $email : input('contact_email');
         required_text($contactEmail, 255, 'อีเมลติดต่อ');
         if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) throw new InvalidArgumentException('อีเมลติดต่อไม่ถูกต้อง');
+        $address = input('address'); required_text($address, 10000, 'ที่อยู่');
         query(
-            'INSERT INTO EMPLOYER (username,email,password_hash,company_name,business_type,business_type_other,phone,contact_email) VALUES (?,?,?,?,?,?,?,?)',
-            [$username, $email, password_hash($password, PASSWORD_DEFAULT), $company, $businessType, $businessTypeOther, $phone, $contactEmail]
+            'INSERT INTO EMPLOYER (username,email,password_hash,company_name,business_type,business_type_other,phone,contact_email,address) VALUES (?,?,?,?,?,?,?,?,?)',
+            [$username, $email, password_hash($password, PASSWORD_DEFAULT), $company, $businessType, $businessTypeOther, $phone, $contactEmail, $address]
         );
         $id = (int) db()->lastInsertId();
         session_regenerate_id(true);
@@ -49,12 +50,13 @@ start_page('สมัครสมาชิกสำหรับบริษั�
       <p><label for="password">รหัสผ่าน</label><input id="password" type="password" name="password" autocomplete="new-password" required></p>
       <p><label for="password_confirmation">ยืนยันรหัสผ่าน</label><input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" required></p>
       <p><label for="email">อีเมลสำหรับบัญชี</label><input id="email" type="email" name="email" autocomplete="email" maxlength="255" value="<?= e(input('email')) ?>" required></p>
-      <p><label for="company_name">ชื่อบริษัทหรือร้านค้า (ไม่บังคับ)</label><input id="company_name" type="text" name="company_name" autocomplete="organization" maxlength="150" value="<?= e(input('company_name')) ?>"></p>
+      <p><label for="company_name">ชื่อบริษัทหรือร้านค้า</label><input id="company_name" type="text" name="company_name" autocomplete="organization" maxlength="150" value="<?= e(input('company_name')) ?>" required></p>
       <p><label for="business_type">ลักษณะธุรกิจ</label><select id="business_type" name="business_type" required><option value="">เลือกลักษณะธุรกิจ</option><?php foreach ($businessTypes as $type): ?><option value="<?= e($type) ?>" <?= input('business_type') === $type ? 'selected' : '' ?>><?= e($type) ?></option><?php endforeach; ?></select></p>
       <p id="business-type-other"<?= input('business_type') === 'อื่น ๆ' ? '' : ' hidden' ?>><label for="business_type_other">ระบุลักษณะธุรกิจ (เมื่อเลือกอื่น ๆ)</label><input id="business_type_other" name="business_type_other" maxlength="100" value="<?= e(input('business_type_other')) ?>"<?= input('business_type') === 'อื่น ๆ' ? ' required' : '' ?>></p>
-      <p><label for="phone">โทรศัพท์ (ไม่บังคับ)</label><input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="20" value="<?= e(input('phone')) ?>"></p>
+      <p><label for="phone">โทรศัพท์</label><input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="20" value="<?= e(input('phone')) ?>" required></p>
       <p><label><input type="checkbox" name="same_contact_email" value="1" id="same-contact-email" <?= input('same_contact_email')==='1'?'checked':'' ?>> ใช้อีเมลเดียวกับบัญชี</label></p>
       <p><label for="contact_email">อีเมลติดต่อ</label><input id="contact_email" type="email" name="contact_email" autocomplete="section-contact email" maxlength="255" value="<?= e(input('contact_email')) ?>" required></p>
+      <p><label for="address">ที่อยู่บริษัทหรือร้านค้า</label><textarea id="address" name="address" autocomplete="street-address" maxlength="10000" required><?= e(input('address')) ?></textarea></p>
       <button type="submit">สมัครสมาชิก</button>
     </form>
     <p class="company-auth-link">เป็นสมาชิกอยู่แล้ว? <a href="<?= e(url('employer/login.php')) ?>">เข้าสู่ระบบ</a></p>
