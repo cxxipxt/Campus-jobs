@@ -82,7 +82,7 @@ if (!is_string($subject) || $subject === '' || strlen($subject) > 255 ||
     google_login_failed('กรุณาใช้บัญชี Google ที่ยืนยันอีเมลแล้ว');
 }
 
-$sql = 'SELECT employer_id, company_name, phone, contact_email, address FROM EMPLOYER WHERE google_subject = ?';
+$sql = 'SELECT employer_id, company_name, business_type, business_type_other, phone, contact_email, address FROM EMPLOYER WHERE google_subject = ?';
 $account = query($sql, [$subject])->fetch();
 if (!$account) {
     try {
@@ -98,6 +98,13 @@ if (!$account) {
 
 session_regenerate_id(true);
 $_SESSION = ['auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']]];
-go($account['company_name'] === null || $account['phone'] === null || $account['contact_email'] === null || $account['address'] === null
-    ? 'employer/profile.php'
-    : 'employer/jobs.php');
+go(
+    $account['company_name'] === null ||
+    $account['business_type'] === null ||
+    ($account['business_type'] === 'อื่น ๆ' && $account['business_type_other'] === null) ||
+    $account['phone'] === null ||
+    $account['contact_email'] === null ||
+    $account['address'] === null
+        ? 'employer/profile.php'
+        : 'employer/jobs.php'
+);

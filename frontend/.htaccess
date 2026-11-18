@@ -1,9 +1,14 @@
-DirectoryIndex jobs.php index.html
+DirectoryIndex index.php
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
 RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ index.php [R=302,L]
+RewriteRule ^register\.html$ register.php [R=302,L]
+RewriteRule ^student/login\.html$ student/login.php [R=302,L]
 RewriteRule ^jobs\.html$ jobs.php [R=302,L]
+RewriteCond %{QUERY_STRING} (^|&)job_id=
 RewriteRule ^job-detail\.html$ job-detail.php [R=302,L]
 RewriteRule ^my-applications\.html$ my-applications.php [R=302,L]
 RewriteRule ^(dashboard|saved)\.html$ $1.php [R=302,L]

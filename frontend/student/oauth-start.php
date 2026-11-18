@@ -84,6 +84,7 @@ try {
     );
 
     $oidc->setRedirectURL($config['redirect_uri']);
+    $oidc->addAuthParam(['prompt' => 'select_account']);
     $oidc->addScope(['openid', 'profile', 'email']);
     $oidc->setCodeChallengeMethod('S256');
 

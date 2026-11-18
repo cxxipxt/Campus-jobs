@@ -85,11 +85,15 @@ CREATE TABLE JOB (
     hourly_wage DECIMAL(10,2) NOT NULL,
     location VARCHAR(255) NOT NULL,
     work_schedule VARCHAR(255) NOT NULL,
+    hours_per_day DECIMAL(4,2) NULL,
+    subcategory VARCHAR(100) NULL,
+    CONSTRAINT chk_job_hours CHECK (hours_per_day IS NULL OR (hours_per_day > 0 AND hours_per_day <= 24)),
     status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Open',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (job_id),
     KEY idx_job_employer (employer_id),
     KEY idx_job_category_status_wage (category_id, status, hourly_wage),
+    KEY idx_job_subcategory (subcategory),
     KEY idx_job_status_created (status, created_at),
     CONSTRAINT fk_job_employer FOREIGN KEY (employer_id) REFERENCES EMPLOYER (employer_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -148,3 +152,40 @@ CREATE TABLE SAVED_JOB (
     CONSTRAINT fk_saved_job_job FOREIGN KEY (job_id) REFERENCES JOB (job_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE STUDENT
+    ADD COLUMN study_year TINYINT UNSIGNED NULL,
+    ADD COLUMN activities TEXT NULL,
+    ADD COLUMN experience TEXT NULL,
+    ADD COLUMN portfolio_url VARCHAR(2048) NULL,
+    ADD COLUMN languages TEXT NULL,
+    ADD COLUMN certificates TEXT NULL,
+    ADD COLUMN preferred_area VARCHAR(150) NULL,
+    ADD COLUMN min_wage DECIMAL(10,2) UNSIGNED NULL;
+
+CREATE TABLE STUDENT_AVAILABILITY (
+    student_id INT UNSIGNED NOT NULL,
+    weekday TINYINT UNSIGNED NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    PRIMARY KEY (student_id, weekday),
+    FOREIGN KEY (student_id) REFERENCES STUDENT(student_id) ON DELETE CASCADE,
+    CHECK (weekday BETWEEN 1 AND 7),
+    CHECK (start_time < end_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE JOB_SKILL ADD COLUMN skill_type ENUM('required','preferred') NOT NULL DEFAULT 'required';
+ALTER TABLE JOB ADD COLUMN days_per_week TINYINT UNSIGNED NULL,
+ ADD CONSTRAINT chk_job_days_per_week CHECK (days_per_week BETWEEN 1 AND 7);
+CREATE TABLE JOB_SHIFT (
+ job_id INT UNSIGNED NOT NULL,
+ weekday TINYINT UNSIGNED NOT NULL,
+ start_time TIME NOT NULL,
+ end_time TIME NOT NULL,
+ PRIMARY KEY(job_id,weekday),
+ CONSTRAINT fk_job_shift_job FOREIGN KEY(job_id) REFERENCES JOB(job_id) ON DELETE CASCADE,
+ CONSTRAINT chk_job_shift_day CHECK(weekday BETWEEN 1 AND 7),
+ CONSTRAINT chk_job_shift_times CHECK(start_time < end_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE JOB ADD COLUMN subcategory VARCHAR(100) NULL, ADD INDEX idx_job_subcategory (subcategory);

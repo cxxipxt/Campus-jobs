@@ -355,22 +355,8 @@ if (
         $error = 'ไม่สามารถสร้างบัญชีได้ กรุณาลองใหม่อีกครั้ง';
     }
 }
+start_page('ยืนยันบัญชีมหาวิทยาลัย', 'workspace-page account-confirm', false);
 ?>
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ยืนยันบัญชีนักศึกษา | Campus-jobs</title>
-</head>
-<body>
-<a href="#main">ข้ามไปเนื้อหาหลัก</a>
-
-<header>
-    <p><a href="../index.html"><strong>Campus-jobs</strong></a></p>
-</header>
-
-<main id="main">
     <h1>ยืนยันบัญชีมหาวิทยาลัย</h1>
 
     <section>
@@ -405,7 +391,4 @@ if (
             </form>
         </section>
     <?php endif; ?>
-</main>
-
-</body>
-</html>
+<?php end_page(); ?>

@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         sign_in_student((int) $id);
     } catch (InvalidArgumentException $ex) { $error = $ex->getMessage(); }
 }
-start_page('ยืนยันโปรไฟล์นักศึกษา', 'workspace-page');
+start_page('ยืนยันโปรไฟล์นักศึกษา', 'workspace-page account-confirm');
 error_box($error);
 ?>
 <p><?= e($verified['email']) ?></p>

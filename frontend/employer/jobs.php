@@ -23,8 +23,8 @@ start_page('จัดการประกาศงาน', 'workspace-page empl
 <?php if (!$jobs): ?><section><h2>ยังไม่มีประกาศงาน</h2><p>สร้างประกาศแรกเพื่อเริ่มรับสมัครนักศึกษา</p></section><?php endif; ?>
 <div class="table-wrap"><table><caption>ประกาศงานของคุณ</caption><thead><tr><th>ตำแหน่ง</th><th>สถานะ</th><th>ผู้สมัคร</th><th>จัดการ</th></tr></thead><tbody>
 <?php foreach($jobs as $job): ?><tr>
-<td><a href="<?= e(url('job-detail.php?job_id='.$job['job_id'])) ?>"><?= e($job['job_title']) ?></a></td><td><?= e($job['status']) ?></td><td><a href="<?= e(url('employer/applicants.php?job_id='.$job['job_id'])) ?>">ดูผู้สมัคร (<?= e($job['applicant_count']) ?>)</a></td>
-<td><?php if ($verification['verification_status'] === 'Verified'): ?><a href="<?= e(url('employer/job-form.php?job_id='.$job['job_id'])) ?>">แก้ไข</a><?php endif; ?>
+<td data-label="ตำแหน่ง"><a href="<?= e(url('job-detail.php?job_id='.$job['job_id'])) ?>"><?= e($job['job_title']) ?></a></td><td data-label="สถานะ"><span class="status-pill"><?= $job['status'] === 'Open' ? 'เปิดรับสมัคร' : 'ปิดรับสมัคร' ?></span></td><td data-label="ผู้สมัคร"><a href="<?= e(url('employer/applicants.php?job_id='.$job['job_id'])) ?>">ดูผู้สมัคร (<?= e($job['applicant_count']) ?>)</a></td>
+<td data-label="จัดการ"><?php if ($verification['verification_status'] === 'Verified'): ?><a href="<?= e(url('employer/job-form.php?job_id='.$job['job_id'])) ?>">แก้ไข</a><?php endif; ?>
 <?php if($job['status']==='Open'): ?><form method="post"><?php csrf_field(); ?><input type="hidden" name="job_id" value="<?= e($job['job_id']) ?>"><button>ปิดรับสมัคร</button></form><?php endif; ?></td></tr>
 <?php endforeach; ?></tbody></table></div>
 <?php end_page(); ?>

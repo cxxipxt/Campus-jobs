@@ -1,0 +1,28 @@
+.student-hub { background:#fbf8f4; }
+.student-hub #main { max-width:1190px; margin-inline:auto; padding:clamp(1rem,3vw,2.75rem); }
+.student-hub .hub-cover { display:grid; grid-template-columns:1.45fr 1fr; overflow:hidden; padding:0; border-radius:18px; background:#ffe6d4; color:#392318; }
+.hub-identity { padding:clamp(1.5rem,4vw,3rem); min-width:0; align-self:center; overflow-wrap:anywhere; }
+.hub-identity h1 { margin:.25rem 0; font-size:clamp(1.8rem,3.5vw,3rem); line-height:1.25; }
+.hub-identity p {margin:0 0 .8rem}
+.hub-identity .hub-kicker {font-size:.9rem;font-weight:700;color:#8f3517}
+.hub-cover img {width:100%;height:100%;min-height:180px;max-height:280px;object-fit:cover;object-position:center 40%}
+.hub-shortcuts {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem;margin:1.1rem 0 1.7rem}
+.hub-shortcuts a,.student-hub .hub-panel {border:1px solid #e4dcd4;border-radius:14px;background:white}
+.hub-shortcuts a {display:grid;gap:.35rem;padding:1.1rem;color:#3c302a;text-decoration:none}
+.hub-shortcuts a:hover {border-color:#b6481e;background:#fff9f2}
+.hub-shortcuts strong {font-size:clamp(1.2rem,2vw,1.7rem);color:#963a19}
+.hub-shortcuts small,.hub-row p {color:#62574f}
+.hub-grid {display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem;align-items:start}
+.student-hub .hub-panel {margin:0;padding:clamp(1rem,2.5vw,1.7rem);min-width:0;overflow-wrap:anywhere;scroll-margin-top:6rem}
+.hub-cover+.hub-panel {margin-top:1rem}
+.hub-panel > a {display:inline-block;margin: .4rem .8rem 0 0}
+.hub-panel form {max-width:32rem}
+.hub-title {display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.hub-title h2,.hub-panel h2 {margin:0;font-size:1.3rem}
+.hub-title a {font-size:.85rem}
+.hub-panel .hub-row {margin:.8rem 0 0;padding:.9rem 0 0;border:0;border-top:1px solid #efe9e3;background:none;box-shadow:none;border-radius:0}
+.hub-row h3 {font-size:1.05rem;margin:.3rem 0}
+.hub-row p {font-size:.88rem;margin:.2rem 0}
+.hub-row .hub-reason {color:#355c46}
+@media(max-width:760px){.hub-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:540px){.student-hub .hub-cover{grid-template-columns:minmax(0,1fr)}.hub-cover img{height:90px;min-height:0;grid-row:1;object-position:50% 42%}.hub-shortcuts{gap:.5rem}.hub-shortcuts a{padding:.8rem}.hub-identity{padding:1.2rem}}

@@ -1,10 +1,10 @@
-# Data Dictionary v3 — 8 ตาราง
+# Data Dictionary v3 — 10 ตาราง
 
 ใช้ MySQL 8.0.16 ขึ้นไป ตาม [schema.sql](schema.sql) สำหรับฐานข้อมูลใหม่
 อัปเกรดฐานข้อมูลเดิมตาม [student-login.md](student-login.md) ด้วย migration 001 ไม่รัน schema ใหม่ทับฐานข้อมูลที่มีข้อมูล
 
-STUDENT ใช้แบบภาพล่าสุด: student_id, university_username, full_name, email, phone, major, resume_url ไม่มี password_hash หรือ university
-ตารางอื่นใช้ constraints ที่มิกกำหนด รวมถึง EMPLOYER.company_name
+STUDENT ใช้ university_username และไม่มี password_hash หรือ university; schema ยังมีข้อมูลตั้งค่าโปรไฟล์/ความต้องการและตาราง STUDENT_AVAILABILITY เพิ่มเติม
+EMPLOYER รองรับบัญชีรหัสผ่านและ Google พร้อมข้อมูลติดต่อและสถานะตรวจสอบ; JOB รองรับกะงาน หมวดย่อย และทักษะจำเป็น/เสริม
 
 ## STUDENT
 
@@ -17,15 +17,25 @@ STUDENT ใช้แบบภาพล่าสุด: student_id, university_us
 | `phone` | VARCHAR(20) | NULL; CHECK ถ้ามีห้ามว่าง; Backend ตรวจรูปแบบเบอร์โทร |
 | `major` | VARCHAR(150) | NULL; CHECK ถ้ามีห้ามว่าง |
 | `resume_url` | VARCHAR(2048) | NULL; CHECK เริ่มด้วย http:// หรือ https://; Backend ตรวจ URL เต็ม |
+| `profile_completed` | TINYINT(1) | NOT NULL, DEFAULT 1; CHECK เป็น 0 หรือ 1 |
+| `study_year`, `activities`, `experience`, `portfolio_url`, `languages`, `certificates` | ตาม schema.sql | NULL; ข้อมูลประกอบโปรไฟล์นักศึกษา |
+| `preferred_area` | VARCHAR(150) | NULL; พื้นที่ทำงานที่ต้องการ |
+| `min_wage` | DECIMAL(10,2) UNSIGNED | NULL; ค่าจ้างขั้นต่ำที่ต้องการ |
+
+`STUDENT_AVAILABILITY` เก็บ `student_id`, `weekday` (1–7), `start_time` และ `end_time` ต่อวัน
 
 ## EMPLOYER
 
 | Attribute | Type | Constraints / การตรวจสอบ |
 |---|---|---|
 | `employer_id` | INT UNSIGNED | PK, AUTO_INCREMENT, NOT NULL; ระบบสร้าง ID บวก |
+| `username` | VARCHAR(80) | NULL, UNIQUE; ใช้เข้าสู่ระบบแบบรหัสผ่าน |
 | `company_name` | VARCHAR(150) | NULL ระหว่างตั้งค่าบัญชี Google; CHECK ถ้ามีห้ามว่าง; ไม่ UNIQUE |
+| `business_type`, `business_type_other` | VARCHAR(100) | NULL; ประเภทธุรกิจและคำอธิบายเมื่อเลือก “อื่น ๆ” |
+| `contact_email` | VARCHAR(255) | NULL; อีเมลติดต่อ |
 | `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER, CHECK ห้ามว่าง; Backend ตรวจรูปแบบ/Google ยืนยัน |
 | `password_hash` | VARCHAR(255) | NULL สำหรับบัญชี Google; ถ้ามี CHECK ห้ามว่าง และ Backend สร้างด้วยไลบรารีแฮชรหัสผ่านจริง |
+| `google_subject` | VARBINARY(255) | NULL, UNIQUE; subject จาก Google ที่ Backend ยืนยันแล้ว |
 | `phone` | VARCHAR(20) | NULL; CHECK ถ้ามีห้ามว่าง; Backend ตรวจรูปแบบ |
 | `address` | TEXT | NULL; CHECK ถ้ามีห้ามว่าง |
 | `verification_status` | VARCHAR(10), ASCII binary | NOT NULL, DEFAULT `Pending`; CHECK เฉพาะ `Pending` / `Verified` / `Rejected` |
@@ -53,6 +63,9 @@ STUDENT ใช้แบบภาพล่าสุด: student_id, university_us
 | `hourly_wage` | DECIMAL(10,2) | NOT NULL, CHECK >= 0; บาท/ชั่วโมง |
 | `location` | VARCHAR(255) | NOT NULL, CHECK ห้ามว่าง |
 | `work_schedule` | VARCHAR(255) | NOT NULL, CHECK ห้ามว่าง |
+| `hours_per_day` | DECIMAL(4,2) | NULL; CHECK มากกว่า 0 และไม่เกิน 24 |
+| `days_per_week` | TINYINT UNSIGNED | NULL; CHECK 1–7 |
+| `subcategory` | VARCHAR(100) | NULL; หมวดย่อยภายใต้หมวดหลัก |
 | `status` | VARCHAR(10), ASCII binary | NOT NULL, DEFAULT 'Open', CHECK เฉพาะ Open / Closed |
 | `created_at` | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP; Backend ไม่รับเวลาที่ผู้ใช้กำหนด |
 
@@ -74,7 +87,6 @@ UNIQUE(student_id, job_id): สมัครงานเดิมซ้ำไม�
 |---|---|---|
 | `student_id` | INT UNSIGNED | NOT NULL, ส่วนหนึ่งของ PK, FK → STUDENT.student_id |
 | `skill_name` | VARCHAR(100) | NOT NULL, ส่วนหนึ่งของ PK, CHECK ห้ามว่าง; หนึ่งทักษะต่อแถว |
-
 PRIMARY KEY(student_id, skill_name); ไม่ UNIQUE แยกแต่ละคอลัมน์
 
 ## JOB_SKILL
@@ -83,8 +95,13 @@ PRIMARY KEY(student_id, skill_name); ไม่ UNIQUE แยกแต่ละ�
 |---|---|---|
 | `job_id` | INT UNSIGNED | NOT NULL, ส่วนหนึ่งของ PK, FK → JOB.job_id |
 | `skill_name` | VARCHAR(100) | NOT NULL, ส่วนหนึ่งของ PK, CHECK ห้ามว่าง; หนึ่งทักษะต่อแถว |
+| `skill_type` | ENUM('required','preferred') | NOT NULL, DEFAULT 'required' |
 
 PRIMARY KEY(job_id, skill_name); ไม่ UNIQUE แยกแต่ละคอลัมน์
+
+## STUDENT_AVAILABILITY และ JOB_SHIFT
+
+`STUDENT_AVAILABILITY` เก็บเวลาที่นักศึกษาว่าง และ `JOB_SHIFT` เก็บกะงานที่นายจ้างเปิดรับ โดยแต่ละแถวมี ID เจ้าของ, `weekday` (1–7), `start_time` และ `end_time`; เวลาเริ่มต้องก่อนเวลาสิ้นสุด ทั้งสองตารางใช้ CASCADE เมื่อลบแถวเจ้าของ
 
 ## SAVED_JOB
 
@@ -98,7 +115,7 @@ PRIMARY KEY(student_id, job_id): บันทึกงานเดิมซ้�
 
 ## ข้อกำหนดร่วม
 
-- FK ทั้ง 8 ใช้ ON DELETE RESTRICT / ON UPDATE RESTRICT; ชนิดคอลัมน์อ้างอิงต้องตรงกัน
+- FK ของ 8 ตารางหลักใช้ ON DELETE RESTRICT / ON UPDATE RESTRICT; FK ของตารางเวลาว่าง/กะงานใช้ ON DELETE CASCADE
 - PK, UNIQUE, NOT NULL, CHECK และ FK บังคับใน MySQL; ใช้ strict mode เพื่อไม่แปลงค่าผิดเงียบ ๆ
 - ID ใช้ AUTO_INCREMENT และ UNSIGNED; Backend ไม่รับ ID ใหม่จากผู้ใช้ และต้องตรวจ ID ที่อ้างอิงเป็นจำนวนเต็ม > 0 ห้ามเปิด NO_AUTO_VALUE_ON_ZERO ใน connection ที่สร้างข้อมูล
 - MySQL ไม่รองรับ CHECK บนคอลัมน์ AUTO_INCREMENT จึงไม่ใส่ CHECK(id > 0) ที่ทำให้ schema รันไม่ได้ ดู [เอกสาร MySQL](https://dev.mysql.com/doc/refman/8.0/en/numeric-type-attributes.html)

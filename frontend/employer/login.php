@@ -1,48 +1,70 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__,2).'/app/login-limit.php';
 $error = null;
+$loginPanel = 'employer';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
     $username = input('username');
     $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
-    $account = query('SELECT employer_id,password_hash,company_name,phone,contact_email,address FROM EMPLOYER WHERE username = ?', [$username])->fetch();
+    $wait=employer_login_wait($username,$_SERVER['REMOTE_ADDR']??'unknown');
+    if ($wait>0) {
+        http_response_code(429);
+        header('Retry-After: '.$wait);
+        $error='ลองเข้าสู่ระบบหลายครั้งเกินไป กรุณาลองอีกครั้งใน '.(int)ceil($wait/60).' นาที';
+    } else {
+    $account = query('SELECT employer_id,password_hash,company_name,business_type,business_type_other,phone,contact_email,address FROM EMPLOYER WHERE username = ?', [$username])->fetch();
     if (!$account && filter_var($username, FILTER_VALIDATE_EMAIL)) {
-        $account = query('SELECT employer_id,password_hash,company_name,phone,contact_email,address FROM EMPLOYER WHERE username IS NULL AND email = ?', [$username])->fetch();
+        $account = query('SELECT employer_id,password_hash,company_name,business_type,business_type_other,phone,contact_email,address FROM EMPLOYER WHERE username IS NULL AND email = ?', [$username])->fetch();
     }
     // A fixed valid dummy hash keeps a missing account on the password verification path.
     $valid = password_verify($password, $account['password_hash'] ?? '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.');
     if (isset($account['password_hash']) && $valid) {
         session_regenerate_id(true);
         $_SESSION = ['auth' => ['role' => 'employer', 'id' => (int)$account['employer_id']], 'flash' => 'เข้าสู่ระบบสำเร็จ'];
-        go($account['company_name'] === null || $account['phone'] === null || $account['contact_email'] === null || $account['address'] === null
-            ? 'employer/profile.php'
-            : 'employer/jobs.php');
+        go(
+            $account['company_name'] === null ||
+            $account['business_type'] === null ||
+            ($account['business_type'] === 'อื่น ๆ' && $account['business_type_other'] === null) ||
+            $account['phone'] === null ||
+            $account['contact_email'] === null ||
+            $account['address'] === null
+                ? 'employer/profile.php'
+                : 'employer/jobs.php'
+        );
     }
     $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+    }
 }
 start_page('เข้าสู่ระบบ', 'company-auth-page student-login-page', false);
 ?>
-<div class="company-auth" data-login-tabs data-default-panel="employer">
+<div class="company-auth" data-login-tabs data-default-panel="<?= e($loginPanel ?? 'employer') ?>">
   <nav class="company-auth-tabs" aria-label="ประเภทบัญชี">
     <a href="#student" aria-controls="student">หางาน</a>
     <a href="#employer" aria-controls="employer">หาคน</a>
   </nav>
   <div class="company-auth-card company-login-card">
-    <div id="student" data-login-panel>
+    <div id="student" data-login-panel<?= ($loginPanel ?? 'employer') === 'student' ? '' : ' hidden' ?>>
     <h1>เข้าสู่ระบบสำหรับนักศึกษา</h1>
     <p class="company-auth-note">ใช้บัญชีอีเมลนักศึกษา KMUTT</p>
+    <?php if (isset($_SESSION['student_login_notice'])): ?>
+      <div role="alert" class="student-login-notice">
+        <strong>เข้าสู่ระบบนักศึกษายังไม่สำเร็จ</strong>
+        <p><?= e($_SESSION['student_login_notice']) ?></p>
+      </div>
+      <?php unset($_SESSION['student_login_notice']); ?>
+    <?php endif; ?>
     <div class="student-providers">
-      <button type="button" disabled>
+      <a class="provider-button" href="<?= e(url('student/oauth-start.php?provider=microsoft')) ?>">
         <span class="provider-mark microsoft-mark" aria-hidden="true"></span>
         <span>เข้าสู่ระบบด้วย Microsoft <small>@kmutt.ac.th</small></span>
-      </button>
-      <button type="button" disabled>
+      </a>
+      <a class="provider-button" href="<?= e(url('student/oauth-start.php?provider=google')) ?>">
         <span class="provider-mark google-mark" aria-hidden="true">G</span>
         <span>เข้าสู่ระบบด้วย Google <small>@mail.kmutt.ac.th</small></span>
-      </button>
+      </a></div>
     </div>
-    </div>
-    <div id="employer" data-login-panel>
+    <div id="employer" data-login-panel<?= ($loginPanel ?? 'employer') === 'student' ? ' hidden' : '' ?>>
     <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
     <?php error_box($error); ?>
     <form class="company-auth-fields" method="post" action="<?= e(url('employer/login.php')) ?>">

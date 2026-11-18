@@ -6,11 +6,15 @@
 ยังไม่ได้ติดตั้งลงเซิร์ฟเวอร์ของทีม และยังไม่ได้ทดสอบกับ MySQL จริงในเครื่องที่จัดทำไฟล์
 
 ## ไฟล์ที่ใช้ร่วมกัน
-- [schema.sql](schema.sql): สร้าง 8 ตาราง พร้อม PK, FK, UNIQUE, CHECK และ indexes
+- [schema.sql](schema.sql): สร้าง 8 ตารางหลัก พร้อมตารางเวลาเรียน/กะงาน รวม 10 ตาราง และ constraints/indexes
 - [seed.sql](seed.sql): ประเภทงานเริ่มต้น 7 รายการ รันซ้ำได้ ไม่สร้างบัญชีผู้ใช้
 - [verify.sql](verify.sql): อ่าน metadata เพื่อตรวจโครงสร้างหลังนำเข้า ไม่แก้ข้อมูล
 - [migrations/006_student_profile_completion.sql](migrations/006_student_profile_completion.sql): จำสถานะการตั้งค่าโปรไฟล์นักศึกษาข้าม session
 - [migrations/007_employer_verification.sql](migrations/007_employer_verification.sql): เพิ่มคิวตรวจสอบนายจ้าง สถานะ และเหตุผลปฏิเสธ
+- [migrations/008_job_hours_per_day.sql](migrations/008_job_hours_per_day.sql): เพิ่มชั่วโมงทำงานต่อวัน
+- [migrations/009_student_preferences.sql](migrations/009_student_preferences.sql): เพิ่มข้อมูลความสนใจและเวลาว่างของนักศึกษา
+- [migrations/010_job_matching.sql](migrations/010_job_matching.sql): เพิ่มทักษะแบบจำเป็น/เสริมและตารางกะงาน
+- [migrations/011_job_subcategory.sql](migrations/011_job_subcategory.sql): เพิ่มหมวดงานย่อย
 - [แนวทางแบ่งงานและเชื่อมข้อมูล](team-guide.md): ผู้รับผิดชอบ ลำดับเตรียมข้อมูล และกฎ backend
 
 ## ติดตั้งบนเครื่องแต่ละคน
@@ -59,7 +63,7 @@ DDL ของ MySQL commit แยกแต่ละคำสั่ง หาก�
 
 ## การเปลี่ยนโครงสร้าง
 หลังเริ่มใช้งาน ให้เพิ่มไฟล์ migration มีเลขลำดับและบอกวิธีรัน ไม่แก้ข้อมูลจริงโดยลบสร้างใหม่
-ฐานข้อมูลเดิมให้รัน migration 007 หนึ่งครั้ง; นายจ้างเดิมทั้งหมดจะเริ่มเป็น Pending และต้องให้ Admin ตรวจสอบใหม่
+ฐานข้อมูลเดิมให้รัน migration 007 หนึ่งครั้ง; นายจ้างเดิมทั้งหมดจะเริ่มเป็น Pending และต้องให้ Admin ตรวจสอบใหม่. จากนั้นให้ใช้ migration 008–011 ตามลำดับสำหรับชั่วโมงทำงาน, ความต้องการนักศึกษา, matching และหมวดงานย่อย หากยังไม่มีคอลัมน์/ตารางเหล่านี้
 ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน migration 006 หลังมีคอลัมน์ `STUDENT.resume_url`; ฐานข้อมูลใหม่ที่สร้างจาก `schema.sql` มีคอลัมน์นี้อยู่แล้ว ไม่ต้องรัน migration 006 ซ้ำ
 ข้อมูลตัวอย่างต้องเป็นข้อมูลสมมติและใส่ในไฟล์แยกจาก schema
 

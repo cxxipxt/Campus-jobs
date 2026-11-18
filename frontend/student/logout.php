@@ -19,4 +19,4 @@ if (ini_get('session.use_cookies')) {
 
 session_destroy();
 
-go('student/login.html');
+go('student/login.php');

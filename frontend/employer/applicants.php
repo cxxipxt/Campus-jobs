@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     go('employer/applicants.php?job_id='.$id);
 }
 $applicants = query('SELECT a.application_id,a.status,a.applied_at,s.student_id,s.full_name,s.email,s.major,s.resume_url FROM APPLICATION a JOIN STUDENT s ON s.student_id=a.student_id WHERE a.job_id=? ORDER BY a.applied_at DESC,a.application_id DESC', [$id])->fetchAll();
-start_page('ผู้สมัครงาน', 'workspace-page');
+start_page('ผู้สมัครงาน', 'workspace-page applicants-page');
 ?>
 <p><a href="<?= e(url('employer/jobs.php')) ?>">กลับไปจัดการประกาศ</a></p>
 <h2><?= e($job['job_title']) ?></h2>
