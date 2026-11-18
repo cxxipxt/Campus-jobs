@@ -14,7 +14,11 @@ function stage_verified_student(string $email): void {
 
 function sign_in_student(int $id, bool $profileSetup = false): never {
     session_regenerate_id(true);
-    $_SESSION = ['auth' => ['role' => 'student', 'id' => $id]];
+    $returnJob=$_SESSION['return_job']??null;
+    $search=$_SESSION['job_search']??'';
+    $_SESSION = ['auth' => ['role' => 'student', 'id' => $id], 'return_job'=>$returnJob, 'job_search'=>$search];
+    $completed=(int)query('SELECT profile_completed FROM STUDENT WHERE student_id=?',[$id])->fetchColumn()===1;
+    if ($completed && !$profileSetup) resume_student_job();
     if ($profileSetup) {
         $_SESSION['student_profile_setup'] = true;
     }
@@ -74,4 +78,10 @@ function student_resume_link(string $url): ?string {
         throw new InvalidArgumentException('ลิงก์เรซูเม่ต้องเป็น URL แบบ HTTP หรือ HTTPS');
     }
     return $url;
+}
+
+function resume_student_job(): void {
+    $jobId=$_SESSION['return_job']??null;
+    unset($_SESSION['return_job']);
+    if (is_int($jobId) && $jobId>0) go('job-detail.php?job_id='.$jobId);
 }

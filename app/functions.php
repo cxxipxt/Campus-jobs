@@ -139,9 +139,9 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
     echo '<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'
         . e($title) .
         ' | CampusJobs</title><link rel="stylesheet" href="' .
-        e(url('assets/styles/campus.css')) . '"><link rel="stylesheet" href="' . e(url('assets/styles/orange.css?v=4')) . '">' . $surfaceLink .
+        e(url('assets/styles/campus.css')) . '"><link rel="stylesheet" href="' . e(url('assets/styles/orange.css?v=20261118-timefilter')) . '">' . $surfaceLink .
         '<script defer src="' .
-        e(url('assets/campus.js')) .
+        e(url('assets/campus.js?v=20261118-timefilter')) .
         '"></script></head><body class="' .
         e($layout) .
         '"><a class="skip" href="#main">ข้ามไปเนื้อหาหลัก</a><header class="campus-header"><a class="brand" href="' .

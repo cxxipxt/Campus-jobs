@@ -349,16 +349,20 @@ if (loginTabs) {
   if (!carousel) return;
   const slides = [...carousel.querySelectorAll('.job-slide')];
   const controls = carousel.querySelector('.carousel-controls');
-  const pause = controls.querySelector('[data-carousel-pause]');
+  controls?.remove();
+  let hovering = false, gesture = null, suppressClick = false;
+  carousel.tabIndex = 0;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   let current = 0, paused = reduce.matches, timer, busy = false;
-  const show = index => {
+  const show = (index, direction = 'left') => {
     if (busy) return;
     const old = slides[current];
     const next = (index + slides.length) % slides.length;
     if (next !== current && !reduce.matches) {
-      busy = true; old.classList.add('is-dealing');
-      setTimeout(() => { old.classList.remove('is-dealing'); busy = false; }, 850);
+      busy = true;
+      old.classList.toggle('is-dealing-right', direction === 'right');
+      old.classList.add('is-dealing');
+      setTimeout(() => { old.classList.remove('is-dealing', 'is-dealing-right'); busy = false; }, 850);
     }
     current = next;
     slides.forEach((slide, i) => {
@@ -370,18 +374,42 @@ if (loginTabs) {
       slide.setAttribute('aria-hidden', String(i !== current));
       if (i === current) slide.querySelector('img').loading = 'eager';
     });
-    controls.querySelector('.carousel-count').textContent = `${current + 1} / ${slides.length}`;
+
   };
   const schedule = () => {
     clearInterval(timer);
-    pause.textContent = paused ? 'เล่นสลับภาพ' : 'หยุดสลับภาพ';
-    if (!paused && !document.hidden && !carousel.contains(document.activeElement)) timer = setInterval(() => show(current + 1), 4200);
-  };
-  controls.hidden = false;
-  controls.querySelector('[data-carousel-next]').onclick = () => { show(current + 1); schedule(); };
-  controls.querySelector('[data-carousel-prev]').onclick = () => { show(current - 1); schedule(); };
-  pause.onclick = () => { paused = !paused; schedule(); };
 
+    if (!paused && !hovering && !gesture && !document.hidden && !carousel.contains(document.activeElement)) timer = setInterval(() => show(current + 1), 3000);
+  };
+  carousel.addEventListener('pointerenter', event => { if(event.pointerType==='mouse'){ hovering=true; schedule(); } });
+  carousel.addEventListener('pointerleave', event => { if(event.pointerType==='mouse'){ hovering=false; schedule(); } });
+  carousel.addEventListener('dragstart', event => event.preventDefault());
+  carousel.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    gesture={id:event.pointerId,x:event.clientX,y:event.clientY};
+    suppressClick=false;
+    schedule();
+  });
+  window.addEventListener('pointerup', event => {
+    if (!gesture || event.pointerId!==gesture.id) return;
+    const dx=event.clientX-gesture.x, dy=event.clientY-gesture.y;
+    gesture=null;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.3) {
+      suppressClick=true;
+      show(current+(dx>0?1:-1), dx>0?'right':'left');
+      setTimeout(()=>{suppressClick=false;},400);
+    }
+    schedule();
+  });
+  window.addEventListener('pointercancel', () => { gesture=null; schedule(); });
+  carousel.addEventListener('click', event => {
+    if(suppressClick){event.preventDefault();event.stopPropagation();}
+  },true);
+  carousel.addEventListener('keydown', event => {
+    if(event.key==='ArrowLeft' || event.key==='ArrowRight'){
+      event.preventDefault();show(current+(event.key==='ArrowRight'?1:-1));schedule();
+    }
+  });
   carousel.addEventListener('focusin', schedule);
   carousel.addEventListener('focusout', () => setTimeout(schedule, 0));
   document.addEventListener('visibilitychange', schedule);

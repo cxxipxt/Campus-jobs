@@ -30,6 +30,15 @@
       });
       summary.append(chip);
     }
+    for (const box of form.querySelectorAll('input[name="category_id[]"]:checked, input[name="subcategory[]"]:checked')) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      const name = box.closest('label').textContent.trim();
+      chip.textContent = name + ' ×';
+      chip.setAttribute('aria-label', 'ล้างประเภทงาน ' + name);
+      chip.addEventListener('click', () => { box.checked = false; form.requestSubmit(); });
+      summary.append(chip);
+    }
     summary.hidden = !summary.childElementCount;
   }
   const preview = document.querySelector('[data-job-preview]');

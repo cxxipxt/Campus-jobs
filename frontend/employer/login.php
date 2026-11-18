@@ -1,11 +1,18 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__,2).'/app/login-limit.php';
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $loginPanel = 'employer';
     check_csrf();
     $username = input('username');
     $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
+    $wait=employer_login_wait($username,$_SERVER['REMOTE_ADDR']??'unknown');
+    if ($wait>0) {
+        http_response_code(429);
+        header('Retry-After: '.$wait);
+        $error='ลองเข้าสู่ระบบหลายครั้งเกินไป กรุณาลองอีกครั้งใน '.(int)ceil($wait/60).' นาที';
+    } else {
     $account = query('SELECT employer_id,password_hash,company_name FROM EMPLOYER WHERE username = ?', [$username])->fetch();
     if (!$account && filter_var($username, FILTER_VALIDATE_EMAIL)) {
         $account = query('SELECT employer_id,password_hash,company_name FROM EMPLOYER WHERE username IS NULL AND email = ?', [$username])->fetch();
@@ -18,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         go($account['company_name'] === null ? 'employer/profile.php' : 'employer/jobs.php');
     }
     $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+    }
 }
 start_page('เข้าสู่ระบบ', 'company-auth-page student-login-page', false);
 ?>

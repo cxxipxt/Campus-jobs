@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $businessTypeOther = input('business_type_other');
             required_text($businessTypeOther, 100, 'ลักษณะธุรกิจอื่น ๆ');
         }
-        $contactEmail = input('contact_email');
+        $contactEmail = input('same_contact_email')==='1' ? $email : input('contact_email');
         required_text($contactEmail, 255, 'อีเมลติดต่อ');
         if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) throw new InvalidArgumentException('อีเมลติดต่อไม่ถูกต้อง');
         query(
@@ -53,6 +53,7 @@ start_page('สมัครสมาชิกสำหรับบริษั�
       <p><label for="business_type">ลักษณะธุรกิจ</label><select id="business_type" name="business_type" required><option value="">เลือกลักษณะธุรกิจ</option><?php foreach ($businessTypes as $type): ?><option value="<?= e($type) ?>" <?= input('business_type') === $type ? 'selected' : '' ?>><?= e($type) ?></option><?php endforeach; ?></select></p>
       <p id="business-type-other"<?= input('business_type') === 'อื่น ๆ' ? '' : ' hidden' ?>><label for="business_type_other">ระบุลักษณะธุรกิจ (เมื่อเลือกอื่น ๆ)</label><input id="business_type_other" name="business_type_other" maxlength="100" value="<?= e(input('business_type_other')) ?>"<?= input('business_type') === 'อื่น ๆ' ? ' required' : '' ?>></p>
       <p><label for="phone">โทรศัพท์ (ไม่บังคับ)</label><input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="20" value="<?= e(input('phone')) ?>"></p>
+      <p><label><input type="checkbox" name="same_contact_email" value="1" id="same-contact-email" <?= input('same_contact_email')==='1'?'checked':'' ?>> ใช้อีเมลเดียวกับบัญชี</label></p>
       <p><label for="contact_email">อีเมลติดต่อ</label><input id="contact_email" type="email" name="contact_email" autocomplete="section-contact email" maxlength="255" value="<?= e(input('contact_email')) ?>" required></p>
       <button type="submit">สมัครสมาชิก</button>
     </form>
@@ -61,3 +62,13 @@ start_page('สมัครสมาชิกสำหรับบริษั�
 </div>
 <script src="<?= e(url('assets/business-type.js')) ?>" defer></script>
 <?php end_page(); ?>
+
+<script>
+(() => {
+  const same=document.querySelector('#same-contact-email');
+  const account=document.querySelector('#email');
+  const contact=document.querySelector('#contact_email');
+  function update(){contact.readOnly=same.checked;if(same.checked)contact.value=account.value;}
+  same.addEventListener('change',update);account.addEventListener('input',update);update();
+})();
+</script>

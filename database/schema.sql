@@ -171,3 +171,5 @@ CREATE TABLE JOB_SHIFT (
  CONSTRAINT chk_job_shift_day CHECK(weekday BETWEEN 1 AND 7),
  CONSTRAINT chk_job_shift_times CHECK(start_time < end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE JOB ADD COLUMN subcategory VARCHAR(100) NULL, ADD INDEX idx_job_subcategory (subcategory);

@@ -75,7 +75,7 @@ function dashboard_recommendations(int $studentId): array {
         if (!$old || $row['skill_type']==='required') $skills[$row['job_id']][$key]=[$name,$row['skill_type']];
     }
     $shiftCounts=[];
-    foreach(query("SELECT s.job_id,COUNT(*) shift_count,SUM(EXISTS(SELECT 1 FROM STUDENT_AVAILABILITY a WHERE a.student_id=? AND a.weekday=s.weekday AND a.start_time<=s.start_time AND a.end_time>=s.end_time)) covered FROM JOB_SHIFT s JOIN JOB j USING(job_id) WHERE j.status='Open' GROUP BY s.job_id",[$studentId])->fetchAll() as $row) $shiftCounts[$row['job_id']]=$row;
+    foreach(query("SELECT s.job_id,COUNT(*) shift_count,SUM(EXISTS(SELECT 1 FROM STUDENT_AVAILABILITY a WHERE a.student_id=? AND a.weekday=s.weekday AND a.start_time<=s.start_time AND ((s.end_time<'24:00:00' AND a.end_time>=s.end_time) OR (s.end_time>='24:00:00' AND a.end_time>='23:59:00' AND EXISTS(SELECT 1 FROM STUDENT_AVAILABILITY b WHERE b.student_id=a.student_id AND b.weekday=MOD(s.weekday,7)+1 AND b.start_time='00:00:00' AND b.end_time>=SUBTIME(s.end_time,'24:00:00')))))) covered FROM JOB_SHIFT s JOIN JOB j USING(job_id) WHERE j.status='Open' GROUP BY s.job_id",[$studentId])->fetchAll() as $row) $shiftCounts[$row['job_id']]=$row;
     $jobs=query("SELECT job_id,job_title,hourly_wage,location,days_per_week FROM JOB WHERE status='Open' ORDER BY created_at DESC,job_id DESC")->fetchAll();
     foreach($jobs as &$job) {
         $names=[]; $missing=0;
@@ -100,4 +100,30 @@ function dashboard_recommendations(int $studentId): array {
     $jobs=array_filter($jobs,static fn($j)=>$j['area_match'] || $j['wage_match'] || $j['shift_match'] || $j['matched_count']);
     usort($jobs,static fn($a,$b)=>$b['score']<=>$a['score']);
     return array_slice($jobs,0,5);
+}
+
+function job_schedule_summary(array $shifts, $daysNeeded): string {
+    if (!$shifts) return '';
+    $durations=[];
+    foreach ($shifts as $shift) {
+        $minutes=static fn($time)=>(int)substr($time,0,2)*60+(int)substr($time,3,2);
+        $durations[]=($minutes($shift['end_time'])-$minutes($shift['start_time']))/60;
+    }
+    $minimum=min($durations); $maximum=max($durations);
+    $hours=$minimum===$maximum?(string)$minimum:$minimum.'–'.$maximum;
+    return $hours.' ชม./วัน · '.($daysNeeded ?: count($shifts)).' วัน/สัปดาห์';
+}
+
+function shift_fits_availability(array $shift, array $availability): bool {
+    $seconds=static function(string $time): int {
+        $parts=explode(':',$time);
+        return (int)$parts[0]*3600+(int)$parts[1]*60+(int)($parts[2]??0);
+    };
+    $day=(int)$shift['weekday'];
+    $start=$seconds($shift['start_time']); $end=$seconds($shift['end_time']);
+    $slot=$availability[$day]??null;
+    if (!$slot || $seconds($slot['start_time'])>$start) return false;
+    if ($end<86400) return $seconds($slot['end_time'])>=$end;
+    $next=$availability[$day%7+1]??null;
+    return $seconds($slot['end_time'])>=86340 && ($end===86400 || ($next && $seconds($next['start_time'])===0 && $seconds($next['end_time'])>=$end-86400));
 }

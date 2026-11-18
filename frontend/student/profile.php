@@ -109,6 +109,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         db()->commit();
         $_SESSION['student_profile_setup'] = false;
         $_SESSION['flash'] = 'บันทึกโปรไฟล์แล้ว';
+        resume_student_job();
         $section = input('active_section');
         go('student/profile.php' . (isset($sections[$section]) ? '#' . $section : ''));
     } catch (Throwable $ex) {
