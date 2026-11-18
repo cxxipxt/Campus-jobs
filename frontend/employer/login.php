@@ -5,16 +5,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
     $username = input('username');
     $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
-    $account = query('SELECT employer_id,password_hash,company_name FROM EMPLOYER WHERE username = ?', [$username])->fetch();
+    $account = query('SELECT employer_id,password_hash,company_name,phone,contact_email,address FROM EMPLOYER WHERE username = ?', [$username])->fetch();
     if (!$account && filter_var($username, FILTER_VALIDATE_EMAIL)) {
-        $account = query('SELECT employer_id,password_hash,company_name FROM EMPLOYER WHERE username IS NULL AND email = ?', [$username])->fetch();
+        $account = query('SELECT employer_id,password_hash,company_name,phone,contact_email,address FROM EMPLOYER WHERE username IS NULL AND email = ?', [$username])->fetch();
     }
     // A fixed valid dummy hash keeps a missing account on the password verification path.
     $valid = password_verify($password, $account['password_hash'] ?? '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.');
     if (isset($account['password_hash']) && $valid) {
         session_regenerate_id(true);
         $_SESSION = ['auth' => ['role' => 'employer', 'id' => (int)$account['employer_id']], 'flash' => 'เข้าสู่ระบบสำเร็จ'];
-        go($account['company_name'] === null ? 'employer/profile.php' : 'employer/jobs.php');
+        go($account['company_name'] === null || $account['phone'] === null || $account['contact_email'] === null || $account['address'] === null
+            ? 'employer/profile.php'
+            : 'employer/jobs.php');
     }
     $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
 }

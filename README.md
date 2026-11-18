@@ -51,8 +51,8 @@
 - เส้นทางบัญชีใหม่ที่วางไว้: `register.html` → `student/login.html` → `student/register.html` → `dashboard.html`
 - `student/register.html` เป็นฟอร์มยืนยันชื่อและข้อมูลโปรไฟล์ครั้งแรก ไม่มีฟิลด์ตั้งรหัสผ่าน ยืนยันแล้วจึง INSERT STUDENT และไป Dashboard
 - เมื่อทำระบบจริง อีเมลและข้อมูลบัญชีต้องมาจากผู้ให้บริการที่ยืนยันแล้ว ไม่ใช้ค่าจากฟอร์มเป็นหลักฐานยืนยันตัวตน
-- Schema v2 ใช้ STUDENT.university_username แบบ UNIQUE แทนรหัสผ่านนักศึกษา ใช้ 8 ตารางเดิม และมี migration จาก v1 ดู [ขั้นตอนล็อกอินนักศึกษา](database/student-login.md)
-- นายจ้างยังใช้โครงฟอร์มอีเมล/รหัสผ่านเดิม
+- Schema v3 ใช้ STUDENT.university_username แบบ UNIQUE แทนรหัสผ่านนักศึกษา และเพิ่มสถานะตรวจสอบนายจ้างใน EMPLOYER โดยยังใช้ 8 ตารางเดิม ดู [ขั้นตอนล็อกอินนักศึกษา](database/student-login.md)
+- นายจ้างสมัครพร้อมข้อมูลกิจการและข้อมูลติดต่อ โดยบัญชีเริ่ม Pending และลงประกาศได้หลัง Admin ยืนยันเป็น Verified
 
 ### โครงสร้างปัจจุบัน
 
@@ -123,7 +123,7 @@ Backend ต้องตรวจเจ้าของข้อมูลและ
 - ดูโปรไฟล์ ทักษะ และลิงก์ Resume ของผู้สมัครในงานของตนเอง
 - พิจารณาและเปลี่ยนสถานะใบสมัคร
 
-เวอร์ชันแรกยังไม่รวมแชต ชำระค่าจ้าง รีวิว อัปโหลดไฟล์ Resume จับคู่งานอัตโนมัติ แจ้งเตือนอีเมล/SMS และหน้าผู้ดูแลระบบ ดูรายละเอียดใน [ขอบเขตระบบ](docs/scope.md)
+เวอร์ชันแรกยังไม่รวมแชต ชำระค่าจ้าง รีวิว อัปโหลดไฟล์ Resume จับคู่งานอัตโนมัติ และแจ้งเตือนอีเมล/SMS; มีหน้า Admin สำหรับตรวจสอบบัญชีนายจ้าง ดูรายละเอียดใน [ขอบเขตระบบ](docs/scope.md)
 
 ---
 
@@ -319,12 +319,12 @@ Campus-jobs/
 รายการตรวจฉบับเต็มอยู่ใน [Acceptance Checklist](docs/acceptance-checklist.md)
 
 
-### หมายเหตุเกี่ยวกับฐานข้อมูล v2 และ OAuth
+### หมายเหตุเกี่ยวกับฐานข้อมูล v3 และ OAuth
 
-ฐานข้อมูลพื้นฐาน v2 มี 8 ตาราง โดยตาราง STUDENT ใช้ `university_username` (UNIQUE) และไม่มี `password_hash` หรือ `university` ส่วน EMPLOYER ใช้ `company_name`
+ฐานข้อมูลพื้นฐาน v3 มี 8 ตาราง โดยตาราง STUDENT ใช้ `university_username` (UNIQUE) และไม่มี `password_hash` หรือ `university` ส่วน EMPLOYER เก็บสถานะตรวจสอบและเหตุผลปฏิเสธ
 
 เมื่อรัน Migration `005_student_oauth.sql` จะเพิ่มตาราง `STUDENT_OAUTH` เป็นตารางที่ 9 เพื่อเชื่อมบัญชีนักศึกษากับ Microsoft และ Google
 
 ดูรายละเอียดการติดตั้งและ Migration ได้ที่ [student-login.md](database/student-login.md)
 
-หมายเหตุ: ภาพ ER Diagram ยังเป็นเวอร์ชันเดิมและยังไม่ได้ปรับตามโครงสร้าง v2 และ STUDENT_OAUTH
+หมายเหตุ: ภาพ ER Diagram ยังเป็นเวอร์ชันเดิมและยังไม่ได้ปรับตามโครงสร้าง v3 และ STUDENT_OAUTH

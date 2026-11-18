@@ -57,6 +57,10 @@ function employer(): int {
     return $id;
 }
 
+function admin(): void {
+    if (!identity('admin')) go('admin/login.php');
+}
+
 function required_text(string $value, int $max, string $label): void {
     if ($value === '' || mb_strlen($value, 'UTF-8') > $max) {
         throw new InvalidArgumentException("กรุณากรอก$label ไม่เกิน $max ตัวอักษร");
@@ -67,6 +71,10 @@ function optional_text(string $value, int $max, string $label): ?string {
     if ($value === '') return null;
     required_text($value, $max, $label);
     return $value;
+}
+
+function employer_business_types(): array {
+    return ['ร้านอาหารและเครื่องดื่ม', 'ค้าปลีกและค้าส่ง', 'อีคอมเมิร์ซ', 'บริการ', 'โรงแรมและการท่องเที่ยว', 'เทคโนโลยี', 'การศึกษา', 'การผลิต', 'โลจิสติกส์และขนส่ง', 'สุขภาพและความงาม', 'การเงินและประกันภัย', 'สื่อและโฆษณา', 'อีเวนต์และบันเทิง', 'อสังหาริมทรัพย์และก่อสร้าง', 'เกษตรและอาหาร', 'หน่วยงานรัฐและองค์กรไม่แสวงหากำไร', 'อื่น ๆ'];
 }
 
 function money(string $value): string {
@@ -159,6 +167,9 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
             'employer/jobs.php' => 'จัดการประกาศ',
             'employer/profile.php' => 'ข้อมูลบริษัท'
         ];
+    }
+    if (identity('admin')) {
+        $links += ['admin/verification.php' => 'ตรวจสอบนายจ้าง'];
     }
 
     foreach ($links as $path => $label) {

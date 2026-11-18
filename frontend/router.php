@@ -8,6 +8,7 @@ $routes += [
     '/student/profile.html' => '/student/profile.php',
     '/student/register.html' => '/student/register.php',
     '/employer/applicants.html' => '/employer/applicants.php',
+    '/admin/verification.html' => '/admin/verification.php',
 ];
 if (preg_match('~(?:^|/)\.~', rawurldecode((string)$path))) { http_response_code(404); echo 'Not found'; return true; }
 if(isset($routes[$path])) { $query=$_SERVER['QUERY_STRING']??''; header('Location: '.$routes[$path].($query!==''?'?'.$query:''),true,302); return true; }

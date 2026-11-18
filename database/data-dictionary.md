@@ -1,4 +1,4 @@
-# Data Dictionary v2 — 8 ตาราง
+# Data Dictionary v3 — 8 ตาราง
 
 ใช้ MySQL 8.0.16 ขึ้นไป ตาม [schema.sql](schema.sql) สำหรับฐานข้อมูลใหม่
 อัปเกรดฐานข้อมูลเดิมตาม [student-login.md](student-login.md) ด้วย migration 001 ไม่รัน schema ใหม่ทับฐานข้อมูลที่มีข้อมูล
@@ -23,11 +23,16 @@ STUDENT ใช้แบบภาพล่าสุด: student_id, university_us
 | Attribute | Type | Constraints / การตรวจสอบ |
 |---|---|---|
 | `employer_id` | INT UNSIGNED | PK, AUTO_INCREMENT, NOT NULL; ระบบสร้าง ID บวก |
-| `company_name` | VARCHAR(150) | NOT NULL, CHECK ห้ามว่าง; ไม่ UNIQUE |
-| `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER, CHECK ห้ามว่าง; Backend ตรวจรูปแบบ |
-| `password_hash` | VARCHAR(255) | NOT NULL, CHECK ห้ามว่าง; Backend สร้างด้วยไลบรารีแฮชรหัสผ่านจริง |
+| `company_name` | VARCHAR(150) | NULL ระหว่างตั้งค่าบัญชี Google; CHECK ถ้ามีห้ามว่าง; ไม่ UNIQUE |
+| `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER, CHECK ห้ามว่าง; Backend ตรวจรูปแบบ/Google ยืนยัน |
+| `password_hash` | VARCHAR(255) | NULL สำหรับบัญชี Google; ถ้ามี CHECK ห้ามว่าง และ Backend สร้างด้วยไลบรารีแฮชรหัสผ่านจริง |
 | `phone` | VARCHAR(20) | NULL; CHECK ถ้ามีห้ามว่าง; Backend ตรวจรูปแบบ |
 | `address` | TEXT | NULL; CHECK ถ้ามีห้ามว่าง |
+| `verification_status` | VARCHAR(10), ASCII binary | NOT NULL, DEFAULT `Pending`; CHECK เฉพาะ `Pending` / `Verified` / `Rejected` |
+| `rejection_reason` | VARCHAR(1000) | NULL; ต้องมีข้อความเมื่อสถานะ `Rejected` และเป็น NULL ในสถานะอื่น |
+| `verified_at` | DATETIME | NULL; ระบบกำหนดเวลา UTC เมื่อ Admin อนุมัติ และล้างเมื่อกลับเป็น Pending |
+
+`idx_employer_verification_status` รองรับคิวตรวจสอบ Admin. นายจ้างที่ยังไม่ Verified ลงประกาศหรือแก้ไขประกาศไม่ได้; หากแก้ข้อมูลบริษัทหลังอนุมัติจะกลับไปรอการตรวจสอบ
 
 ## JOB_CATEGORY
 

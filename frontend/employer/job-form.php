@@ -1,9 +1,16 @@
 <?php
 require dirname(__DIR__,2) . '/app/bootstrap.php';
 $owner=employer(); $id=null; $error=null;
-if (query('SELECT 1 FROM EMPLOYER WHERE employer_id=? AND company_name IS NULL', [$owner])->fetchColumn()) {
-    $_SESSION['flash'] = 'กรอกชื่อบริษัทหรือร้านค้าก่อนลงประกาศงาน';
+$verification = query('SELECT verification_status,company_name,phone,contact_email,address FROM EMPLOYER WHERE employer_id=?', [$owner])->fetch();
+if (!$verification || $verification['company_name'] === null || $verification['phone'] === null || $verification['contact_email'] === null || $verification['address'] === null) {
+    $_SESSION['flash'] = 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบก่อนลงประกาศงาน';
     go('employer/profile.php');
+}
+if ($verification['verification_status'] !== 'Verified') {
+    $_SESSION['flash'] = $verification['verification_status'] === 'Rejected'
+        ? 'บัญชีถูกปฏิเสธ กรุณาแก้ไขข้อมูลบริษัทตามเหตุผลที่แจ้ง'
+        : 'บัญชีกำลังรอ Admin อนุมัติ จึงยังลงประกาศงานไม่ได้';
+    go('employer/jobs.php');
 }
 try { if (isset($_GET['job_id'])) $id=positive_id(input('job_id',$_GET)); }
 catch (InvalidArgumentException $ex) { http_response_code(400); exit(e($ex->getMessage())); }

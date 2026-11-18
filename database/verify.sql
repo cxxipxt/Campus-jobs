@@ -16,7 +16,7 @@ FROM information_schema.REFERENTIAL_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE()
 ORDER BY TABLE_NAME, CONSTRAINT_NAME;
 
--- Expected: 22 CHECK constraints, all enforced (v2 plus profile completion).
+-- Expected: 25 CHECK constraints, all enforced (v2, profile completion and employer verification).
 SELECT TABLE_NAME, CONSTRAINT_NAME, ENFORCED
 FROM information_schema.TABLE_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_TYPE = 'CHECK'
