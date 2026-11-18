@@ -129,21 +129,28 @@ function thai_time(string $utc): string {
 }
 
 function start_page(string $title, string $layout = '', bool $showHeading = true): void {
+    $surfaceStyles = [
+        'student-hub' => 'student-hub.css',
+        'workspace-page student-editor' => 'student-editor.css',
+    ];
+    $surfaceLink = isset($surfaceStyles[$layout])
+        ? '<link rel="stylesheet" href="' . e(url('assets/styles/' . $surfaceStyles[$layout])) . '">'
+        : '';
     echo '<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'
         . e($title) .
         ' | CampusJobs</title><link rel="stylesheet" href="' .
-        e(url('assets/styles/campus.css')) .
-        '"><script defer src="' .
+        e(url('assets/styles/campus.css')) . '"><link rel="stylesheet" href="' . e(url('assets/styles/orange.css?v=4')) . '">' . $surfaceLink .
+        '<script defer src="' .
         e(url('assets/campus.js')) .
         '"></script></head><body class="' .
         e($layout) .
         '"><a class="skip" href="#main">ข้ามไปเนื้อหาหลัก</a><header class="campus-header"><a class="brand" href="' .
-        e(url('index.html')) .
+        e(url('index.php')) .
         '">CampusJobs</a><nav aria-label="เมนูหลัก">';
 
     $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
-    $links = ['jobs.php' => 'ค้นหางาน'];
+    $links = ['index.php' => 'หน้าหลัก', 'jobs.php' => 'ค้นหางาน'];
 
     if (identity('student')) {
         $links += [
@@ -181,6 +188,7 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
     }
     // Guest
     else {
+        echo '<a href="' . e(url('student/login.php')) . '">เข้าสู่ระบบนักศึกษา</a>';
         echo '<a href="' . e(url('employer/login.php')) . '">เข้าสู่ระบบนายจ้าง</a>';
     }
 
@@ -197,7 +205,7 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
 }
 
 function end_page(): void {
-    echo '</main><footer>CampusJobs · งานพาร์ทไทม์สำหรับนักศึกษา</footer></body></html>';
+    echo '</main><footer class="app-footer"><a class="brand" href="' . e(url('index.php')) . '">CampusJobs</a><p>งานพาร์ทไทม์ที่เข้ากับเวลาเรียน</p><nav aria-label="ลิงก์ท้ายหน้า"><a href="' . e(url('jobs.php')) . '">ค้นหางาน</a><a href="' . e(url('employer/jobs.php')) . '">สำหรับนายจ้าง</a></nav></footer></body></html>';
 }
 
 function error_box(?string $error): void {

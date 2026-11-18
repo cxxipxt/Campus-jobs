@@ -13,8 +13,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
 $intent = $_SESSION['student_oauth_intent'] ?? null;
 
 if (!is_array($intent)) {
-    http_response_code(400);
-    exit('ไม่พบรายการเข้าสู่ระบบ กรุณาเริ่มใหม่');
+    $_SESSION['student_login_notice'] = 'กรุณาเลือกบัญชีเพื่อเริ่มเข้าสู่ระบบอีกครั้ง';
+    go('student/login.php');
 }
 
 $flowType = $intent['type'] ?? '';
@@ -35,8 +35,8 @@ if (
         $_SESSION['student_oauth_provider']
     );
 
-    http_response_code(400);
-    exit('รายการเข้าสู่ระบบหมดอายุ กรุณาเริ่มใหม่');
+    $_SESSION['student_login_notice'] = 'รายการเข้าสู่ระบบหมดอายุแล้ว กรุณาเลือกบัญชีอีกครั้ง';
+    go('student/login.php');
 }
 
 // Linking must remain attached to the same authenticated student.
@@ -209,7 +209,7 @@ try {
             !is_string($claims->tid) ||
             !hash_equals($tenantId, strtolower($claims->tid))
         ) {
-            throw new RuntimeException('Invalid Microsoft tenant');
+            throw new DomainException('Invalid Microsoft tenant');
         }
 
         $allowedDomain = 'kmutt.ac.th';
@@ -227,7 +227,7 @@ try {
             !is_string($claims->hd) ||
             !hash_equals($hostedDomain, strtolower($claims->hd))
         ) {
-            throw new RuntimeException('Invalid Google hosted domain');
+            throw new DomainException('Invalid Google hosted domain');
         }
 
         $allowedDomain = $hostedDomain;
@@ -258,7 +258,7 @@ try {
         $domain !== $allowedDomain ||
         !preg_match('/^[A-Za-z0-9._-]{1,64}$/D', $localPart)
     ) {
-        throw new RuntimeException('Email domain is not allowed');
+        throw new DomainException('Email domain is not allowed');
     }
 
     $username = strtolower($localPart);
@@ -434,13 +434,18 @@ try {
         get_class($error)
     );
 
+    $domainNotice = $provider === 'google'
+        ? 'กรุณาเลือกบัญชี Google ของมหาวิทยาลัยที่ลงท้ายด้วย @mail.kmutt.ac.th'
+        : 'กรุณาเลือกบัญชี Microsoft ของมหาวิทยาลัยที่ลงท้ายด้วย @kmutt.ac.th';
     if ($flowType === 'link' && identity('student') !== null) {
-        $_SESSION['flash'] = 'ไม่สามารถเชื่อมบัญชีได้ บัญชีอาจถูกเชื่อมกับผู้ใช้อื่นแล้ว หรือเกิดข้อผิดพลาด กรุณาลองใหม่';
+        $_SESSION['flash'] = $error instanceof DomainException ? $domainNotice : 'ไม่สามารถเชื่อมบัญชีได้ บัญชีอาจถูกเชื่อมกับผู้ใช้อื่นแล้ว หรือเกิดข้อผิดพลาด กรุณาลองใหม่';
         go('student/profile.php');
     }
 
     unset($_SESSION['student_oauth_pending']);
 
-    http_response_code(403);
-    exit('ไม่สามารถยืนยันบัญชีได้ กรุณาเริ่มเข้าสู่ระบบใหม่');
+    $_SESSION['student_login_notice'] = $error instanceof DomainException
+        ? $domainNotice
+        : 'ยืนยันบัญชีไม่สำเร็จ กรุณาเลือกบัญชีมหาวิทยาลัยเพื่อเริ่มใหม่';
+    go('student/login.php');
 }

@@ -46,7 +46,7 @@ start_page('สมัครสมาชิกสำหรับบริษั�
     <form class="company-auth-fields" method="post" action="<?= e(url('employer/register.php')) ?>">
       <?php csrf_field(); ?>
       <p><label for="username">ชื่อผู้ใช้</label><input id="username" type="text" name="username" autocomplete="username" maxlength="80" value="<?= e(input('username')) ?>" required></p>
-      <p><label for="password">รหัสผ่าน (12–72 ไบต์)</label><input id="password" type="password" name="password" autocomplete="new-password" required></p>
+      <p><label for="password">รหัสผ่าน</label><input id="password" type="password" name="password" autocomplete="new-password" required></p>
       <p><label for="password_confirmation">ยืนยันรหัสผ่าน</label><input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" required></p>
       <p><label for="email">อีเมลสำหรับบัญชี</label><input id="email" type="email" name="email" autocomplete="email" maxlength="255" value="<?= e(input('email')) ?>" required></p>
       <p><label for="company_name">ชื่อบริษัทหรือร้านค้า (ไม่บังคับ)</label><input id="company_name" type="text" name="company_name" autocomplete="organization" maxlength="150" value="<?= e(input('company_name')) ?>"></p>

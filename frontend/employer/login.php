@@ -2,6 +2,7 @@
 require dirname(__DIR__, 2) . '/app/bootstrap.php';
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $loginPanel = 'employer';
     check_csrf();
     $username = input('username');
     $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
@@ -20,27 +21,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 start_page('เข้าสู่ระบบ', 'company-auth-page student-login-page', false);
 ?>
-<div class="company-auth" data-login-tabs data-default-panel="employer">
+<div class="company-auth" data-login-tabs data-default-panel="<?= e($loginPanel ?? 'employer') ?>">
   <nav class="company-auth-tabs" aria-label="ประเภทบัญชี">
     <a href="#student" aria-controls="student">หางาน</a>
     <a href="#employer" aria-controls="employer">หาคน</a>
   </nav>
   <div class="company-auth-card company-login-card">
-    <div id="student" data-login-panel>
+    <div id="student" data-login-panel<?= ($loginPanel ?? 'employer') === 'student' ? '' : ' hidden' ?>>
     <h1>เข้าสู่ระบบสำหรับนักศึกษา</h1>
     <p class="company-auth-note">ใช้บัญชีอีเมลนักศึกษา KMUTT</p>
+    <?php if (isset($_SESSION['student_login_notice'])): ?>
+      <div role="alert" class="student-login-notice">
+        <strong>เข้าสู่ระบบนักศึกษายังไม่สำเร็จ</strong>
+        <p><?= e($_SESSION['student_login_notice']) ?></p>
+      </div>
+      <?php unset($_SESSION['student_login_notice']); ?>
+    <?php endif; ?>
     <div class="student-providers">
-      <button type="button" disabled>
+      <a class="provider-button" href="<?= e(url('student/oauth-start.php?provider=microsoft')) ?>">
         <span class="provider-mark microsoft-mark" aria-hidden="true"></span>
         <span>เข้าสู่ระบบด้วย Microsoft <small>@kmutt.ac.th</small></span>
-      </button>
-      <button type="button" disabled>
+      </a>
+      <a class="provider-button" href="<?= e(url('student/oauth-start.php?provider=google')) ?>">
         <span class="provider-mark google-mark" aria-hidden="true">G</span>
         <span>เข้าสู่ระบบด้วย Google <small>@mail.kmutt.ac.th</small></span>
-      </button>
+      </a></div>
     </div>
-    </div>
-    <div id="employer" data-login-panel>
+    <div id="employer" data-login-panel<?= ($loginPanel ?? 'employer') === 'student' ? ' hidden' : '' ?>>
     <h1>เข้าสู่ระบบสำหรับบริษัท</h1>
     <?php error_box($error); ?>
     <form class="company-auth-fields" method="post" action="<?= e(url('employer/login.php')) ?>">

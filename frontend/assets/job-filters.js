@@ -9,22 +9,23 @@
   const form = filters.querySelector('form');
   const summary = document.querySelector('[data-active-job-filters]');
   const fields = {
-    q: 'ตำแหน่ง', location: 'สถานที่', category_id: 'หมวดงาน',
-    min_wage: 'ขั้นต่ำ', max_wage: 'สูงสุด',
+    q: 'คำค้นหา', my_skills: 'ทักษะของฉัน', location: 'สถานที่', category_id: 'หมวดงาน',
+    min_wage: 'ค่าจ้างขั้นต่ำ', max_wage: 'ค่าจ้างสูงสุด', min_hours: 'ชั่วโมงขั้นต่ำ', max_hours: 'ชั่วโมงสูงสุด',
   };
   function showActiveFilters() {
     if (!summary) return;
     summary.replaceChildren();
     for (const [name, label] of Object.entries(fields)) {
       const field = form.elements.namedItem(name);
-      if (!field?.value.trim()) continue;
+      if (!field?.value.trim() || (field.type === 'checkbox' && !field.checked)) continue;
       const chip = document.createElement('button');
       chip.type = 'button';
-      const value = field.selectedOptions?.[0]?.text ?? field.value.trim();
+      const value = field.type === 'checkbox' ? 'ตรงอย่างน้อยหนึ่งทักษะ' : field.selectedOptions?.[0]?.text ?? field.value.trim();
       chip.textContent = `${label}: ${value} ×`;
       chip.setAttribute('aria-label', `ล้างตัวกรอง ${label}: ${value}`);
       chip.addEventListener('click', () => {
-        field.value = '';
+        if (field.type === 'checkbox') field.checked = false;
+        else field.value = '';
         form.requestSubmit();
       });
       summary.append(chip);

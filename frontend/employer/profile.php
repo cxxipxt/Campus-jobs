@@ -14,8 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 start_page('ข้อมูลบริษัท', 'workspace-page company-page'); error_box($error);
 ?>
-<section class="company-cover"><div aria-hidden="true"></div><h2><?= e($profile['company_name'] ?? 'กรอกข้อมูลบริษัทหรือร้านค้า') ?></h2><p>อีเมลบัญชี: <?= e($profile['email']) ?></p></section>
-<form method="post" class="panel"><?php csrf_field(); field('company_name','ชื่อบริษัท',$_SERVER['REQUEST_METHOD']==='POST'?input('company_name'):$profile['company_name'],'text',true,150); field('phone','เบอร์โทร (ไม่บังคับ)',$_SERVER['REQUEST_METHOD']==='POST'?input('phone'):($profile['phone']??''),'tel',false,20); ?>
+<div class="company-workspace">
+<aside class="company-identity"><span class="company-monogram" aria-hidden="true"><?= e(mb_substr($profile['company_name'] ?: 'C',0,1)) ?></span>
+<h2><?= e($profile['company_name'] ?: 'บัญชีนายจ้าง') ?></h2><p>อีเมลบัญชี<br><strong><?= e($profile['email']) ?></strong></p></aside>
+<form method="post" class="panel company-fields"><h2>รายละเอียดบริษัทหรือร้านค้า</h2><?php csrf_field(); field('company_name','ชื่อบริษัท',$_SERVER['REQUEST_METHOD']==='POST'?input('company_name'):($profile['company_name'] ?? ''),'text',true,150); field('phone','เบอร์โทร (ไม่บังคับ)',$_SERVER['REQUEST_METHOD']==='POST'?input('phone'):($profile['phone']??''),'tel',false,20); ?>
 <p><label for="address">ที่อยู่ (ไม่บังคับ)</label><textarea id="address" name="address" maxlength="10000"><?= e($_SERVER['REQUEST_METHOD']==='POST'?input('address'):($profile['address']??'')) ?></textarea></p>
-<button>บันทึกข้อมูล</button></form>
+<button>บันทึกข้อมูลบริษัท</button></form></div>
 <?php end_page(); ?>
