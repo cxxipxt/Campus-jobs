@@ -44,6 +44,7 @@ CREATE TABLE EMPLOYER (
     phone VARCHAR(20) NULL,
     address TEXT NULL,
     verification_status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Draft',
+    review_revision BIGINT UNSIGNED NOT NULL DEFAULT 1,
     rejection_reason VARCHAR(1000) NULL,
     verified_at DATETIME NULL,
     PRIMARY KEY (employer_id),

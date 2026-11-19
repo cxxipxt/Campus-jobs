@@ -19,7 +19,7 @@ php -S 127.0.0.1:8000 -t frontend frontend/router.php
 - สมัครนายจ้างด้วยชื่อผู้ใช้ อีเมลบัญชี และรหัสผ่านก่อน บัญชีใหม่จะเป็น `Draft`; กรอกชื่อกิจการ ประเภทธุรกิจ เบอร์โทร อีเมลติดต่อ และที่อยู่ในหน้าโปรไฟล์เพื่อส่งเป็น `Pending`
 - ผู้ดูแลตั้ง `ADMIN_USERNAME` และ `ADMIN_PASSWORD_HASH` ใน `.env` แล้วเปิด `http://127.0.0.1:8000/admin/login.php`; สร้าง hash ด้วย `php -r "echo password_hash('your-strong-password', PASSWORD_DEFAULT), PHP_EOL;"` และใส่ hash ใน `.env` ด้วย single quotes เพื่อรักษา `$` เมื่อใช้ Docker Compose
 - ผู้ดูแลอนุมัติเป็น `Verified` หรือปฏิเสธพร้อมเหตุผลเป็น `Rejected`; นายจ้างแก้ไขข้อมูลที่ถูกปฏิเสธและส่งตรวจใหม่ได้ งานสร้างหรือแก้ไขได้เฉพาะบัญชี `Verified`
-- ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน `database/migrations/011_employer_verification.sql` หลัง migration 010; ฐานข้อมูลใหม่ใช้ `database/schema.sql` ปัจจุบัน
+- ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน `database/migrations/011_employer_verification.sql` และ `012_employer_review_revision.sql` ตามลำดับหลัง migration 010; ฐานข้อมูลใหม่ใช้ `database/schema.sql` ปัจจุบัน
 
 ### ตั้งค่า Google Login สำหรับนายจ้าง
 

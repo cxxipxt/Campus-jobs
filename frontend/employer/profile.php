@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 : '';
             query(
                 'UPDATE EMPLOYER SET company_name=?,business_type=?,business_type_other=?,phone=?,contact_email=?,address=?' .
-                $verificationUpdate . ' WHERE employer_id=?',
+                $verificationUpdate . (($changed || $submitForReview) ? ',review_revision=review_revision+1' : '') .
+                ' WHERE employer_id=?',
                 [$company,$businessType,$businessTypeOther,$phone,$contactEmail,$address,$id]
             );
             $pdo->commit();

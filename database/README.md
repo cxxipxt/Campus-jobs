@@ -11,6 +11,7 @@
 - [verify.sql](verify.sql): อ่าน metadata เพื่อตรวจโครงสร้างหลังนำเข้า ไม่แก้ข้อมูล
 - [migrations/006_student_profile_completion.sql](migrations/006_student_profile_completion.sql): จำสถานะการตั้งค่าโปรไฟล์นักศึกษาข้าม session
 - [migrations/011_employer_verification.sql](migrations/011_employer_verification.sql): เพิ่มสถานะและเงื่อนไขการตรวจสอบนายจ้าง
+- [migrations/012_employer_review_revision.sql](migrations/012_employer_review_revision.sql): รันหลัง 011 บนฐานข้อมูลเดิม เพื่อให้แอดมินตัดสินเฉพาะคำขอฉบับที่ตรวจ
 - [แนวทางแบ่งงานและเชื่อมข้อมูล](team-guide.md): ผู้รับผิดชอบ ลำดับเตรียมข้อมูล และกฎ backend
 
 ## ติดตั้งบนเครื่องแต่ละคน

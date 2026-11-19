@@ -79,6 +79,11 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         required_text($data['work_schedule'],255,'วันและเวลางาน');
         $pdo=db(); $pdo->beginTransaction();
         try {
+            // Lock the employer before any job row, in the same transaction as the write.
+            $status = query('SELECT verification_status FROM EMPLOYER WHERE employer_id=? FOR UPDATE', [$owner])->fetchColumn();
+            if ($status !== 'Verified') {
+                throw new InvalidArgumentException('สถานะบัญชีเปลี่ยนแปลง กรุณารอการอนุมัติก่อนบันทึกประกาศงาน');
+            }
             $params=[$data['category_id'],$data['job_title'],$data['description'],$data['hourly_wage'],$data['location'],$data['work_schedule'],$data['hours_per_day']];
             if($id) {
                 owned_job($id,$owner,true);

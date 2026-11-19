@@ -33,6 +33,7 @@ STUDENT ใช้แบบภาพล่าสุด: student_id, university_us
 | `address` | TEXT | NULL ใน `Draft`; ต้องกรอกก่อนส่งเป็น `Pending` |
 | `verification_status` | VARCHAR(10) | NOT NULL, DEFAULT `Draft`; `Draft` → `Pending` → `Verified` หรือ `Rejected` |
 | `rejection_reason` | VARCHAR(1000) | NOT NULL เมื่อ `Rejected`; นายจ้างเห็นเหตุผลและแก้ไขเพื่อส่งตรวจใหม่ |
+| `review_revision` | BIGINT UNSIGNED | รุ่นของข้อมูลที่ใช้พิจารณา เพิ่มเมื่อแก้ข้อมูลหรือส่งคำขอรอบใหม่ |
 | `verified_at` | DATETIME | NOT NULL เมื่อ `Verified`; เก็บ UTC |
 
 ## JOB_CATEGORY

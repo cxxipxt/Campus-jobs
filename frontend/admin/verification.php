@@ -2,6 +2,11 @@
 require dirname(__DIR__, 2) . '/app/bootstrap.php';
 admin();
 $error = null;
+$reviewColumns = 'employer_id,username,company_name,business_type,business_type_other,email,contact_email,phone,address,review_revision';
+$_SESSION['review_key'] ??= random_bytes(32);
+function review_token(array $row): string {
+    return hash_hmac('sha256', serialize($row), $_SESSION['review_key']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
@@ -11,13 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = db();
         $pdo->beginTransaction();
         try {
+            $profile = query(
+                "SELECT $reviewColumns FROM EMPLOYER WHERE employer_id=? AND verification_status='Pending' FOR UPDATE",
+                [$employerId]
+            )->fetch();
+            if (!$profile || !hash_equals(review_token($profile), input('review_token'))) {
+                throw new InvalidArgumentException('คำขอตรวจสอบมีการเปลี่ยนแปลง กรุณาตรวจสอบข้อมูลล่าสุดอีกครั้ง');
+            }
             if ($action === 'approve') {
-                $profile = query(
-                    "SELECT company_name,business_type,business_type_other,phone,contact_email,address
-                     FROM EMPLOYER WHERE employer_id=? AND verification_status='Pending' FOR UPDATE",
-                    [$employerId]
-                )->fetch();
-                if (!$profile || !employer_profile_complete($profile)) {
+                if (!employer_profile_complete($profile)) {
                     throw new InvalidArgumentException('ข้อมูลนายจ้างไม่ครบหรือสถานะไม่ใช่ Pending');
                 }
                 $updated = query(
@@ -52,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pending = query(
-    "SELECT employer_id,username,company_name,business_type,business_type_other,email,contact_email,phone,address
+    "SELECT $reviewColumns
      FROM EMPLOYER WHERE verification_status='Pending' ORDER BY employer_id"
 )->fetchAll();
 start_page('ตรวจสอบบัญชีนายจ้าง', 'workspace-page admin-page'); error_box($error);
@@ -83,6 +90,7 @@ start_page('ตรวจสอบบัญชีนายจ้าง', 'workspa
     <form method="post" class="verification-approve-form">
       <?php csrf_field(); ?>
       <input type="hidden" name="employer_id" value="<?= e($profile['employer_id']) ?>">
+      <input type="hidden" name="review_token" value="<?= e(review_token($profile)) ?>">
       <input type="hidden" name="action" value="approve">
       <button type="submit">อนุมัติและยืนยันบัญชี</button>
     </form>
@@ -91,6 +99,7 @@ start_page('ตรวจสอบบัญชีนายจ้าง', 'workspa
       <form method="post" class="verification-reject-form">
         <?php csrf_field(); ?>
         <input type="hidden" name="employer_id" value="<?= e($profile['employer_id']) ?>">
+        <input type="hidden" name="review_token" value="<?= e(review_token($profile)) ?>">
         <input type="hidden" name="action" value="reject">
         <label for="reason-<?= e($profile['employer_id']) ?>">เหตุผลที่ปฏิเสธ (นายจ้างจะเห็นข้อความนี้)</label>
         <textarea id="reason-<?= e($profile['employer_id']) ?>" name="rejection_reason" maxlength="1000" required></textarea>
