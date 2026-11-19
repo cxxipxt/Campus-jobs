@@ -43,15 +43,39 @@ CREATE TABLE EMPLOYER (
     google_subject VARBINARY(255) NULL,
     phone VARCHAR(20) NULL,
     address TEXT NULL,
+    verification_status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Draft',
+    rejection_reason VARCHAR(1000) NULL,
+    verified_at DATETIME NULL,
     PRIMARY KEY (employer_id),
     CONSTRAINT uq_employer_username UNIQUE (username),
     CONSTRAINT uq_employer_email UNIQUE (email),
     CONSTRAINT uq_employer_google_subject UNIQUE (google_subject),
+    KEY idx_employer_verification_status (verification_status, employer_id),
     CONSTRAINT chk_employer_name CHECK (CHAR_LENGTH(TRIM(company_name)) > 0),
     CONSTRAINT chk_employer_email CHECK (CHAR_LENGTH(TRIM(email)) > 0),
     CONSTRAINT chk_employer_hash CHECK (CHAR_LENGTH(TRIM(password_hash)) > 0),
     CONSTRAINT chk_employer_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
-    CONSTRAINT chk_employer_address CHECK (address IS NULL OR CHAR_LENGTH(TRIM(address)) > 0)
+    CONSTRAINT chk_employer_address CHECK (address IS NULL OR CHAR_LENGTH(TRIM(address)) > 0),
+    CONSTRAINT chk_employer_verification_status CHECK (verification_status IN ('Draft', 'Pending', 'Verified', 'Rejected')),
+    CONSTRAINT chk_employer_pending_profile_complete CHECK (
+        verification_status <> 'Pending' OR (
+            company_name IS NOT NULL AND CHAR_LENGTH(TRIM(company_name)) > 0
+            AND business_type IS NOT NULL AND CHAR_LENGTH(TRIM(business_type)) > 0
+            AND (business_type <> 'อื่น ๆ' OR
+                 (business_type_other IS NOT NULL AND CHAR_LENGTH(TRIM(business_type_other)) > 0))
+            AND phone IS NOT NULL AND CHAR_LENGTH(TRIM(phone)) > 0
+            AND contact_email IS NOT NULL AND CHAR_LENGTH(TRIM(contact_email)) > 0
+            AND address IS NOT NULL AND CHAR_LENGTH(TRIM(address)) > 0
+        )
+    ),
+    CONSTRAINT chk_employer_rejection_reason CHECK (
+        (verification_status = 'Rejected' AND rejection_reason IS NOT NULL AND CHAR_LENGTH(TRIM(rejection_reason)) > 0)
+        OR (verification_status <> 'Rejected' AND rejection_reason IS NULL)
+    ),
+    CONSTRAINT chk_employer_verified_at CHECK (
+        (verification_status = 'Verified' AND verified_at IS NOT NULL)
+        OR (verification_status <> 'Verified' AND verified_at IS NULL)
+    )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE JOB_CATEGORY (

@@ -23,11 +23,17 @@ STUDENT ใช้แบบภาพล่าสุด: student_id, university_us
 | Attribute | Type | Constraints / การตรวจสอบ |
 |---|---|---|
 | `employer_id` | INT UNSIGNED | PK, AUTO_INCREMENT, NOT NULL; ระบบสร้าง ID บวก |
-| `company_name` | VARCHAR(150) | NOT NULL, CHECK ห้ามว่าง; ไม่ UNIQUE |
-| `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER, CHECK ห้ามว่าง; Backend ตรวจรูปแบบ |
-| `password_hash` | VARCHAR(255) | NOT NULL, CHECK ห้ามว่าง; Backend สร้างด้วยไลบรารีแฮชรหัสผ่านจริง |
-| `phone` | VARCHAR(20) | NULL; CHECK ถ้ามีห้ามว่าง; Backend ตรวจรูปแบบ |
-| `address` | TEXT | NULL; CHECK ถ้ามีห้ามว่าง |
+| `username` | VARCHAR(80) | NULL, UNIQUE; ใช้เข้าสู่ระบบแบบรหัสผ่าน |
+| `company_name` | VARCHAR(150) | NULL ใน `Draft`; ต้องกรอกก่อนส่งเป็น `Pending` |
+| `business_type`, `business_type_other` | VARCHAR(100) | NULL ใน `Draft`; ต้องเลือกประเภทธุรกิจและกรอกอื่น ๆ เมื่อเลือก `อื่น ๆ` |
+| `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER; อีเมลสำหรับบัญชี |
+| `contact_email` | VARCHAR(255) | NULL ใน `Draft`; ต้องกรอกและตรวจรูปแบบก่อนส่งเป็น `Pending` |
+| `password_hash` | VARCHAR(255) | NULL สำหรับ Google login; รหัสผ่านสร้างด้วยไลบรารีแฮชจริง |
+| `phone` | VARCHAR(20) | NULL ใน `Draft`; ต้องกรอกก่อนส่งเป็น `Pending` |
+| `address` | TEXT | NULL ใน `Draft`; ต้องกรอกก่อนส่งเป็น `Pending` |
+| `verification_status` | VARCHAR(10) | NOT NULL, DEFAULT `Draft`; `Draft` → `Pending` → `Verified` หรือ `Rejected` |
+| `rejection_reason` | VARCHAR(1000) | NOT NULL เมื่อ `Rejected`; นายจ้างเห็นเหตุผลและแก้ไขเพื่อส่งตรวจใหม่ |
+| `verified_at` | DATETIME | NOT NULL เมื่อ `Verified`; เก็บ UTC |
 
 ## JOB_CATEGORY
 
@@ -108,4 +114,4 @@ PRIMARY KEY(student_id, job_id): บันทึกงานเดิมซ้�
 
 ## สถานะตรวจสอบ
 
-ไฟล์ผ่านการตรวจโครงสร้างเบื้องต้น ยังไม่ได้รัน MySQL หรือ migration จริง และภาพ ER เก่ายังไม่ได้ปรับตาม v2
+ทดสอบ schema ใหม่และ migration 011 บน MySQL 8.4 ในฐานข้อมูลแยกแล้ว; ภาพ ER เก่ายังไม่ได้ปรับตาม v2
