@@ -82,11 +82,11 @@ if (!is_string($subject) || $subject === '' || strlen($subject) > 255 ||
     google_login_failed('กรุณาใช้บัญชี Google ที่ยืนยันอีเมลแล้ว');
 }
 
-$sql = 'SELECT employer_id, company_name FROM EMPLOYER WHERE google_subject = ?';
+$sql = 'SELECT employer_id,company_name,business_type,business_type_other,phone,contact_email,address,verification_status FROM EMPLOYER WHERE google_subject = ?';
 $account = query($sql, [$subject])->fetch();
 if (!$account) {
     try {
-        query('INSERT INTO EMPLOYER (email, google_subject) VALUES (?, ?)', [$email, $subject]);
+        query("INSERT INTO EMPLOYER (email, google_subject, verification_status) VALUES (?, ?, 'Draft')", [$email, $subject]);
     } catch (PDOException $error) {
         if ((int) ($error->errorInfo[1] ?? 0) !== 1062) throw $error;
     }
@@ -98,4 +98,6 @@ if (!$account) {
 
 session_regenerate_id(true);
 $_SESSION = ['auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']]];
-go($account['company_name'] === null ? 'employer/profile.php' : 'employer/jobs.php');
+go(employer_profile_complete($account) && $account['verification_status'] !== 'Draft'
+    ? 'employer/jobs.php'
+    : 'employer/profile.php');
