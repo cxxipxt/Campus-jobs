@@ -18,4 +18,16 @@ $_SESSION=['auth'=>['role'=>'student','id'=>['7']]];
 expect(identity('student')===null,'Reject malformed session identity');
 expect(thai_time('2026-10-13 03:00:00')==='13/10/2026 10:00','UTC to Bangkok');
 expect(array_keys(statuses())===['Pending','Reviewing','Accepted','Rejected'],'Shared status contract');
+$employerProfile = [
+    'company_name'=>'บริษัททดสอบ',
+    'business_type'=>'บริการ',
+    'business_type_other'=>null,
+    'phone'=>'020000000',
+    'contact_email'=>'contact@example.com',
+    'address'=>'ที่อยู่ทดสอบ',
+];
+expect(employer_profile_complete($employerProfile),'Complete employer profile');
+expect(!employer_profile_complete(array_merge($employerProfile,['business_type'=>'ไม่รู้จัก'])),'Reject unknown employer business type');
+expect(!employer_profile_complete(array_merge($employerProfile,['business_type'=>'อื่น ๆ'])),'Other business type requires a description');
+expect(!employer_profile_complete(array_merge($employerProfile,['contact_email'=>'not-an-email'])),'Reject invalid employer contact email');
 echo "PASS: validation, role isolation, output escaping and UTC conversion\n";

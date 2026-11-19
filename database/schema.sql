@@ -1,5 +1,4 @@
--- Campus-jobs baseline v3. MySQL >= 8.0.16, InnoDB.
-
+-- Campus-jobs baseline v2. MySQL >= 8.0.16, InnoDB.
 -- Run once against a NEW, EMPTY development database selected by the caller.
 -- Deliberately no DROP, CREATE DATABASE, USE, or IF NOT EXISTS.
 -- MySQL DDL auto-commits: stop on the first error and inspect partial results.
@@ -44,7 +43,8 @@ CREATE TABLE EMPLOYER (
     google_subject VARBINARY(255) NULL,
     phone VARCHAR(20) NULL,
     address TEXT NULL,
-    verification_status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Pending',
+    verification_status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Draft',
+    review_revision BIGINT UNSIGNED NOT NULL DEFAULT 1,
     rejection_reason VARCHAR(1000) NULL,
     verified_at DATETIME NULL,
     PRIMARY KEY (employer_id),
@@ -57,7 +57,18 @@ CREATE TABLE EMPLOYER (
     CONSTRAINT chk_employer_hash CHECK (CHAR_LENGTH(TRIM(password_hash)) > 0),
     CONSTRAINT chk_employer_phone CHECK (phone IS NULL OR CHAR_LENGTH(TRIM(phone)) > 0),
     CONSTRAINT chk_employer_address CHECK (address IS NULL OR CHAR_LENGTH(TRIM(address)) > 0),
-    CONSTRAINT chk_employer_verification_status CHECK (verification_status IN ('Pending', 'Verified', 'Rejected')),
+    CONSTRAINT chk_employer_verification_status CHECK (verification_status IN ('Draft', 'Pending', 'Verified', 'Rejected')),
+    CONSTRAINT chk_employer_pending_profile_complete CHECK (
+        verification_status <> 'Pending' OR (
+            company_name IS NOT NULL AND CHAR_LENGTH(TRIM(company_name)) > 0
+            AND business_type IS NOT NULL AND CHAR_LENGTH(TRIM(business_type)) > 0
+            AND (business_type <> 'อื่น ๆ' OR
+                 (business_type_other IS NOT NULL AND CHAR_LENGTH(TRIM(business_type_other)) > 0))
+            AND phone IS NOT NULL AND CHAR_LENGTH(TRIM(phone)) > 0
+            AND contact_email IS NOT NULL AND CHAR_LENGTH(TRIM(contact_email)) > 0
+            AND address IS NOT NULL AND CHAR_LENGTH(TRIM(address)) > 0
+        )
+    ),
     CONSTRAINT chk_employer_rejection_reason CHECK (
         (verification_status = 'Rejected' AND rejection_reason IS NOT NULL AND CHAR_LENGTH(TRIM(rejection_reason)) > 0)
         OR (verification_status <> 'Rejected' AND rejection_reason IS NULL)
@@ -86,14 +97,12 @@ CREATE TABLE JOB (
     location VARCHAR(255) NOT NULL,
     work_schedule VARCHAR(255) NOT NULL,
     hours_per_day DECIMAL(4,2) NULL,
-    subcategory VARCHAR(100) NULL,
     CONSTRAINT chk_job_hours CHECK (hours_per_day IS NULL OR (hours_per_day > 0 AND hours_per_day <= 24)),
     status VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'Open',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (job_id),
     KEY idx_job_employer (employer_id),
     KEY idx_job_category_status_wage (category_id, status, hourly_wage),
-    KEY idx_job_subcategory (subcategory),
     KEY idx_job_status_created (status, created_at),
     CONSTRAINT fk_job_employer FOREIGN KEY (employer_id) REFERENCES EMPLOYER (employer_id)
         ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -187,3 +196,5 @@ CREATE TABLE JOB_SHIFT (
  CONSTRAINT chk_job_shift_day CHECK(weekday BETWEEN 1 AND 7),
  CONSTRAINT chk_job_shift_times CHECK(start_time < end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE JOB ADD COLUMN subcategory VARCHAR(100) NULL, ADD INDEX idx_job_subcategory (subcategory);

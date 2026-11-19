@@ -2,17 +2,17 @@
 require dirname(__DIR__,2) . '/app/bootstrap.php';
 require_once dirname(__DIR__,2) . '/app/work-skills.php';
 $owner=employer(); $id=null; $error=null;
-$verification = query('SELECT verification_status,company_name,business_type,business_type_other,phone,contact_email,address FROM EMPLOYER WHERE employer_id=?', [$owner])->fetch();
-if (!$verification || $verification['company_name'] === null || $verification['business_type'] === null ||
-    ($verification['business_type'] === 'อื่น ๆ' && $verification['business_type_other'] === null) ||
-    $verification['phone'] === null || $verification['contact_email'] === null || $verification['address'] === null) {
-    $_SESSION['flash'] = 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบก่อนลงประกาศงาน';
+$verification = query('SELECT company_name,business_type,business_type_other,phone,contact_email,address,verification_status FROM EMPLOYER WHERE employer_id=?', [$owner])->fetch();
+if (!$verification || !employer_profile_complete($verification)) {
+    $_SESSION['flash'] = 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบก่อนส่งให้ Admin ตรวจสอบ';
     go('employer/profile.php');
 }
 if ($verification['verification_status'] !== 'Verified') {
-    $_SESSION['flash'] = $verification['verification_status'] === 'Rejected'
-        ? 'บัญชีถูกปฏิเสธ กรุณาแก้ไขข้อมูลบริษัทตามเหตุผลที่แจ้ง'
-        : 'บัญชีกำลังรอ Admin อนุมัติ จึงยังลงประกาศงานไม่ได้';
+    $_SESSION['flash'] = match ($verification['verification_status']) {
+        'Rejected' => 'บัญชีถูกปฏิเสธ กรุณาแก้ไขข้อมูลบริษัทตามเหตุผลที่แจ้ง',
+        'Draft' => 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบก่อนส่งให้ Admin ตรวจสอบ',
+        default => 'บัญชีกำลังรอ Admin อนุมัติ จึงยังลงประกาศงานไม่ได้',
+    };
     go('employer/jobs.php');
 }
 try { if (isset($_GET['job_id'])) $id=positive_id(input('job_id',$_GET)); }
@@ -79,6 +79,11 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         required_text($data['work_schedule'],255,'วันและเวลางาน');
         $pdo=db(); $pdo->beginTransaction();
         try {
+            // Lock the employer before any job row, in the same transaction as the write.
+            $status = query('SELECT verification_status FROM EMPLOYER WHERE employer_id=? FOR UPDATE', [$owner])->fetchColumn();
+            if ($status !== 'Verified') {
+                throw new InvalidArgumentException('สถานะบัญชีเปลี่ยนแปลง กรุณารอการอนุมัติก่อนบันทึกประกาศงาน');
+            }
             $params=[$data['category_id'],$data['job_title'],$data['description'],$data['hourly_wage'],$data['location'],$data['work_schedule'],$data['hours_per_day']];
             if($id) {
                 owned_job($id,$owner,true);

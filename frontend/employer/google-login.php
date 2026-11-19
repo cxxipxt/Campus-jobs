@@ -82,11 +82,11 @@ if (!is_string($subject) || $subject === '' || strlen($subject) > 255 ||
     google_login_failed('กรุณาใช้บัญชี Google ที่ยืนยันอีเมลแล้ว');
 }
 
-$sql = 'SELECT employer_id, company_name, business_type, business_type_other, phone, contact_email, address FROM EMPLOYER WHERE google_subject = ?';
+$sql = 'SELECT employer_id,company_name,business_type,business_type_other,phone,contact_email,address,verification_status FROM EMPLOYER WHERE google_subject = ?';
 $account = query($sql, [$subject])->fetch();
 if (!$account) {
     try {
-        query('INSERT INTO EMPLOYER (email, google_subject) VALUES (?, ?)', [$email, $subject]);
+        query("INSERT INTO EMPLOYER (email, google_subject, verification_status) VALUES (?, ?, 'Draft')", [$email, $subject]);
     } catch (PDOException $error) {
         if ((int) ($error->errorInfo[1] ?? 0) !== 1062) throw $error;
     }
@@ -97,18 +97,7 @@ if (!$account) {
 }
 
 session_regenerate_id(true);
-$profileComplete =
-    is_string($account['company_name']) && trim($account['company_name']) !== '' &&
-    is_string($account['business_type']) && trim($account['business_type']) !== '' &&
-    ($account['business_type'] !== 'อื่น ๆ' ||
-        (is_string($account['business_type_other']) && trim($account['business_type_other']) !== '')) &&
-    is_string($account['phone']) && trim($account['phone']) !== '' &&
-    is_string($account['contact_email']) && filter_var($account['contact_email'], FILTER_VALIDATE_EMAIL) !== false &&
-    is_string($account['address']) && trim($account['address']) !== '';
-$_SESSION = [
-    'auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']],
-    'flash' => $profileComplete
-        ? 'เข้าสู่ระบบสำเร็จ'
-        : 'กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบ เพื่อส่งบัญชีให้ Admin ตรวจสอบ',
-];
-go($profileComplete ? 'employer/jobs.php' : 'employer/profile.php');
+$_SESSION = ['auth' => ['role' => 'employer', 'id' => (int) $account['employer_id']]];
+go(employer_profile_complete($account) && $account['verification_status'] !== 'Draft'
+    ? 'employer/jobs.php'
+    : 'employer/profile.php');

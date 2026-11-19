@@ -61,6 +61,21 @@ function admin(): void {
     if (!identity('admin')) go('admin/login.php');
 }
 
+function employer_business_types(): array {
+    return ['ร้านอาหารและเครื่องดื่ม', 'ค้าปลีกและค้าส่ง', 'อีคอมเมิร์ซ', 'บริการ', 'โรงแรมและการท่องเที่ยว', 'เทคโนโลยี', 'การศึกษา', 'การผลิต', 'โลจิสติกส์และขนส่ง', 'สุขภาพและความงาม', 'การเงินและประกันภัย', 'สื่อและโฆษณา', 'อีเวนต์และบันเทิง', 'อสังหาริมทรัพย์และก่อสร้าง', 'เกษตรและอาหาร', 'หน่วยงานรัฐและองค์กรไม่แสวงหากำไร', 'อื่น ๆ'];
+}
+
+function employer_profile_complete(array $profile): bool {
+    foreach (['company_name', 'business_type', 'phone', 'contact_email', 'address'] as $field) {
+        if (!is_string($profile[$field] ?? null) || trim($profile[$field]) === '') return false;
+    }
+
+    return in_array($profile['business_type'], employer_business_types(), true) &&
+        ($profile['business_type'] !== 'อื่น ๆ' ||
+            (is_string($profile['business_type_other'] ?? null) && trim($profile['business_type_other']) !== '')) &&
+        filter_var($profile['contact_email'], FILTER_VALIDATE_EMAIL) !== false;
+}
+
 function required_text(string $value, int $max, string $label): void {
     if ($value === '' || mb_strlen($value, 'UTF-8') > $max) {
         throw new InvalidArgumentException("กรุณากรอก$label ไม่เกิน $max ตัวอักษร");
@@ -71,10 +86,6 @@ function optional_text(string $value, int $max, string $label): ?string {
     if ($value === '') return null;
     required_text($value, $max, $label);
     return $value;
-}
-
-function employer_business_types(): array {
-    return ['ร้านอาหารและเครื่องดื่ม', 'ค้าปลีกและค้าส่ง', 'อีคอมเมิร์ซ', 'บริการ', 'โรงแรมและการท่องเที่ยว', 'เทคโนโลยี', 'การศึกษา', 'การผลิต', 'โลจิสติกส์และขนส่ง', 'สุขภาพและความงาม', 'การเงินและประกันภัย', 'สื่อและโฆษณา', 'อีเวนต์และบันเทิง', 'อสังหาริมทรัพย์และก่อสร้าง', 'เกษตรและอาหาร', 'หน่วยงานรัฐและองค์กรไม่แสวงหากำไร', 'อื่น ๆ'];
 }
 
 function money(string $value): string {
@@ -140,6 +151,7 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
     $surfaceStyles = [
         'student-hub' => 'student-hub.css',
         'workspace-page student-editor' => 'student-editor.css',
+        'workspace-page admin-page' => 'admin-verification.css',
     ];
     $surfaceLink = isset($surfaceStyles[$layout])
         ? '<link rel="stylesheet" href="' . e(url('assets/styles/' . $surfaceStyles[$layout])) . '">'
@@ -175,8 +187,12 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
             'employer/profile.php' => 'ข้อมูลบริษัท'
         ];
     }
+
     if (identity('admin')) {
         $links += ['admin/verification.php' => 'ตรวจสอบนายจ้าง'];
+    }
+    else {
+        $links += ['admin/login.php' => 'เข้าสู่ระบบผู้ดูแล'];
     }
 
     foreach ($links as $path => $label) {
@@ -194,6 +210,11 @@ function start_page(string $title, string $layout = '', bool $showHeading = true
     // Employer logout
     elseif (identity('employer')) {
         echo '<form method="post" action="' . e(url('employer/logout.php')) . '">';
+        csrf_field();
+        echo '<button>ออกจากระบบ</button></form>';
+    }
+    elseif (identity('admin')) {
+        echo '<form method="post" action="' . e(url('admin/logout.php')) . '">';
         csrf_field();
         echo '<button>ออกจากระบบ</button></form>';
     }

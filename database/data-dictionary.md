@@ -30,7 +30,7 @@ EMPLOYER รองรับบัญชีรหัสผ่านและ Goog
 |---|---|---|
 | `employer_id` | INT UNSIGNED | PK, AUTO_INCREMENT, NOT NULL; ระบบสร้าง ID บวก |
 | `username` | VARCHAR(80) | NULL, UNIQUE; ใช้เข้าสู่ระบบแบบรหัสผ่าน |
-| `company_name` | VARCHAR(150) | NULL ระหว่างตั้งค่าบัญชี Google; CHECK ถ้ามีห้ามว่าง; ไม่ UNIQUE |
+| `company_name` | VARCHAR(150) | NULL ระหว่างตั้งค่าบัญชี Draft; CHECK ถ้ามีห้ามว่าง; ไม่ UNIQUE |
 | `business_type`, `business_type_other` | VARCHAR(100) | NULL; ประเภทธุรกิจและคำอธิบายเมื่อเลือก “อื่น ๆ” |
 | `contact_email` | VARCHAR(255) | NULL; อีเมลติดต่อ |
 | `email` | VARCHAR(255) | NOT NULL, UNIQUE ภายใน EMPLOYER, CHECK ห้ามว่าง; Backend ตรวจรูปแบบ/Google ยืนยัน |
@@ -38,8 +38,9 @@ EMPLOYER รองรับบัญชีรหัสผ่านและ Goog
 | `google_subject` | VARBINARY(255) | NULL, UNIQUE; subject จาก Google ที่ Backend ยืนยันแล้ว |
 | `phone` | VARCHAR(20) | NULL; CHECK ถ้ามีห้ามว่าง; Backend ตรวจรูปแบบ |
 | `address` | TEXT | NULL; CHECK ถ้ามีห้ามว่าง |
-| `verification_status` | VARCHAR(10), ASCII binary | NOT NULL, DEFAULT `Pending`; CHECK เฉพาะ `Pending` / `Verified` / `Rejected` |
+| `verification_status` | VARCHAR(10), ASCII binary | NOT NULL, DEFAULT `Draft`; CHECK เฉพาะ `Draft` / `Pending` / `Verified` / `Rejected` |
 | `rejection_reason` | VARCHAR(1000) | NULL; ต้องมีข้อความเมื่อสถานะ `Rejected` และเป็น NULL ในสถานะอื่น |
+| `review_revision` | BIGINT UNSIGNED | รุ่นของข้อมูลที่ใช้พิจารณา เพิ่มเมื่อแก้ข้อมูลหรือส่งคำขอรอบใหม่ |
 | `verified_at` | DATETIME | NULL; ระบบกำหนดเวลา UTC เมื่อ Admin อนุมัติ และล้างเมื่อกลับเป็น Pending |
 
 `idx_employer_verification_status` รองรับคิวตรวจสอบ Admin. นายจ้างที่ยังไม่ Verified ลงประกาศหรือแก้ไขประกาศไม่ได้; หากแก้ข้อมูลบริษัทหลังอนุมัติจะกลับไปรอการตรวจสอบ
@@ -130,4 +131,4 @@ PRIMARY KEY(student_id, job_id): บันทึกงานเดิมซ้�
 
 ## สถานะตรวจสอบ
 
-ไฟล์ผ่านการตรวจโครงสร้างเบื้องต้น ยังไม่ได้รัน MySQL หรือ migration จริง และภาพ ER เก่ายังไม่ได้ปรับตาม v2
+ทดสอบ schema บน MySQL 8.4 ในฐานข้อมูลแยก ภาพ ER เก่ายังไม่ได้ปรับตามโครงสร้างนี้

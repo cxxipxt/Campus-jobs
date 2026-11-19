@@ -15,9 +15,9 @@ start_page('จัดการประกาศงาน', 'workspace-page empl
 ?>
 <div class="page-tools"><p class="muted">ภาพรวมการรับสมัครและประกาศของคุณ</p><?php if ($verification['verification_status'] === 'Verified'): ?><a class="button" href="<?= e(url('employer/job-form.php')) ?>">+ ลงประกาศงานใหม่</a><?php endif; ?></div>
 <?php if ($verification['verification_status'] !== 'Verified'): ?>
-<section class="panel"><h2>สถานะบัญชี: <?= e(['Pending'=>'รอ Admin อนุมัติ','Rejected'=>'ถูกปฏิเสธ'][$verification['verification_status']] ?? $verification['verification_status']) ?></h2>
-<?php if ($verification['verification_status'] === 'Rejected'): ?><p>เหตุผลที่ปฏิเสธ: <?= e($verification['rejection_reason']) ?></p><?php else: ?><p>ลงประกาศงานได้หลัง Admin ตรวจสอบและยืนยันบัญชีแล้ว</p><?php endif; ?>
-<a href="<?= e(url('employer/profile.php')) ?>"><?= $verification['verification_status'] === 'Rejected' ? 'แก้ไขข้อมูลและส่งตรวจใหม่' : 'ตรวจสอบข้อมูลบริษัท' ?></a></section>
+<section class="panel"><h2>สถานะบัญชี: <?= e(['Draft'=>'ยังไม่ส่งตรวจสอบ','Pending'=>'รอ Admin อนุมัติ','Rejected'=>'ถูกปฏิเสธ'][$verification['verification_status']] ?? $verification['verification_status']) ?></h2>
+<?php if ($verification['verification_status'] === 'Rejected'): ?><p>เหตุผลที่ปฏิเสธ: <?= e($verification['rejection_reason']) ?></p><?php elseif ($verification['verification_status'] === 'Draft'): ?><p>กรอกข้อมูลบริษัทและข้อมูลติดต่อให้ครบในหน้าโปรไฟล์เพื่อส่งให้ Admin ตรวจสอบ</p><?php else: ?><p>ลงประกาศงานได้หลัง Admin ตรวจสอบและยืนยันบัญชีแล้ว</p><?php endif; ?>
+<a href="<?= e(url('employer/profile.php')) ?>"><?= $verification['verification_status'] === 'Rejected' ? 'แก้ไขข้อมูลและส่งตรวจใหม่' : ($verification['verification_status'] === 'Draft' ? 'กรอกข้อมูลและส่งตรวจสอบ' : 'ตรวจสอบข้อมูลบริษัท') ?></a></section>
 <?php endif; ?>
 <div class="stats-row"><article><span>ประกาศทั้งหมด</span><strong><?= count($jobs) ?></strong></article><article><span>ประกาศที่เปิดรับ</span><strong><?= count(array_filter($jobs, static fn($job) => $job['status'] === 'Open')) ?></strong></article><article><span>ใบสมัครทั้งหมด</span><strong><?= e(array_sum(array_column($jobs, 'applicant_count'))) ?></strong></article></div>
 <?php if (!$jobs): ?><section><h2>ยังไม่มีประกาศงาน</h2><p>สร้างประกาศแรกเพื่อเริ่มรับสมัครนักศึกษา</p></section><?php endif; ?>

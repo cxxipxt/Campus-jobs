@@ -17,7 +17,7 @@ FROM information_schema.REFERENTIAL_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE()
 ORDER BY TABLE_NAME, CONSTRAINT_NAME;
 
--- Expected: 31 CHECK constraints, all enforced (schema v3 plus employer verification and schedule/matching fields).
+-- Expected: all CHECK constraints enforced (schema v3 plus employer verification and schedule/matching fields).
 SELECT TABLE_NAME, CONSTRAINT_NAME, ENFORCED
 FROM information_schema.TABLE_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_TYPE = 'CHECK'

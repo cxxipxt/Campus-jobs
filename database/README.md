@@ -3,18 +3,19 @@
 
 ทีมยืนยันใช้ MySQL แล้ว โครงล่าสุด v3 ใช้ MySQL 8.0.16 ขึ้นไป เพราะต้องบังคับ CHECK constraints
 ทุกคนสร้างฐานข้อมูลพัฒนาบนเครื่องตัวเองด้วยไฟล์กลางชุดเดียวกัน ไม่แยก schema ตามคน
-ยังไม่ได้ติดตั้งลงเซิร์ฟเวอร์ของทีม และยังไม่ได้ทดสอบกับ MySQL จริงในเครื่องที่จัดทำไฟล์
+ทดสอบ schema ในฐานข้อมูลแยกบน MySQL 8.4
 
 ## ไฟล์ที่ใช้ร่วมกัน
 - [schema.sql](schema.sql): สร้าง 8 ตารางหลัก พร้อมตารางเวลาเรียน/กะงาน รวม 10 ตาราง และ constraints/indexes
 - [seed.sql](seed.sql): ประเภทงานเริ่มต้น 7 รายการ รันซ้ำได้ ไม่สร้างบัญชีผู้ใช้
 - [verify.sql](verify.sql): อ่าน metadata เพื่อตรวจโครงสร้างหลังนำเข้า ไม่แก้ข้อมูล
 - [migrations/006_student_profile_completion.sql](migrations/006_student_profile_completion.sql): จำสถานะการตั้งค่าโปรไฟล์นักศึกษาข้าม session
-- [migrations/007_employer_verification.sql](migrations/007_employer_verification.sql): เพิ่มคิวตรวจสอบนายจ้าง สถานะ และเหตุผลปฏิเสธ
-- [migrations/008_job_hours_per_day.sql](migrations/008_job_hours_per_day.sql): เพิ่มชั่วโมงทำงานต่อวัน
-- [migrations/009_student_preferences.sql](migrations/009_student_preferences.sql): เพิ่มข้อมูลความสนใจและเวลาว่างของนักศึกษา
-- [migrations/010_job_matching.sql](migrations/010_job_matching.sql): เพิ่มทักษะแบบจำเป็น/เสริมและตารางกะงาน
-- [migrations/011_job_subcategory.sql](migrations/011_job_subcategory.sql): เพิ่มหมวดงานย่อย
+- [migrations/011_employer_verification.sql](migrations/011_employer_verification.sql): เพิ่มคิวตรวจสอบนายจ้าง สถานะ และเหตุผลปฏิเสธ
+- [migrations/007_job_hours_per_day.sql](migrations/007_job_hours_per_day.sql): เพิ่มชั่วโมงทำงานต่อวัน
+- [migrations/008_student_preferences.sql](migrations/008_student_preferences.sql): เพิ่มข้อมูลความสนใจและเวลาว่างของนักศึกษา
+- [migrations/009_job_matching.sql](migrations/009_job_matching.sql): เพิ่มทักษะแบบจำเป็น/เสริมและตารางกะงาน
+- [migrations/010_job_subcategory.sql](migrations/010_job_subcategory.sql): เพิ่มหมวดงานย่อย
+- [migrations/012_employer_review_revision.sql](migrations/012_employer_review_revision.sql): ผูกคำตัดสินกับรุ่นข้อมูลที่ตรวจ
 - [แนวทางแบ่งงานและเชื่อมข้อมูล](team-guide.md): ผู้รับผิดชอบ ลำดับเตรียมข้อมูล และกฎ backend
 
 ## ติดตั้งบนเครื่องแต่ละคน
@@ -44,7 +45,7 @@ DDL ของ MySQL commit แยกแต่ละคำสั่ง หาก�
 ## ข้อตกลงโครงล่าสุด v3
 - ชื่อตารางใช้ตัวพิมพ์ใหญ่ตาม ER ทุกเครื่องและทุก query ต้องใช้ให้ตรงกัน โดยเฉพาะเมื่อย้ายไป Linux
 - ID ทุกตัวเป็น INT UNSIGNED; PK ที่เป็น ID เดี่ยวเพิ่มอัตโนมัติ ห้ามกำหนด ID ใหม่เอง
-- STUDENT ใช้ university_username แบบ UNIQUE ไม่มี password_hash หรือ university; full_name เป็น NOT NULL และห้ามว่าง ต้องมีชื่อก่อนสร้างนักศึกษา ส่วน EMPLOYER ที่สมัครด้วยรหัสผ่านมี company_name และ password_hash; บัญชี Google กรอกข้อมูลกิจการก่อนส่งตรวจ
+- STUDENT ใช้ university_username แบบ UNIQUE ไม่มี password_hash หรือ university; full_name เป็น NOT NULL และห้ามว่าง ต้องมีชื่อก่อนสร้างนักศึกษา ส่วน EMPLOYER เริ่มเป็น Draft และต้องกรอกข้อมูลกิจการก่อนส่งตรวจ ทั้งบัญชีรหัสผ่านและบัญชี Google
 - JOB บังคับรายละเอียด ค่าจ้าง สถานที่ และเวลางาน; ค่าจ้างเป็นบาทต่อชั่วโมงและห้ามติดลบ
 - status บังคับตัวสะกดและตัวพิมพ์ตรงตาม scope; ไม่อนุญาตค่าอื่น
 - ข้อความทั่วไปใช้ utf8mb4_unicode_ci: รองรับภาษาไทย เปรียบเทียบโดยไม่แยกตัวพิมพ์เล็ก/ใหญ่และอาจไม่แยกเครื่องหมายกำกับเสียง
@@ -63,7 +64,7 @@ DDL ของ MySQL commit แยกแต่ละคำสั่ง หาก�
 
 ## การเปลี่ยนโครงสร้าง
 หลังเริ่มใช้งาน ให้เพิ่มไฟล์ migration มีเลขลำดับและบอกวิธีรัน ไม่แก้ข้อมูลจริงโดยลบสร้างใหม่
-ฐานข้อมูลเดิมให้รัน migration 007 หนึ่งครั้ง; นายจ้างเดิมทั้งหมดจะเริ่มเป็น Pending และต้องให้ Admin ตรวจสอบใหม่. จากนั้นให้ใช้ migration 008–011 ตามลำดับสำหรับชั่วโมงทำงาน, ความต้องการนักศึกษา, matching และหมวดงานย่อย หากยังไม่มีคอลัมน์/ตารางเหล่านี้
+สำหรับฐานข้อมูลจาก main ที่ใช้ migration ถึง 010 แล้ว ให้สำรองข้อมูลและรัน 011 ตามด้วย 012 ก่อนอัปเดตแอป บัญชีเดิมที่ข้อมูลครบจะเป็น Pending และบัญชีที่ข้อมูลไม่ครบจะเป็น Draft
 ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน migration 006 หลังมีคอลัมน์ `STUDENT.resume_url`; ฐานข้อมูลใหม่ที่สร้างจาก `schema.sql` มีคอลัมน์นี้อยู่แล้ว ไม่ต้องรัน migration 006 ซ้ำ
 ข้อมูลตัวอย่างต้องเป็นข้อมูลสมมติและใส่ในไฟล์แยกจาก schema
 
