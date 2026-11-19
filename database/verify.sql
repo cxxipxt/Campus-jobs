@@ -2,21 +2,22 @@
 SELECT DATABASE() AS selected_database, VERSION() AS server_version,
        @@session.time_zone AS session_time_zone, @@session.sql_mode AS sql_mode;
 
--- Expected: all eight named tables, InnoDB and utf8mb4_unicode_ci.
+-- Expected: all ten core and schedule tables, InnoDB and utf8mb4_unicode_ci.
 SELECT TABLE_NAME, ENGINE, TABLE_COLLATION
 FROM information_schema.TABLES
 WHERE TABLE_SCHEMA = DATABASE()
   AND TABLE_NAME IN ('STUDENT', 'EMPLOYER', 'JOB_CATEGORY', 'JOB',
-                     'APPLICATION', 'STUDENT_SKILL', 'JOB_SKILL', 'SAVED_JOB')
+                     'APPLICATION', 'STUDENT_SKILL', 'JOB_SKILL', 'SAVED_JOB',
+                     'STUDENT_AVAILABILITY', 'JOB_SHIFT')
 ORDER BY TABLE_NAME;
 
--- Expected: 8 FK rows, DELETE_RULE and UPDATE_RULE = RESTRICT.
+-- Expected: 10 FK rows; core relationships use RESTRICT and schedule rows use CASCADE.
 SELECT TABLE_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, DELETE_RULE, UPDATE_RULE
 FROM information_schema.REFERENTIAL_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE()
 ORDER BY TABLE_NAME, CONSTRAINT_NAME;
 
--- Expected: 32 CHECK constraints, all enforced (v2 plus profile completion and employer verification).
+-- Expected: all CHECK constraints enforced (schema v3 plus employer verification and schedule/matching fields).
 SELECT TABLE_NAME, CONSTRAINT_NAME, ENFORCED
 FROM information_schema.TABLE_CONSTRAINTS
 WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_TYPE = 'CHECK'

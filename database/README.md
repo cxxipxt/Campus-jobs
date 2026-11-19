@@ -1,17 +1,21 @@
 # ฐานข้อมูล Campus-jobs
 [Data Dictionary](data-dictionary.md) เป็นข้อกำหนดร่วมก่อนเขียน SQL
 
-ทีมยืนยันใช้ MySQL แล้ว โครงล่าสุด v2 ใช้ MySQL 8.0.16 ขึ้นไป เพราะต้องบังคับ CHECK constraints
+ทีมยืนยันใช้ MySQL แล้ว โครงล่าสุด v3 ใช้ MySQL 8.0.16 ขึ้นไป เพราะต้องบังคับ CHECK constraints
 ทุกคนสร้างฐานข้อมูลพัฒนาบนเครื่องตัวเองด้วยไฟล์กลางชุดเดียวกัน ไม่แยก schema ตามคน
-ยังไม่ได้ติดตั้งลงเซิร์ฟเวอร์ของทีม; schema ใหม่และ migration นายจ้างทดสอบในฐานข้อมูล Docker แยกบน MySQL 8.4 แล้ว
+ทดสอบ schema ในฐานข้อมูลแยกบน MySQL 8.4
 
 ## ไฟล์ที่ใช้ร่วมกัน
-- [schema.sql](schema.sql): สร้าง 8 ตาราง พร้อม PK, FK, UNIQUE, CHECK และ indexes
+- [schema.sql](schema.sql): สร้าง 8 ตารางหลัก พร้อมตารางเวลาเรียน/กะงาน รวม 10 ตาราง และ constraints/indexes
 - [seed.sql](seed.sql): ประเภทงานเริ่มต้น 7 รายการ รันซ้ำได้ ไม่สร้างบัญชีผู้ใช้
 - [verify.sql](verify.sql): อ่าน metadata เพื่อตรวจโครงสร้างหลังนำเข้า ไม่แก้ข้อมูล
 - [migrations/006_student_profile_completion.sql](migrations/006_student_profile_completion.sql): จำสถานะการตั้งค่าโปรไฟล์นักศึกษาข้าม session
-- [migrations/011_employer_verification.sql](migrations/011_employer_verification.sql): เพิ่มสถานะและเงื่อนไขการตรวจสอบนายจ้าง
-- [migrations/012_employer_review_revision.sql](migrations/012_employer_review_revision.sql): รันหลัง 011 บนฐานข้อมูลเดิม เพื่อให้แอดมินตัดสินเฉพาะคำขอฉบับที่ตรวจ
+- [migrations/011_employer_verification.sql](migrations/011_employer_verification.sql): เพิ่มคิวตรวจสอบนายจ้าง สถานะ และเหตุผลปฏิเสธ
+- [migrations/007_job_hours_per_day.sql](migrations/007_job_hours_per_day.sql): เพิ่มชั่วโมงทำงานต่อวัน
+- [migrations/008_student_preferences.sql](migrations/008_student_preferences.sql): เพิ่มข้อมูลความสนใจและเวลาว่างของนักศึกษา
+- [migrations/009_job_matching.sql](migrations/009_job_matching.sql): เพิ่มทักษะแบบจำเป็น/เสริมและตารางกะงาน
+- [migrations/010_job_subcategory.sql](migrations/010_job_subcategory.sql): เพิ่มหมวดงานย่อย
+- [migrations/012_employer_review_revision.sql](migrations/012_employer_review_revision.sql): ผูกคำตัดสินกับรุ่นข้อมูลที่ตรวจ
 - [แนวทางแบ่งงานและเชื่อมข้อมูล](team-guide.md): ผู้รับผิดชอบ ลำดับเตรียมข้อมูล และกฎ backend
 
 ## ติดตั้งบนเครื่องแต่ละคน
@@ -38,10 +42,10 @@ SOURCE D:/Campus-jobs/database/verify.sql;
 schema.sql ไม่ลบฐานข้อมูลและไม่ข้ามตารางเดิมเงียบ ๆ ถ้าชื่อซ้ำให้หยุดและตรวจ ห้ามรันต่อโดยใช้ `--force`
 DDL ของ MySQL commit แยกแต่ละคำสั่ง หากเกิดข้อผิดพลาดบางตารางอาจถูกสร้างแล้ว อย่ารันซ้ำหรือ DROP ฐานข้อมูลที่มีข้อมูล ให้ตรวจและแก้เฉพาะจุด
 
-## ข้อตกลงโครงล่าสุด v2
+## ข้อตกลงโครงล่าสุด v3
 - ชื่อตารางใช้ตัวพิมพ์ใหญ่ตาม ER ทุกเครื่องและทุก query ต้องใช้ให้ตรงกัน โดยเฉพาะเมื่อย้ายไป Linux
 - ID ทุกตัวเป็น INT UNSIGNED; PK ที่เป็น ID เดี่ยวเพิ่มอัตโนมัติ ห้ามกำหนด ID ใหม่เอง
-- STUDENT ใช้ university_username แบบ UNIQUE ไม่มี password_hash หรือ university; full_name เป็น NOT NULL และห้ามว่าง ต้องมีชื่อก่อนสร้างนักศึกษา ส่วน EMPLOYER เริ่มเป็น `Draft` และบังคับข้อมูลกิจการ/ติดต่อครบก่อนส่ง `Pending`; password_hash ว่างได้เฉพาะบัญชี Google
+- STUDENT ใช้ university_username แบบ UNIQUE ไม่มี password_hash หรือ university; full_name เป็น NOT NULL และห้ามว่าง ต้องมีชื่อก่อนสร้างนักศึกษา ส่วน EMPLOYER เริ่มเป็น Draft และต้องกรอกข้อมูลกิจการก่อนส่งตรวจ ทั้งบัญชีรหัสผ่านและบัญชี Google
 - JOB บังคับรายละเอียด ค่าจ้าง สถานที่ และเวลางาน; ค่าจ้างเป็นบาทต่อชั่วโมงและห้ามติดลบ
 - status บังคับตัวสะกดและตัวพิมพ์ตรงตาม scope; ไม่อนุญาตค่าอื่น
 - ข้อความทั่วไปใช้ utf8mb4_unicode_ci: รองรับภาษาไทย เปรียบเทียบโดยไม่แยกตัวพิมพ์เล็ก/ใหญ่และอาจไม่แยกเครื่องหมายกำกับเสียง
@@ -60,7 +64,8 @@ DDL ของ MySQL commit แยกแต่ละคำสั่ง หาก�
 
 ## การเปลี่ยนโครงสร้าง
 หลังเริ่มใช้งาน ให้เพิ่มไฟล์ migration มีเลขลำดับและบอกวิธีรัน ไม่แก้ข้อมูลจริงโดยลบสร้างใหม่
-ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน migrations ตามลำดับที่ยังไม่ได้ใช้; migration 011 เพิ่ม `Draft`, `Pending`, `Verified`, `Rejected`, เหตุผลการปฏิเสธ และเวลาอนุมัติ บัญชีเดิมที่ข้อมูลครบจะเป็น `Pending` ส่วนบัญชีที่ยังกรอกไม่ครบจะเป็น `Draft`. ฐานข้อมูลใหม่ที่สร้างจาก `schema.sql` ปัจจุบันไม่ต้องรัน migration ซ้ำ
+สำหรับฐานข้อมูลจาก main ที่ใช้ migration ถึง 010 แล้ว ให้สำรองข้อมูลและรัน 011 ตามด้วย 012 ก่อนอัปเดตแอป บัญชีเดิมที่ข้อมูลครบจะเป็น Pending และบัญชีที่ข้อมูลไม่ครบจะเป็น Draft
+ฐานข้อมูลเดิมให้สำรองข้อมูลและรัน migration 006 หลังมีคอลัมน์ `STUDENT.resume_url`; ฐานข้อมูลใหม่ที่สร้างจาก `schema.sql` มีคอลัมน์นี้อยู่แล้ว ไม่ต้องรัน migration 006 ซ้ำ
 ข้อมูลตัวอย่างต้องเป็นข้อมูลสมมติและใส่ในไฟล์แยกจาก schema
 
 ## การลบ
@@ -77,4 +82,4 @@ saved_at เป็นเวลาในความสัมพันธ์บ�
 
 ## อัปเกรดบัญชีนักศึกษาเป็น v2
 
-ดู [student-login.md](student-login.md) สำหรับกฎ Microsoft/Google ขั้นตอนสร้างบัญชีและ migration จาก v1 ฐานข้อมูลใหม่รัน schema.sql v2 ได้เลย แต่ฐานข้อมูลเดิมต้องสำรองและรัน preflight ก่อน migration 001 ไม่ลบสร้างใหม่
+ดู [student-login.md](student-login.md) สำหรับกฎ Microsoft/Google ขั้นตอนสร้างบัญชีและ migration จาก v1 ฐานข้อมูลใหม่รัน schema.sql v3 ได้เลย แต่ฐานข้อมูลเดิมต้องสำรองและรัน preflight ก่อน migration 001 ไม่ลบสร้างใหม่
